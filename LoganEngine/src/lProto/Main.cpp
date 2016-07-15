@@ -1,5 +1,11 @@
 // wattafakk
+
+//<<<<<<< HEAD
 //DisIsDatFack     // :)
+//=======
+//DisIsDatFack 8=================D
+//>>>>>>> branch 'master' of https://github.com/sereslorant/logan_engine.git
+
 #include "../lGame/lConsole.h"
 #include "lGameModes/lPacMan/lPacMan.h"
 
