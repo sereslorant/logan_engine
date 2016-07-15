@@ -8,31 +8,37 @@
 class liPM_AgentFactory
 {
 public:
-	virtual void AddAgent(unsigned int x,unsigned int y,bool pass_through/*,liView::liDrawable *drawable*/) = 0;
-	virtual void AddPacMan(unsigned int x,unsigned int y,/*liView::liDrawable *drawable,*/liPM_AgentController *agent_control) = 0;
-	virtual void AddCoin(unsigned int x,unsigned int y/*,liView::liDrawable *drawable*/) = 0;
+	virtual void AddAgent(unsigned int x,unsigned int y,bool pass_through) = 0;
+	virtual void AddPacMan(unsigned int x,unsigned int y,liPM_AgentController *agent_control) = 0;
+	virtual void AddCoin(unsigned int x,unsigned int y) = 0;
 
-	liPM_AgentFactory() {}
-	virtual ~liPM_AgentFactory() {}
+	liPM_AgentFactory()
+	{
+		//Üres
+	}
+
+	virtual ~liPM_AgentFactory()
+	{
+		//Üres
+	}
 };
 
 class liPM_ModelObserver
 {
 public:
-
-	//virtual void VisitAgent(lPM_Agent *agent) = 0;
-	//virtual void VisitCoin(lPM_Coin *coin) = 0;
-	//virtual void VisitPacMan(lPM_PacMan *pac_man) = 0;
-
 	virtual void Subscribe(lPM_Agent *agent) = 0;
 
 	virtual void LoopEnded() = 0;
 
 	liPM_ModelObserver()
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~liPM_ModelObserver()
-	{}
+	{
+		//Üres
+	}
 };
 
 #include <list>
@@ -51,9 +57,9 @@ private:
 		lPM_Model &Model;
 
 	public:
-		virtual void AddAgent(unsigned int x,unsigned int y,bool pass_through/*,liView::liDrawable *drawable*/) override
+		virtual void AddAgent(unsigned int x,unsigned int y,bool pass_through) override
 		{
-			lPM_Agent *Agent = new lPM_Agent(x,y,pass_through/*,drawable*/);
+			lPM_Agent *Agent = new lPM_Agent(x,y,pass_through);
 			Model.Agents.push_back(Agent);
 			//
 			for(liPM_ModelObserver *Observer : Model.Observers)
@@ -62,9 +68,9 @@ private:
 			}
 		}
 
-		virtual void AddPacMan(unsigned int x,unsigned int y/*,liView::liDrawable *drawable*/,liPM_AgentController *agent_control) override
+		virtual void AddPacMan(unsigned int x,unsigned int y,liPM_AgentController *agent_control) override
 		{
-			lPM_PacMan *PacMan = new lPM_PacMan(x,y/*,drawable*/,agent_control);
+			lPM_PacMan *PacMan = new lPM_PacMan(x,y,agent_control);
 			Model.Agents.push_back(PacMan);
 			//
 			for(liPM_ModelObserver *Observer : Model.Observers)
@@ -73,9 +79,9 @@ private:
 			}
 		}
 
-		virtual void AddCoin(unsigned int x,unsigned int y/*,liView::liDrawable *drawable*/) override
+		virtual void AddCoin(unsigned int x,unsigned int y) override
 		{
-			lPM_Coin *Coin = new lPM_Coin(x,y/*,drawable*/);
+			lPM_Coin *Coin = new lPM_Coin(x,y);
 			Model.Agents.push_back(Coin);
 			//
 			for(liPM_ModelObserver *Observer : Model.Observers)

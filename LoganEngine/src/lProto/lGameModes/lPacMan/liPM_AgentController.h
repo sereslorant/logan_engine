@@ -11,8 +11,15 @@ public:
 	virtual bool GetLeft() = 0;
 	virtual bool GetRight() = 0;
 
-	liPM_AgentController(){}
-	virtual ~liPM_AgentController(){}
+	liPM_AgentController()
+	{
+		//Üres
+	}
+
+	virtual ~liPM_AgentController()
+	{
+		//Üres
+	}
 };
 
 #endif // LI_AGENT_CONTROL_H

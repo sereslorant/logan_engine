@@ -25,8 +25,6 @@ public:
 		{
 			Observer->CoinEaten();
 		}
-
-		//Drawable->Hide();
 	}
 
 	virtual void Subscribe(liPM_CoinObserver *coin_observer) override
@@ -40,14 +38,16 @@ public:
 		lPM_Agent::Accept(visitor);
 	}
 
-	lPM_Coin(int x,int y/*,liView::liDrawable *drawable*/)
-		:lPM_Agent(x,y,true/*,drawable*/)
+	lPM_Coin(int x,int y)
+		:lPM_Agent(x,y,true)
 	{
-		//Drawable->SetColor(1.0,1.0,0.5,1.0);
+		//Üres
 	}
 
 	virtual ~lPM_Coin() override
-	{}
+	{
+		//Üres
+	}
 };
 
 #endif // LPM_COIN_H

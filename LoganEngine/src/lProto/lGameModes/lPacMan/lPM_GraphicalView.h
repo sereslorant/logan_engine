@@ -13,8 +13,8 @@ private:
 	class lPM_AgentView : public liPM_AgentObserver
 	{
 	protected:
-		unsigned int X;
-		unsigned int Y;
+		int X = 0;
+		int Y = 0;
 
 		li2DElement *Drawable;
 	public:
@@ -29,14 +29,20 @@ private:
 			X = x;
 			Y = y;
 
-			Drawable->SetPosition({X*dS + dS/2.0,Y*dS + dS/2.0});
+			lmVector2D NewPosition = {X*dS + dS/2.0,Y*dS + dS/2.0};
+			Drawable->SetPosition(NewPosition);
 		}
 
 
 		lPM_AgentView(li2DElement *drawable):Drawable(drawable)
-		{}
+		{
+			//Üres
+		}
 
-		virtual ~lPM_AgentView() override {}
+		virtual ~lPM_AgentView() override
+		{
+			//Üres
+		}
 	};
 
 	class lPM_CoinView : public lPM_AgentView, public liPM_CoinObserver
@@ -62,7 +68,7 @@ private:
 
 		virtual void RewardReceived(unsigned int reward) override
 		{
-			//std::cout << "Reward: " << reward << std::endl;
+			//Itt tudnánk értesülni arról, hogy a PacMan-ünk megzabált egy pínzt
 		}
 
 		lPM_PacManView(li2DElement *drawable):lPM_AgentView(drawable)
@@ -70,7 +76,10 @@ private:
 			Drawable->SetColor(lrColor(1.0,1.0,0.0,1.0));
 		}
 
-		virtual ~lPM_PacManView() override {}
+		virtual ~lPM_PacManView() override
+		{
+			//Üres
+		}
 	};
 
 	class lPM_AgentSubscriber : public liPM_Visitor
@@ -86,7 +95,8 @@ private:
 		{
 			if(NewObserver == nullptr)
 			{
-				NewObserver = new lPM_AgentView(GraphicalView.ElementFactory.CreateRectangle({0*dS + dS/2.0,0*dS + dS/2.0},dS,dS));
+				lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
+				NewObserver = new lPM_AgentView(GraphicalView.ElementFactory.CreateRectangle(NewPosition,dS,dS));
 			}
 			//
 			agent->Subscribe(NewObserver);
@@ -95,7 +105,8 @@ private:
 
 		virtual void Visit(liPM_PacMan *pac_man) override
 		{
-			lPM_PacManView *PacManView = new lPM_PacManView(GraphicalView.ElementFactory.CreateRectangle({0*dS + dS/2.0,0*dS + dS/2.0},dS,dS));
+			lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
+			lPM_PacManView *PacManView = new lPM_PacManView(GraphicalView.ElementFactory.CreateRectangle(NewPosition,dS,dS));
 			//
 			pac_man->Subscribe(PacManView);
 			NewObserver = PacManView;
@@ -103,7 +114,8 @@ private:
 
 		virtual void Visit(liPM_Coin *coin) override
 		{
-			lPM_CoinView *CoinView = new lPM_CoinView(GraphicalView.ElementFactory.CreateRectangle({0*dS + dS/2.0,0*dS + dS/2.0},dS,dS));
+			lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
+			lPM_CoinView *CoinView = new lPM_CoinView(GraphicalView.ElementFactory.CreateRectangle(NewPosition,dS,dS));
 			//
 			coin->Subscribe(CoinView);
 			NewObserver = CoinView;
@@ -111,15 +123,18 @@ private:
 
 		lPM_AgentSubscriber(lPM_GraphicalView &graphical_view)
 			:GraphicalView(graphical_view)
-		{}
+		{
+			//Üres
+		}
 
 		virtual ~lPM_AgentSubscriber() override
-		{}
+		{
+			//Üres
+		}
 	};
 
 	std::list<lPM_AgentView *> AgentViews;
 	li2DScene::liElementFactory &ElementFactory;
-	//li2DRenderer::liDrawableFactory &DrawableFactory;
 
 public:
 
@@ -132,7 +147,7 @@ public:
 
 	virtual void LoopEnded() override
 	{
-		//std::cout << "Loop ended" << std::endl;
+		//Itt tudnánk értesülni arról, hogy a ciklus véget ért.
 	}
 
 	lPM_GraphicalView(li2DScene::liElementFactory &element_factory)

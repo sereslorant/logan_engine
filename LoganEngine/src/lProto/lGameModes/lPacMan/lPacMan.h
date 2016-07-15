@@ -1,7 +1,6 @@
 #ifndef L_PACMAN_H
 #define L_PACMAN_H
 
-#include "lPM_JSONLoader.h"
 /*
 class lPM_CommandLineView : public liPM_ModelObserver
 {
@@ -131,6 +130,9 @@ public:
 };
 */
 
+#include "lPM_Model.h"
+#include "lPM_JSONLoader.h"
+
 #include "lPM_PacManJoystickController.h"
 #include "lPM_GraphicalView.h"
 
@@ -226,7 +228,7 @@ public:
 		liJSON_Value *Map;
 		lJSON_Util::Parse(MapStream,Map);
 		//
-		lPM_JSONLoader MapLoader(Model.GetAgentFactory()/*,DrawableFactory*/,AgentController);
+		lPM_JSONLoader MapLoader(Model.GetAgentFactory(),AgentController);
 		Map->Accept(MapLoader);
 		//
 		//Model.Subscribe(&CommandLineView);

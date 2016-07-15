@@ -18,12 +18,6 @@ protected:
 
 	std::list<liPM_AgentObserver *> AgentObservers;
 
-	/*
-	 * IDEIGLENES MEGOLDÁS
-	 */
-	//static constexpr float dS = 40.0;
-	//liView::liDrawable *Drawable;
-
 public:
 
 	int GetX()
@@ -61,8 +55,6 @@ public:
 		X += dX;
 		Y += dY;
 
-		//Drawable->SetPosition(X*dS + dS/2.0,Y*dS + dS/2.0);
-
 		for(liPM_AgentObserver *AgentObserver : AgentObservers)
 		{
 			AgentObserver->RefreshPosition(X,Y);
@@ -75,25 +67,35 @@ public:
 	}
 
 	virtual void Visit(liPM_Agent *agent) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(liPM_Coin *coin) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(liPM_PacMan *pac_man) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Accept(liPM_Visitor *visitor) override
 	{
 		visitor->Visit(this);
 	}
 
-	lPM_Agent(int x,int y,bool pass_through/*,liView::liDrawable *drawable*/)
-		:X(x),Y(y),PassThrough(pass_through)//,Drawable(drawable)
-	{}
+	lPM_Agent(int x,int y,bool pass_through)
+		:X(x),Y(y),PassThrough(pass_through)
+	{
+		//Üres
+	}
 
 	virtual ~lPM_Agent()
-	{}
+	{
+		//Üres
+	}
 };
 
 #endif // LPM_AGENT_H

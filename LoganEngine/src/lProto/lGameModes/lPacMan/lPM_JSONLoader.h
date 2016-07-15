@@ -12,11 +12,10 @@ private:
 	float dS = 40.0;
 
 	liPM_AgentFactory *AgentFactory;
+	liPM_AgentController *AgentController;
 
-	liPM_AgentController *AgentControl;
-
-	unsigned int X;
-	unsigned int Y;
+	unsigned int X = 0;
+	unsigned int Y = 0;
 
 	bool Puszcsy;
 
@@ -27,29 +26,25 @@ private:
 			/*
 			 * Itt nem csinálunk semmit.
 			 */
-			std::cout << " ";
 		}
 		else if(cell.GetValue() == "p")
 		{
-			std::cout << "O";
-			AgentFactory->AddPacMan(X,Y,/*DrawableFactory->CreateRect(0,0,dS,dS),*/AgentControl);
+			AgentFactory->AddPacMan(X,Y,AgentController);
 		}
 		else if(cell.GetValue() == "f")
 		{
-			std::cout << "@";
-			AgentFactory->AddCoin(X,Y/*,DrawableFactory->CreateRect(0,0,dS,dS)*/);
+			AgentFactory->AddCoin(X,Y);
 		}
 		else
 		{
-			std::cout << "#";
-			AgentFactory->AddAgent(X,Y,false/*,DrawableFactory->CreateRect(0,0,dS,dS)*/);
+			AgentFactory->AddAgent(X,Y,false);
 		}
 	}
 
 	void LoadRow(const liJSON_Array &row)
 	{
 		X = 0;
-		for(int i=0;i < row.Size();i++)
+		for(unsigned int i=0;i < row.Size();i++)
 		{
 			row.GetElement(i)->Accept(*this);
 			X++;
@@ -60,7 +55,7 @@ private:
 	{
 		Puszcsy = true;
 		Y = 0;
-		for(int i=0;i < pm_map.Size();i++)
+		for(unsigned int i=0;i < pm_map.Size();i++)
 		{
 			pm_map.GetElement(i)->Accept(*this);
 			std::cout << std::endl;
@@ -84,13 +79,19 @@ public:
 	}
 
 	virtual void Visit(const liJSON_Integer &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(const liJSON_Double &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(const liJSON_Bool &param) override
-	{}
+	{
+		//Üres
+	}
 
 
 	virtual void Visit(const liJSON_String &param) override
@@ -99,10 +100,14 @@ public:
 	}
 
 	virtual void Visit(const liJSON_Object &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void VisitNull(const liJSON_Value &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(liJSON_Array &param) override
 	{
@@ -117,13 +122,19 @@ public:
 	}
 
 	virtual void Visit(liJSON_Integer &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(liJSON_Double &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(liJSON_Bool &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void Visit(liJSON_String &param) override
 	{
@@ -131,19 +142,25 @@ public:
 	}
 
 	virtual void Visit(liJSON_Object &param) override
-	{}
+	{
+		//Üres
+	}
 
 	virtual void VisitNull(liJSON_Value &param) override
-	{}
+	{
+		//Üres
+	}
 
-	lPM_JSONLoader(liPM_AgentFactory *agent_factory/*,liView::liDrawableFactory *drawable_factory*/,liPM_AgentController *agent_control)
-		:AgentFactory(agent_factory)/*,DrawableFactory(drawable_factory)*/,AgentControl(agent_control)
+	lPM_JSONLoader(liPM_AgentFactory *agent_factory,liPM_AgentController *agent_control)
+		:AgentFactory(agent_factory),AgentController(agent_control)
 	{
 		Puszcsy = false;
 	}
 
 	virtual ~lPM_JSONLoader() override
-	{}
+	{
+		//Üres
+	}
 };
 
 #endif // L_JSON_LOADER_H

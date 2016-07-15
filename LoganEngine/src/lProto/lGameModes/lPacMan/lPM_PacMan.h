@@ -27,7 +27,6 @@ public:
 			{
 				Observer->RewardReceived(Reward);
 			}
-			//std::cout << "Reward = " << Reward << std::endl;
 		}
 	}
 
@@ -64,14 +63,16 @@ public:
 		}
 	}
 
-	lPM_PacMan(int x,int y/*,liView::liDrawable *drawable*/,liPM_AgentController *agent_control = nullptr)
-		:lPM_Agent(x,y,false/*,drawable*/),AgentControl(agent_control)
+	lPM_PacMan(int x,int y,liPM_AgentController *agent_control = nullptr)
+		:lPM_Agent(x,y,false),AgentControl(agent_control)
 	{
-		//Drawable->SetColor(1.0,1.0,0.0,1.0);
+		//Üres
 	}
 
 	virtual ~lPM_PacMan() override
-	{}
+	{
+		//Üres
+	}
 };
 
 #endif // LPM_PAC_MAN_H

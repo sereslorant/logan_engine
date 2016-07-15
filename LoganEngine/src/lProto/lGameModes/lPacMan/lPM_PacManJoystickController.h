@@ -72,10 +72,14 @@ public:
 
 	lPM_PacManJoystickController(liController *controller)
 		:Controller(controller)
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~lPM_PacManJoystickController() override
-	{}
+	{
+		//Üres
+	}
 };
 
 

@@ -6,8 +6,15 @@ class liPM_AgentObserver
 public:
 	virtual void RefreshPosition(int x,int y) = 0;
 
-	liPM_AgentObserver() {}
-	virtual ~liPM_AgentObserver() {}
+	liPM_AgentObserver()
+	{
+		//Üres
+	}
+
+	virtual ~liPM_AgentObserver()
+	{
+		//Üres
+	}
 };
 
 class liPM_Agent
@@ -16,10 +23,14 @@ public:
 	virtual void Subscribe(liPM_AgentObserver *agent_observer) = 0;
 
 	liPM_Agent()
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~liPM_Agent()
-	{}
+	{
+		//Üres
+	}
 };
 
 class liPM_PacManObserver
@@ -27,8 +38,15 @@ class liPM_PacManObserver
 public:
 	virtual void RewardReceived(unsigned int reward) = 0;
 
-	liPM_PacManObserver(){}
-	virtual ~liPM_PacManObserver(){}
+	liPM_PacManObserver()
+	{
+		//Üres
+	}
+
+	virtual ~liPM_PacManObserver()
+	{
+		//Üres
+	}
 };
 
 class liPM_PacMan
@@ -37,10 +55,14 @@ public:
 	virtual void Subscribe(liPM_PacManObserver *pac_man_observer) = 0;
 
 	liPM_PacMan()
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~liPM_PacMan()
-	{}
+	{
+		//Üres
+	}
 };
 
 class liPM_CoinObserver
@@ -48,8 +70,15 @@ class liPM_CoinObserver
 public:
 	virtual void CoinEaten() = 0;
 
-	liPM_CoinObserver(){}
-	virtual ~liPM_CoinObserver(){}
+	liPM_CoinObserver()
+	{
+		//Üres
+	}
+
+	virtual ~liPM_CoinObserver()
+	{
+		//Üres
+	}
 };
 
 class liPM_Coin
@@ -62,10 +91,14 @@ public:
 	virtual void Eat() = 0;
 
 	liPM_Coin()
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~liPM_Coin()
-	{}
+	{
+		//Üres
+	}
 };
 
 class liPM_Visitor
@@ -77,10 +110,14 @@ public:
 	virtual void Visit(liPM_Coin *coin) = 0;
 
 	liPM_Visitor()
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~liPM_Visitor()
-	{}
+	{
+		//Üres
+	}
 };
 
 class liPM_Visitable
@@ -90,10 +127,14 @@ public:
 	virtual void Accept(liPM_Visitor *Visitor) = 0;
 
 	liPM_Visitable()
-	{}
+	{
+		//Üres
+	}
 
 	virtual ~liPM_Visitable()
-	{}
+	{
+		//Üres
+	}
 };
 
 #endif // LI_PM_VISITOR_H
