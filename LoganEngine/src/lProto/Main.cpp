@@ -284,12 +284,16 @@ public:
 	{
 		if(Input.GetNumControllers() != 0)
 		{
-			Agents.push_back(new lPlayerAgent(World.CreateBody({0.0,0.0},{0.0,0.0}),Scene.GetElementFactory().CreateRectangle({0.0,0.0},RADIUS*2.0,RADIUS*2.0),Input.GetController(0)));
+			lmVector2D Position = {0.0,0.0};
+			lmVector2D Velocity = {0.0,0.0};
+			Agents.push_back(new lPlayerAgent(World.CreateBody(Position,Velocity),Scene.GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0),Input.GetController(0)));
 		}
 		//
 		for(unsigned int i=0;i < 5;i++)
 		{
-			Agents.push_back(new lAgent(World.CreateBody({100 + i*80.0,100.0},{0.0,0.0}),Scene.GetElementFactory().CreateRectangle({0.0,0.0},RADIUS*2.0,RADIUS*2.0)));
+			lmVector2D Position = {100 + i*80.0,100.0};
+			lmVector2D Velocity = {0.0,0.0};
+			Agents.push_back(new lAgent(World.CreateBody(Position,Velocity),Scene.GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0)));
 		}
 	}
 	//
