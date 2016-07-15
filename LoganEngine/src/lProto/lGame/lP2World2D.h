@@ -1,7 +1,6 @@
 #ifndef L_JRPG_MAP
 #define L_JRPG_MAP
 
-#include "../../lMath/lmGeometry.h"
 #include "liWorld2D.h"
 
 #include <list>
@@ -16,7 +15,7 @@ protected:
 	//
 	std::list<liCollisionCallback2D *> CollisionCallbacks;
 	//
-	void *UserData;
+	void *UserData = nullptr;
 	//
 	lmVector2D Position;
 	lmVector2D Velocity;
