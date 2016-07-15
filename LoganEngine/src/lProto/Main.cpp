@@ -1,24 +1,6 @@
 
 #include "../lGame/lConsole.h"
-
-#include <iostream>
-
-#include <SDL2/SDL.h>
-
-#include "../lApiAdapter/lSDL2_ApiAdapter/lSDL2_Input/lSDL2_Input.h"
-#include "../lApiAdapter/lSDL2_ApiAdapter/lSDL2_Thread/lSDL2_Thread.h"
-
-
-#include "../lInterfaces/lRenderer/li2DRenderer.h"
-#include "../lInterfaces/lGame/liGame.h"
-
 #include "lGameModes/lPacMan/lPacMan.h"
-
-#include <list>
-
-#include <SDL2/SDL_opengl.h>
-
-#include "../lRenderer/lr2DScene/lr2DScene.h"
 
 
 
@@ -82,72 +64,153 @@ public:
 };
 
 
-class lGL2D_Renderer : public li2DRenderer
+#include <SDL2/SDL_opengl.h>
+
+#include "../lInterfaces/lRenderer/li2DRenderer.h"
+
+class lrLayer
 {
 private:
-	/*
-	class lGL2D_DrawableFactory : public liDrawableFactory
-	{
-	private:
-		lGL2D_Renderer &Renderer;
+	bool Enabled = false;
 
-	public:
-
-		virtual li2DElement *CreateRect(float x,float y,float width,float height) override
-		{
-			lr2DRectangle *Rect = new lr2DRectangle({x,y},width,height);
-			Renderer.DisplayList.push_back(Rect);
-
-			return Rect;
-		}
-
-		lGL2D_DrawableFactory(lGL2D_Renderer &renderer)
-			:Renderer(renderer)
-		{}
-
-		virtual ~lGL2D_DrawableFactory() override
-		{}
-	};
-	*/
-
-	//std::list<lr2DRectangle *> DisplayList;
-	//lGL2D_DrawableFactory DrawableFactory;
-	li2DScene *Scene = nullptr;
+	virtual void DrawScene() = 0;
 
 public:
-	/*
-	virtual liDrawableFactory &GetDrawableFactory() override
+
+	void Enable()
 	{
-		return DrawableFactory;
+		Enabled = true;
 	}
-	*/
-	virtual void SetScene(li2DScene *scene) override
+
+	void Disable()
 	{
-		Scene = scene;
+		Enabled = false;
+	}
+
+	void Draw()
+	{
+		if(Enabled)
+		{
+			DrawScene();
+		}
+	}
+
+	lrLayer(){}
+	virtual ~lrLayer(){}
+};
+
+class lGL2D_SceneDrawer : public li2DSceneDrawer,public li2DSceneVisitor
+{
+public:
+	//
+	virtual void VisitRectangle(li2DRectangle &rectangle) override
+	{
+		glBegin(GL_QUADS);
+
+		glVertex2f(rectangle.GetPosition()[0]							,rectangle.GetPosition()[1]);
+		glVertex2f(rectangle.GetPosition()[0] + rectangle.GetWidth()	,rectangle.GetPosition()[1]);
+		glVertex2f(rectangle.GetPosition()[0] + rectangle.GetWidth()	,rectangle.GetPosition()[1] + rectangle.GetHeight());
+		glVertex2f(rectangle.GetPosition()[0]							,rectangle.GetPosition()[1] + rectangle.GetHeight());
+
+		glEnd();
 	}
 	//
-	virtual void Render() override
+	virtual void Draw(li2DElement &element) override
+	{
+		if(!element.IsHidden())
+		{
+			glColor3f(element.GetColor().GetRed(),element.GetColor().GetGreen(),element.GetColor().GetBlue());
+
+			element.Accept(*this);
+		}
+	}
+	//
+	lGL2D_SceneDrawer(){}
+	virtual ~lGL2D_SceneDrawer(){}
+};
+
+class lGL2D_Layer : public lrLayer
+{
+private:
+	li2DScene *Scene = nullptr;
+	li2DCamera *Camera = nullptr;
+
+	virtual void DrawScene() override
 	{
 		if(Scene->HasBackgroundColor())
 		{
 			glClearColor(Scene->GetBackgroundColor().GetRed(),Scene->GetBackgroundColor().GetGreen(),Scene->GetBackgroundColor().GetBlue(),Scene->GetBackgroundColor().GetAlpha());
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
+		//
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(Camera->GetPosition()[0],
+				Camera->GetPosition()[0] + Camera->GetWidth(),
+				Camera->GetPosition()[1] + Camera->GetHeight(),
+				Camera->GetPosition()[1],
+				-1,1);
 
+		glMatrixMode(GL_MODELVIEW);
+
+		lGL2D_SceneDrawer SceneDrawer;
+		Scene->Draw(SceneDrawer);
+	}
+
+public:
+
+	void SetScene(li2DScene *scene)
+	{
+		Scene = scene;
+	}
+
+	void SetCamera(li2DCamera *camera)
+	{
+		Camera = camera;
+	}
+
+	lGL2D_Layer(){}
+	virtual ~lGL2D_Layer() override {}
+};
+
+class lGL2D_Renderer : public li2DRenderer
+{
+private:
+	//
+	//li2DScene *Scene = nullptr;
+	lGL2D_Layer Layer;
+	//
+public:
+
+	virtual void SetScene(li2DScene *scene) override
+	{
+		Layer.SetScene(scene);
+	}
+
+	virtual void SetCamera(li2DCamera *camera) override
+	{
+		Layer.SetCamera(camera);
+	}
+	//
+	virtual void Render() override
+	{
+		/*
+		if(Scene->HasBackgroundColor())
+		{
+			glClearColor(Scene->GetBackgroundColor().GetRed(),Scene->GetBackgroundColor().GetGreen(),Scene->GetBackgroundColor().GetBlue(),Scene->GetBackgroundColor().GetAlpha());
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
+		//
         glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
         glOrtho(0,800,600,0,-1,1);
-        /*
-		for(lr2DRectangle *Rect : DisplayList)
-		{
-			Rect->Draw();
-		}
-		*/
+        //
 		Scene->Draw();
+		*/
+		Layer.Draw();
 	}
 
 	lGL2D_Renderer()
-		//:DrawableFactory(*this)
 	{
 		glClearColor(1,1,1,1);
 		glViewport(0,0,800,600);
@@ -156,188 +219,25 @@ public:
 		//
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		Layer.Enable();
 	}
 
 	virtual ~lGL2D_Renderer() override
 	{
-    	/*
-    	for(lr2DRectangle *I : DisplayList)
-		{
-			delete I;
-		}
-		*/
+    	//
 	}
 };
 
-#include "../lGame/lGame.h"
-/*
-class lGameMode : public liGameMode
-{
-public:
-	virtual void Logic(double dt) override
-	{
-		std::cout << "8==========D" << std::endl;
-	}
-
-	lGameMode(){}
-	virtual ~lGameMode() override{}
-};
-*/
-#include "lGame/liWorld2D.h"
-
-class lP2ProtoGameMode : public liGameMode
-{
-protected:
-	liInput &Input;
-	//
-	liWorld2D &World;
-	//li2DRenderer::liDrawableFactory &DrawableFactory;
-	li2DScene &Scene;
-	//
-	constexpr static lmScalar RADIUS = 25.0;
-	//
-	class lAgent
-	{
-	protected:
-		//
-		liBody2D *Body;
-		li2DElement *Element;
-		//
-	public:
-		//
-		virtual void Step(double dt)
-		{
-			Element->SetPosition(Body->GetPosition() - lmVector2D({RADIUS,RADIUS}));
-		}
-		//
-		lAgent(liBody2D *body,li2DElement *element)
-			:Body(body),Element(element)
-		{
-			lGetCircle GetCircle;
-			Body->GetCollisionShape()->Accept(&GetCircle);
-			//
-			liCircle *Circle_I = GetCircle.GetCircle();
-			Circle_I->SetRadius(RADIUS);
-		}
-		//
-		virtual ~lAgent(){}
-	};
-	//
-	class lPlayerAgent : public lAgent
-	{
-	protected:
-		liController *Controller;
-		float Speed = 100.0;
-		//
-	public:
-		//
-		virtual void Step(double dt) override
-		{
-			lmVector2D NewVelocity = {0.0,0.0};
-			if((Controller->GetAxis(1)->GetValue() / (float)Controller->GetAxis(1)->GetMaxValue()) > 0.01)
-			{
-				NewVelocity += {0.0, Speed};
-			}
-			//
-			if((Controller->GetAxis(1)->GetValue() / (float)Controller->GetAxis(1)->GetMaxValue()) < -0.01)
-			{
-				NewVelocity += {0.0,-Speed};
-			}
-			//
-			if((Controller->GetAxis(0)->GetValue() / (float)Controller->GetAxis(0)->GetMaxValue()) > 0.01)
-			{
-				NewVelocity += { Speed,0.0};
-			}
-			//
-			if((Controller->GetAxis(0)->GetValue() / (float)Controller->GetAxis(0)->GetMaxValue()) < -0.01)
-			{
-				NewVelocity += {-Speed,0.0};
-			}
-			//
-			Body->SetVelocity(NewVelocity);
-			//
-			lAgent::Step(dt);
-		}
-		//
-		lPlayerAgent(liBody2D *body,li2DElement *element,liController *controller)
-			:lAgent(body,element),Controller(controller)
-		{}
-		//
-		virtual ~lPlayerAgent() override
-		{}
-	};
-	//
-	std::list<lAgent *> Agents;
-	//
-public:
-	//
-	virtual void Logic(double dt) override
-	{
-		for(lAgent *Agent : Agents)
-		{
-			Agent->Step(dt);
-		}
-	}
-	//
-	lP2ProtoGameMode(liInput &input,liWorld2D &world,li2DScene &scene)
-		:Input(input),World(world),Scene(scene)
-	{
-		if(Input.GetNumControllers() != 0)
-		{
-			lmVector2D Position = {0.0,0.0};
-			lmVector2D Velocity = {0.0,0.0};
-			Agents.push_back(new lPlayerAgent(World.CreateBody(Position,Velocity),Scene.GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0),Input.GetController(0)));
-		}
-		//
-		for(unsigned int i=0;i < 5;i++)
-		{
-			lmVector2D Position = {100 + i*80.0,100.0};
-			lmVector2D Velocity = {0.0,0.0};
-			Agents.push_back(new lAgent(World.CreateBody(Position,Velocity),Scene.GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0)));
-		}
-	}
-	//
-	virtual ~lP2ProtoGameMode() override
-	{
-		for(lAgent *Agent : Agents)
-		{
-			delete Agent;
-		}
-	}
-};
-
-class lP2ProtoGame : public lGame
-{
-protected:
-	//
-	liWorld2D *World;
-	bool SimulationPaused = false;
-	//
-public:
-	//
-	virtual void Step() override
-	{
-		if(!SimulationPaused)
-		{
-			World->Step(dt);
-		}
-		//
-		GameMode->Logic(dt);
-	}
-	//
-	lP2ProtoGame(liConsole &console,liGameMode *game_mode,li2DScene *scene,liWorld2D *world)
-		:lGame(console,game_mode,scene),World(world)
-	{
-		//
-	}
-	//
-	virtual ~lP2ProtoGame() override
-	{
-		delete World;
-	}
-};
-
+#include "lGame/lP2Game.h"
 #include "lGame/lP2World2D.h"
+#include "../lRenderer/lr2DScene/lr2DScene.h"
+
+#include <SDL2/SDL.h>
+
+#include "../lInterfaces/liApiAdapter.h"
+
+#include <iostream>
 
 class lP2_Program
 {
@@ -387,8 +287,8 @@ public:
 			lConsole *RunnableConsole = new lConsole(std::cin,std::cout,std::cerr);
 			Console = RunnableConsole;
 			//
-			ConsoleThread = new lSDL2_Thread(RunnableConsole);
-			//ConsoleThread->SetRunnable(Console);
+			ConsoleThread = ApiAdapter.GetThreadFactory().CreateThread();
+			ConsoleThread->SetRunnable(RunnableConsole);
 		}
 		else
 		{
@@ -399,15 +299,17 @@ public:
 		li2DScene *Scene = new lr2DScene;
 		Scene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
 		Renderer->SetScene(Scene);
-		//*
-		liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),Scene->GetElementFactory(),0.125);//new lGameMode();
-		Game = new lGame(*Console,GameMode,Scene);
-		// */
-		/*
-		liWorld2D *World = new lP2World2D;
-		liGameMode *GameMode = new lP2ProtoGameMode(ApiAdapter.GetInput(),*World,*Scene);
-		Game = new lP2ProtoGame(*Console,GameMode,Scene,World);
-		// */
+		li2DCamera *Camera = new lr2DCamera({0.0,0.0},800,600);
+		Renderer->SetCamera(Camera);
+		#ifdef PAC_MAN
+			std::cout << "Puszcsyka!" << std::endl;
+			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),Scene->GetElementFactory(),0.125);//new lGameMode();
+			Game = new lGame(*Console,GameMode,Scene,Camera);
+		#else
+			liWorld2D *World = new lP2World2D;
+			liGameMode *GameMode = new lP2ProtoGameMode(ApiAdapter.GetInput(),*World,*Scene,*Camera);
+			Game = new lP2ProtoGame(*Console,GameMode,Scene,Camera,World);
+		#endif
     }
 
     ~lP2_Program()
@@ -417,6 +319,7 @@ public:
 		//
 		if(ConsoleThread != nullptr)
 			{delete ConsoleThread;}
+		//
 		delete Console;
     }
 };
@@ -442,9 +345,9 @@ int main(int argc, char *argv[])
 	lSDL2_ApiAdapter ApiAdapter(Settings);
 
 	lP2_Program Program(ApiAdapter);
-	//
+
 	Program.MainLoop();
 	//fclose(stdin);
-	//
+
 	return 0;
 }

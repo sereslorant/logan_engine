@@ -10,6 +10,9 @@ public:
 	virtual const lmVector2D &GetPosition() = 0;
 	virtual void SetPosition(const lmVector2D &position) = 0;
 
+	virtual float GetWidth() = 0;
+	virtual float GetHeight() = 0;
+
 	li2DCamera(){}
 	virtual ~li2DCamera(){}
 };
@@ -29,7 +32,7 @@ class li2DSceneVisitor
 {
 public:
 	//
-	virtual void VisitRectangle(li2DRectangle *Rrectangle) = 0;
+	virtual void VisitRectangle(li2DRectangle &rectangle) = 0;
 	//
 	li2DSceneVisitor(){}
 	virtual ~li2DSceneVisitor(){}
@@ -40,13 +43,24 @@ class li2DElement
 public:
 	virtual void SetPosition(const lmVector2D &position) = 0;
 	virtual void SetColor(const liColor &color) = 0;
+	virtual const liColor &GetColor() = 0;
 	virtual void Show() = 0;
 	virtual void Hide() = 0;
+	virtual bool IsHidden() = 0;
 	//
 	virtual void Accept(li2DSceneVisitor &visitor) = 0;
 	//
 	li2DElement(){}
 	virtual ~li2DElement(){}
+};
+
+class li2DSceneDrawer
+{
+public:
+	virtual void Draw(li2DElement &element) = 0;
+
+	li2DSceneDrawer(){}
+	virtual ~li2DSceneDrawer(){}
 };
 
 class li2DScene
@@ -71,7 +85,7 @@ public:
 	virtual liElementFactory &GetElementFactory() = 0;
 	//
 	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	virtual void Draw() = 0;
+	virtual void Draw(li2DSceneDrawer &scene_visitor) = 0;
 	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//
 	li2DScene(){}
@@ -95,6 +109,7 @@ public:
 
 	//virtual liDrawableFactory &GetDrawableFactory() = 0;
 	virtual void SetScene(li2DScene *scene) = 0;
+	virtual void SetCamera(li2DCamera *camera) = 0;
 	virtual void Render() = 0;
 
 	li2DRenderer(){}

@@ -1,0 +1,4 @@
+#ifndef L_SPACE_SHOOTER_H
+#define L_SPACE_SHOOTER_H
+
+#endif // L_SPACE_SHOOTER_H

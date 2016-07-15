@@ -14,6 +14,9 @@ class lr2DCamera : public li2DCamera
 private:
 	lmVector2D		Position;
 
+	float Width;
+	float Height;
+
 public:
 	virtual const lmVector2D &GetPosition() override
 	{
@@ -24,6 +27,17 @@ public:
 	{
 		Position = position;
 	}
+
+	virtual float GetWidth() override
+	{
+		return Width;
+	}
+
+	virtual float GetHeight() override
+	{
+		return Height;
+	}
+
 	/*
 	bool IsEnabled()
 	{
@@ -41,8 +55,8 @@ public:
 	}
 	*/
 
-	lr2DCamera(const lmVector2D &position)
-		:Position(position)
+	lr2DCamera(const lmVector2D &position,float width,float height)
+		:Position(position),Width(width),Height(height)
 	{
 		//
 	}
@@ -73,6 +87,11 @@ public:
 		Color = color;
 	}
 
+	virtual const liColor &GetColor() override
+	{
+		return Color;
+	}
+
 	virtual void Show() override
 	{
 		Hidden = false;
@@ -83,7 +102,10 @@ public:
 		Hidden = true;
 	}
 
-	virtual void Draw() = 0;
+	virtual bool IsHidden() override
+	{
+		return Hidden;
+	}
 
 	lr2DElement(const lmVector2D &position)
 		:Position(position),Color(0.0,0.0,0.0,0.0)
@@ -113,7 +135,7 @@ public:
 	*/
 	virtual const lmVector2D &GetPosition() override
 	{
-		return GetPosition();
+		return Position;
 	}
 
 	virtual float GetWidth() override
@@ -128,24 +150,7 @@ public:
 
 	virtual void Accept(li2DSceneVisitor &visitor) override
 	{
-		visitor.VisitRectangle(this);
-	}
-
-	void Draw()
-	{
-		if(!Hidden)
-		{
-			glColor3f(Color.GetRed(),Color.GetGreen(),Color.GetBlue());
-
-			glBegin(GL_QUADS);
-
-			glVertex2f(Position[0]			,Position[1]);
-			glVertex2f(Position[0] + Width	,Position[1]);
-			glVertex2f(Position[0] + Width	,Position[1] + Height);
-			glVertex2f(Position[0]			,Position[1] + Height);
-
-			glEnd();
-		}
+		visitor.VisitRectangle(*this);
 	}
 
 	lr2DRectangle(const lmVector2D &position,float width,float height)
@@ -221,11 +226,11 @@ public:
 	}
 	//
 	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	virtual void Draw() override
+	virtual void Draw(li2DSceneDrawer &scene_drawer) override
 	{
 		for(lr2DElement *Element : Elements)
 		{
-			Element->Draw();
+			scene_drawer.Draw(*Element);
 		}
 	}
 	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

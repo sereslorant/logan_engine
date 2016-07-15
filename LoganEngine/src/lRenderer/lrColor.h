@@ -1,6 +1,8 @@
 #ifndef LR_COLOR_H
 #define LR_COLOR_H
 
+#include "../lInterfaces/lRenderer/liColor.h"
+
 /** \todo Dokumentálni kéne.
  *
  * \author Seres Lóránt Gábor

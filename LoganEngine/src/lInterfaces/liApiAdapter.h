@@ -3,6 +3,7 @@
 
 #include "liInput.h"
 #include "liFrameLimiter.h"
+#include "liThread.h"
 
 /** \brief Ez a class felelős az összes platformspecifikus rendszerhívás (ablakkészítés, input, output, stb.) összefogásáért.
  *
@@ -42,6 +43,8 @@ public:
      *
      */
     //virtual liResourceManager *GetResourceManager() = 0;
+
+    virtual liThreadFactory &GetThreadFactory() = 0;
 
     virtual void PollInput() = 0;
 

@@ -7,6 +7,7 @@
 
 #include "lSDL2_Input/lSDL2_Input.h"
 #include "lSDL2_FrameLimiter.h"
+#include "lSDL2_Thread/lSDL2_Thread.h"
 
 #include <fstream>
 #include <string>
@@ -63,7 +64,8 @@ public:
 private:
     lSDL2_Input		*Input = nullptr;			/**< Az inputkezelő példányára mutató pointer */
     lSDL2_FrameLimiter	FrameLimiter;	/**< A frame limiter példányára mutató pointer */
-	//
+	lSDL2_ThreadFactory ThreadFactory;
+    //
     int Error; //Integer, amelynek az egyes bitjeit 1-esbe állítjuk, ha valami hiba van.
 	//
     SDL_Window *Window; //Az SDL Window
@@ -121,6 +123,21 @@ public:
 	//
     //int GetError();
     //
+    virtual liThreadFactory &GetThreadFactory() override
+    {
+    	return ThreadFactory;
+    }
+
+	virtual void PollInput() override
+	{
+		Input->PollInput();
+	}
+
+    virtual void SwapBuffers() override
+    {
+		SDL_GL_SwapWindow(Window);
+	}
+    //
     void PrintStatus(std::ostream &out)
     {
 		if(Error == ERR_OK)
@@ -144,16 +161,6 @@ public:
 		}
 		*/
 		out << std::endl;
-	}
-
-	virtual void PollInput() override
-	{
-		Input->PollInput();
-	}
-
-    virtual void SwapBuffers() override
-    {
-		SDL_GL_SwapWindow(Window);
 	}
 
 

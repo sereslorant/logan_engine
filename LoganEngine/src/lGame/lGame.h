@@ -9,7 +9,15 @@ class lGame : public liGame
 protected:
 	liConsole &Console;
 	liGameMode *GameMode;
+
+	/*
+	 * TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 */
 	li2DScene *Scene;
+	li2DCamera *Camera;
+	/*
+	 * TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 */
 
 	const float dt = 1.0/60.0;
 
@@ -20,8 +28,8 @@ public:
 		GameMode->Logic(dt);
 	}
 
-	lGame(liConsole &console,liGameMode *game_mode,li2DScene *scene)
-		:Console(console),GameMode(game_mode),Scene(scene)
+	lGame(liConsole &console,liGameMode *game_mode,li2DScene *scene,li2DCamera *camera)
+		:Console(console),GameMode(game_mode),Scene(scene),Camera(camera)
 	{
 		//Üres függvénytörzs
 	}
@@ -29,35 +37,11 @@ public:
 	virtual ~lGame() override
 	{
 		delete GameMode;
+
 		delete Scene;
+		delete Camera;
 	}
 };
-
-/*
- * Ezen még elmélkedni kell egy sort!!!
- */
-/*
-#include "../lInterfaces/lRenderer/li2DRenderer.h"
-
-class lGame2D : public lGame
-{
-protected:
-	li2DRenderer &Renderer;
-
-public:
-
-	lGame2D(liGameMode &game_mode,liConsole &console,li2DRenderer &renderer)
-		:lGame(game_mode,console),Renderer(renderer)
-	{
-		//Üres függvénytörzs
-	}
-
-	virtual ~lGame2D() override
-	{
-		//Üres függvénytörzs
-	}
-};
-*/
 
 #endif // L_GAME_H
 

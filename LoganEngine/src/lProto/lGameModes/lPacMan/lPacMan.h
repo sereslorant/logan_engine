@@ -138,8 +138,11 @@ public:
 
 #include <sstream>
 
-#include "../../../lGame/lTimer.h"
+#include "../../../lInterfaces/lGame/liGame.h"
+#include "../../../lInterfaces/lRenderer/li2DRenderer.h"
 #include "../../../lInterfaces/liApiAdapter.h"
+
+#include "../../../lGame/lTimer.h"
 
 class lPM_Game : public liGameMode
 {
@@ -148,16 +151,16 @@ protected:
 	class lPacManStepCallback : public liEventCallback
 	{
 	private:
-		lPM_Game &Game;
+		lPM_Model &Model;
 
 	public:
 		virtual void Callback() override
 		{
-			Game.Model.Step();
+			Model.Step();
 		}
 
-		lPacManStepCallback(lPM_Game &game)
-			:Game(game)
+		lPacManStepCallback(lPM_Model &model)
+			:Model(model)
 		{}
 
 		virtual ~lPacManStepCallback() override
@@ -189,7 +192,7 @@ public:
 		Timer = new lTimer(time_step,true);
 		Timer->Enable();
 		//
-		PacManStepCallback = new lPacManStepCallback(*this);
+		PacManStepCallback = new lPacManStepCallback(Model);
 		Timer->GetLimitReachedEvent()->AddCallback(PacManStepCallback);
 		//
 		if(input.GetNumControllers() > 0)

@@ -2,6 +2,10 @@
 #define LPM_GRAPHICAL_VIEW_H
 
 #include "lPM_Model.h"
+
+#include "../../../lInterfaces/lRenderer/li2DRenderer.h"
+
+#include "../../../lMath/lMath.h"
 #include "../../../lRenderer/lrColor.h"
 
 class lPM_GraphicalView : public liPM_ModelObserver
