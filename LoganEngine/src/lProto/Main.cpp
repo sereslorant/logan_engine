@@ -302,7 +302,6 @@ public:
 		li2DCamera *Camera = new lr2DCamera({0.0,0.0},800,600);
 		Renderer->SetCamera(Camera);
 		#ifdef PAC_MAN
-			std::cout << "Puszcsyka!" << std::endl;
 			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),Scene->GetElementFactory(),0.125);//new lGameMode();
 			Game = new lGame(*Console,GameMode,Scene,Camera);
 		#else
