@@ -216,37 +216,5 @@ public:
 	}
 };
 
-class lP2ProtoGame : public lGame
-{
-protected:
-	//
-	liWorld2D *World;
-	bool SimulationPaused = false;
-	//
-public:
-	//
-	virtual void Step() override
-	{
-		if(!SimulationPaused)
-		{
-			World->Step(dt);
-		}
-		//
-		GameMode->Logic(dt);
-	}
-	//
-	lP2ProtoGame(liConsole &console,liGameMode *game_mode,li2DRenderer &renderer,liWorld2D *world)
-		:lGame(console,game_mode,renderer),World(world)
-	{
-		//
-	}
-	//
-	virtual ~lP2ProtoGame() override
-	{
-		delete World;
-	}
-};
-
-
 #endif //LP2_GAME_H
 

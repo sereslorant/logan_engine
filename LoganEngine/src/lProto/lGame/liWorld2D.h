@@ -113,7 +113,7 @@ public:
 	//
 	virtual liBody2D *CreateBody(const lmVector2D &position,const lmVector2D &velocity) = 0;
 	//
-	virtual void Step(lmScalar dt) = 0;
+	virtual void Simulate(lmScalar dt) = 0;
 	//
 	liWorld2D()
 		{}

@@ -34,5 +34,38 @@ public:
 	}
 };
 
+template<class liWorld_T>
+class lSimulationGame : public lGame
+{
+protected:
+	//
+	liWorld_T *World;
+	bool SimulationPaused = false;
+	//
+public:
+	//
+	virtual void Step() override
+	{
+		if(!SimulationPaused)
+		{
+			World->Simulate(dt);
+		}
+		//
+		GameMode->Logic(dt);
+	}
+	//
+	lSimulationGame(liConsole &console,liGameMode *game_mode,li2DRenderer &renderer,liWorld_T *world)
+		:lGame(console,game_mode,renderer),World(world)
+	{
+		//
+	}
+	//
+	virtual ~lSimulationGame() override
+	{
+		delete World;
+	}
+};
+
+
 #endif // L_GAME_H
 

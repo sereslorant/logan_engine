@@ -407,18 +407,14 @@ public:
 		}
 		//
 		Renderer = new lffGL2D_Renderer;
-		li2DScene *Scene = new lr2DScene;
-		//Scene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
-		//Renderer->SetScene(Scene);
-		//li2DCamera *Camera = new lr2DCamera({0.0,0.0},800,600);
-		//Renderer->SetCamera(Camera);
+		//
 		#ifdef PAC_MAN
 			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),*Renderer,0.125);//new lGameMode();
 			Game = new lGame(*Console,GameMode,*Renderer);
 		#else
 			liWorld2D *World = new lP2World2D;
 			liGameMode *GameMode = new lP2ProtoGameMode(ApiAdapter.GetInput(),*World,*Renderer);
-			Game = new lP2ProtoGame(*Console,GameMode,*Renderer,World);
+			Game = new lSimulationGame<liWorld2D>(*Console,GameMode,*Renderer,World);
 		#endif
     }
 
