@@ -72,7 +72,7 @@ public:
 			Console = new lConsoleNullObject;
 		}
 		//
-		Renderer = new lffGL2D_Renderer;
+		Renderer = new lffGLRenderer;
 		//
 		#ifdef PAC_MAN
 			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),*Renderer,0.125);//new lGameMode();

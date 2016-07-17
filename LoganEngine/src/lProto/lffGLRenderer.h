@@ -3,7 +3,7 @@
 
 #include <GL/gl.h>
 
-class lffGL2D_SceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
+class lffGL2DSceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
 {
 public:
 	//
@@ -29,8 +29,8 @@ public:
 		}
 	}
 	//
-	lffGL2D_SceneDrawer(){}
-	virtual ~lffGL2D_SceneDrawer() override {}
+	lffGL2DSceneDrawer(){}
+	virtual ~lffGL2DSceneDrawer() override {}
 };
 
 #include "../lRenderer/lrLayer.h"
@@ -64,7 +64,7 @@ private:
 		//
 		glMatrixMode(GL_MODELVIEW);
 		//
-		lffGL2D_SceneDrawer SceneDrawer;
+		lffGL2DSceneDrawer SceneDrawer;
 		Scene->Draw(SceneDrawer);
 	}
 
@@ -168,7 +168,7 @@ public:
 	}
 };
 
-class lffGL2D_Renderer : public li2DRenderer
+class lffGLRenderer : public li2DRenderer
 {
 private:
 	//
@@ -186,7 +186,7 @@ public:
 		MainFramebuffer.Draw();
 	}
 
-	lffGL2D_Renderer()
+	lffGLRenderer()
 		:MainFramebuffer(800,600)
 	{
 		glShadeModel(GL_SMOOTH);
@@ -195,7 +195,7 @@ public:
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	virtual ~lffGL2D_Renderer() override
+	virtual ~lffGLRenderer() override
 	{
     	//
 	}
