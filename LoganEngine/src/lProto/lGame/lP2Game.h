@@ -1,6 +1,7 @@
 #ifndef LP2_GAME_H
 #define LP2_GAME_H
 
+#include "../../lRenderer/lr2DScene/lr2DScene.h"
 #include "../../lInterfaces/lRenderer/li2DRenderer.h"
 #include "../../lGame/lGame.h"
 #include "liWorld2D.h"
@@ -10,11 +11,42 @@
 class lP2ProtoGameMode : public liGameMode
 {
 protected:
+	class Set2DLayer : public liLayerVisitor
+	{
+	private:
+		li2DScene *Scene;
+		li2DCamera *Camera;
+
+	public:
+
+		virtual void Visit2DLayer(li2DLayer &layer) override
+		{
+			layer.SetScene(Scene);
+			layer.SetCamera(Camera);
+		}
+
+		Set2DLayer(li2DScene *scene,li2DCamera *camera)
+			:Scene(scene),Camera(camera)
+		{}
+
+		virtual ~Set2DLayer() override {}
+	};
+
 	liInput &Input;
 	//
 	liWorld2D &World;
-	li2DScene &GameScene;
-	//li2DScene &GuiScene;
+	li2DRenderer &Renderer;
+	//
+	liViewport *Viewport;
+	//
+	liLayer *GameLayer;
+	liLayer *GuiLayer;
+	//
+	lr2DScene *GameScene;
+	lr2DCamera *GameCamera;
+	//
+	lr2DScene *GuiScene;
+	lr2DCamera *GuiCamera;
 	//
 	constexpr static lmScalar RADIUS = 25.0;
 	//
@@ -126,21 +158,46 @@ public:
 		}
 	}
 	//
-	lP2ProtoGameMode(liInput &input,liWorld2D &world,li2DScene &game_scene,li2DCamera &game_camera)
-		:Input(input),World(world),GameScene(game_scene)
+	lP2ProtoGameMode(liInput &input,liWorld2D &world,li2DRenderer &renderer)
+		:Input(input),World(world),Renderer(renderer)
 	{
+		unsigned int Width = Renderer.GetMainFramebuffer().GetWidth();
+		unsigned int Height = Renderer.GetMainFramebuffer().GetHeight();
+		//
+		Viewport = Renderer.GetMainFramebuffer().CreateViewport(0,0,Width,Height);
+		//
+		//
+		GameScene = new lr2DScene;
+		GameScene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
+		GameCamera = new lr2DCamera({0.0,0.0},Width,Height);
+		//
+		GuiScene = new lr2DScene;
+		GuiCamera = new lr2DCamera({0.0,0.0},Width,Height);
+		//
+		Set2DLayer SetGameLayer(GameScene,GameCamera);
+		Set2DLayer SetGuiLayer(GuiScene,GuiCamera);
+		//
+		GameLayer = Viewport->Create2DLayer();
+		GuiLayer = Viewport->Create2DLayer();
+		//
+		GameLayer->Accept(SetGameLayer);
+		GuiLayer->Accept(SetGuiLayer);
+		//
+		GameLayer->Enable();
+		//GuiLayer->Enable();
+		//
 		if(Input.GetNumControllers() != 0)
 		{
 			lmVector2D Position = {0.0,0.0};
 			lmVector2D Velocity = {0.0,0.0};
-			Agents.push_back(new lPlayerAgent(World.CreateBody(Position,Velocity),GameScene.GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0),Input.GetController(0),&game_camera));
+			Agents.push_back(new lPlayerAgent(World.CreateBody(Position,Velocity),GameScene->GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0),Input.GetController(0),GameCamera));
 		}
 		//
 		for(unsigned int i=0;i < 5;i++)
 		{
 			lmVector2D Position = {100 + i*80.0,100.0};
 			lmVector2D Velocity = {0.0,0.0};
-			Agents.push_back(new lAgent(World.CreateBody(Position,Velocity),GameScene.GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0)));
+			Agents.push_back(new lAgent(World.CreateBody(Position,Velocity),GameScene->GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0)));
 		}
 	}
 	//
@@ -150,6 +207,12 @@ public:
 		{
 			delete Agent;
 		}
+		//
+		delete GameScene;
+		delete GameCamera;
+		//
+		delete GuiScene;
+		delete GuiCamera;
 	}
 };
 
@@ -172,8 +235,8 @@ public:
 		GameMode->Logic(dt);
 	}
 	//
-	lP2ProtoGame(liConsole &console,liGameMode *game_mode,li2DScene *scene,li2DCamera *camera,liWorld2D *world)
-		:lGame(console,game_mode,scene,camera),World(world)
+	lP2ProtoGame(liConsole &console,liGameMode *game_mode,li2DRenderer &renderer,liWorld2D *world)
+		:lGame(console,game_mode,renderer),World(world)
 	{
 		//
 	}

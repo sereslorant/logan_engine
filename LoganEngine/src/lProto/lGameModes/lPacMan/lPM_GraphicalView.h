@@ -3,6 +3,7 @@
 
 #include "lPM_Model.h"
 
+#include "../../../lRenderer/lr2DScene/lr2DScene.h"
 #include "../../../lInterfaces/lRenderer/li2DRenderer.h"
 
 #include "../../../lMath/lMath.h"
@@ -13,6 +14,28 @@ class lPM_GraphicalView : public liPM_ModelObserver
 private:
 
 	static constexpr float dS = 40.0;
+
+
+	class Set2DLayer : public liLayerVisitor
+	{
+	private:
+		li2DScene *Scene;
+		li2DCamera *Camera;
+
+	public:
+
+		virtual void Visit2DLayer(li2DLayer &layer) override
+		{
+			layer.SetScene(Scene);
+			layer.SetCamera(Camera);
+		}
+
+		Set2DLayer(li2DScene *scene,li2DCamera *camera)
+			:Scene(scene),Camera(camera)
+		{}
+
+		virtual ~Set2DLayer() override {}
+	};
 
 	class lPM_AgentView : public liPM_AgentObserver
 	{
@@ -90,6 +113,7 @@ private:
 	{
 	private:
 		lPM_GraphicalView &GraphicalView;
+		li2DScene::liElementFactory &ElementFactory;
 
 		lPM_AgentView *NewObserver = nullptr;
 
@@ -100,7 +124,7 @@ private:
 			if(NewObserver == nullptr)
 			{
 				lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
-				NewObserver = new lPM_AgentView(GraphicalView.ElementFactory.CreateRectangle(NewPosition,dS,dS));
+				NewObserver = new lPM_AgentView(ElementFactory.CreateRectangle(NewPosition,dS,dS));
 			}
 			//
 			agent->Subscribe(NewObserver);
@@ -110,7 +134,7 @@ private:
 		virtual void Visit(liPM_PacMan *pac_man) override
 		{
 			lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
-			lPM_PacManView *PacManView = new lPM_PacManView(GraphicalView.ElementFactory.CreateRectangle(NewPosition,dS,dS));
+			lPM_PacManView *PacManView = new lPM_PacManView(ElementFactory.CreateRectangle(NewPosition,dS,dS));
 			//
 			pac_man->Subscribe(PacManView);
 			NewObserver = PacManView;
@@ -119,14 +143,14 @@ private:
 		virtual void Visit(liPM_Coin *coin) override
 		{
 			lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
-			lPM_CoinView *CoinView = new lPM_CoinView(GraphicalView.ElementFactory.CreateRectangle(NewPosition,dS,dS));
+			lPM_CoinView *CoinView = new lPM_CoinView(ElementFactory.CreateRectangle(NewPosition,dS,dS));
 			//
 			coin->Subscribe(CoinView);
 			NewObserver = CoinView;
 		}
 
-		lPM_AgentSubscriber(lPM_GraphicalView &graphical_view)
-			:GraphicalView(graphical_view)
+		lPM_AgentSubscriber(lPM_GraphicalView &graphical_view,li2DScene::liElementFactory &element_factory)
+			:GraphicalView(graphical_view),ElementFactory(element_factory)
 		{
 			//Üres
 		}
@@ -138,13 +162,19 @@ private:
 	};
 
 	std::list<lPM_AgentView *> AgentViews;
-	li2DScene::liElementFactory &ElementFactory;
-
+	//
+	li2DRenderer &Renderer;
+	//
+	lr2DScene *Scene;
+	lr2DCamera *Camera;
+	//
+	liViewport *Viewport;
+	liLayer *Layer;
 public:
 
 	virtual void Subscribe(lPM_Agent *agent) override
 	{
-		lPM_AgentSubscriber AgentSubscriber(*this);
+		lPM_AgentSubscriber AgentSubscriber(*this,Scene->GetElementFactory());
 		//
 		agent->Accept(&AgentSubscriber);
 	}
@@ -154,9 +184,26 @@ public:
 		//Itt tudnánk értesülni arról, hogy a ciklus véget ért.
 	}
 
-	lPM_GraphicalView(li2DScene::liElementFactory &element_factory)
-		:ElementFactory(element_factory)
-	{}
+	lPM_GraphicalView(li2DRenderer &renderer)
+		:Renderer(renderer)
+	{
+		unsigned int Width = Renderer.GetMainFramebuffer().GetWidth();
+		unsigned int Height = Renderer.GetMainFramebuffer().GetHeight();
+		//
+		Viewport = Renderer.GetMainFramebuffer().CreateViewport(0,0,Width,Height);
+		//
+		Scene = new lr2DScene;
+		Scene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
+		Camera = new lr2DCamera({0.0,0.0},Width,Height);
+		//
+		Set2DLayer SetLayer(Scene,Camera);
+		//
+		Layer = Viewport->Create2DLayer();
+		//
+		Layer->Accept(SetLayer);
+		//
+		Layer->Enable();
+	}
 
 	virtual ~lPM_GraphicalView()
 	{

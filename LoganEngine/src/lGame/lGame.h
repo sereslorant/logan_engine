@@ -3,6 +3,7 @@
 
 #include "../lInterfaces/lGame/liConsole.h"
 #include "../lInterfaces/lGame/liGame.h"
+#include "../lInterfaces/lRenderer/li2DRenderer.h"
 
 class lGame : public liGame
 {
@@ -10,14 +11,7 @@ protected:
 	liConsole &Console;
 	liGameMode *GameMode;
 
-	/*
-	 * TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 */
-	li2DScene *Scene;
-	li2DCamera *Camera;
-	/*
-	 * TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 */
+	li2DRenderer &Renderer;
 
 	const float dt = 1.0/60.0;
 
@@ -28,8 +22,8 @@ public:
 		GameMode->Logic(dt);
 	}
 
-	lGame(liConsole &console,liGameMode *game_mode,li2DScene *scene,li2DCamera *camera)
-		:Console(console),GameMode(game_mode),Scene(scene),Camera(camera)
+	lGame(liConsole &console,liGameMode *game_mode,li2DRenderer &renderer)
+		:Console(console),GameMode(game_mode),Renderer(renderer)
 	{
 		//Üres függvénytörzs
 	}
@@ -37,9 +31,6 @@ public:
 	virtual ~lGame() override
 	{
 		delete GameMode;
-
-		delete Scene;
-		delete Camera;
 	}
 };
 

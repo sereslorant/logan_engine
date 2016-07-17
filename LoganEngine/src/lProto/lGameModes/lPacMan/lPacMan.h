@@ -186,9 +186,10 @@ public:
 		Timer->Update(dt);
 	}
 
-	lPM_Game(liInput &input,li2DScene::liElementFactory &element_factory,double time_step)
-		:GraphicalView(element_factory)
+	lPM_Game(liInput &input,li2DRenderer &renderer,double time_step)
+		:GraphicalView(renderer)
 	{
+		//
 		Timer = new lTimer(time_step,true);
 		Timer->Enable();
 		//
