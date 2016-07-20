@@ -429,6 +429,9 @@ public:
 
 #include <istream>
 
+#include <cctype>
+
+
 class lJSON_StatefulParser
 {
 private:
