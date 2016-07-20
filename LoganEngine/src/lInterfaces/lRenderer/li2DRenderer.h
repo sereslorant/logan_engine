@@ -2,6 +2,7 @@
 #define LI_RENDERER_H
 
 #include "li2DScene.h"
+#include "li3DScene.h"
 
 class li2DLayer
 {
@@ -13,10 +14,25 @@ public:
 	virtual ~li2DLayer(){}
 };
 
+class li3DLayer
+{
+public:
+	//virtual void SetScene(li3DScene *scene) = 0;
+	virtual void SetFrustum(liFrustum *frustum) = 0;
+	virtual void SetCamera(li3DCamera *camera) = 0;
+
+	li3DLayer()
+	{}
+
+	virtual ~li3DLayer()
+	{}
+};
+
 class liLayerVisitor
 {
 public:
 	virtual void Visit2DLayer(li2DLayer &layer) = 0;
+	virtual void Visit3DLayer(li3DLayer &layer) = 0;
 
 	liLayerVisitor(){}
 	virtual ~liLayerVisitor(){}
@@ -39,6 +55,7 @@ class liViewport
 public:
 
 	virtual liLayer *Create2DLayer() = 0;
+	virtual liLayer *Create3DLayer() = 0;
 
 	virtual int GetX() = 0;
 	virtual int GetY() = 0;
@@ -68,15 +85,15 @@ public:
 	virtual ~liFramebuffer(){}
 };
 
-class li2DRenderer
+class liRenderer
 {
 public:
 
 	virtual liFramebuffer &GetMainFramebuffer() = 0;
 	virtual void Render() = 0;
 
-	li2DRenderer(){}
-	virtual ~li2DRenderer(){}
+	liRenderer(){}
+	virtual ~liRenderer(){}
 };
 
 #endif // LI_RENDERER_H

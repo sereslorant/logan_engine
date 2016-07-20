@@ -30,6 +30,11 @@ private:
 			layer.SetCamera(Camera);
 		}
 
+		virtual void Visit3DLayer(li3DLayer &layer) override
+		{
+			//Üres
+		}
+
 		Set2DLayer(li2DScene *scene,li2DCamera *camera)
 			:Scene(scene),Camera(camera)
 		{}
@@ -163,7 +168,7 @@ private:
 
 	std::list<lPM_AgentView *> AgentViews;
 	//
-	li2DRenderer &Renderer;
+	liRenderer &Renderer;
 	//
 	lr2DScene *Scene;
 	lr2DCamera *Camera;
@@ -184,7 +189,7 @@ public:
 		//Itt tudnánk értesülni arról, hogy a ciklus véget ért.
 	}
 
-	lPM_GraphicalView(li2DRenderer &renderer)
+	lPM_GraphicalView(liRenderer &renderer)
 		:Renderer(renderer)
 	{
 		unsigned int Width = Renderer.GetMainFramebuffer().GetWidth();

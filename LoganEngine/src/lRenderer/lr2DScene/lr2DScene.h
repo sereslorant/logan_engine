@@ -1,13 +1,9 @@
 #ifndef LR_2D_SCENE_H
 #define LR_2D_SCENE_H
 
-#include "../../lInterfaces/lRenderer/li2DRenderer.h"
+#include "../../lInterfaces/lRenderer/li2DScene.h"
 #include "../lrColor.h"
 
-//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 class lr2DCamera : public li2DCamera
 {

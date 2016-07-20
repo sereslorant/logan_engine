@@ -11,7 +11,7 @@ protected:
 	liConsole &Console;
 	liGameMode *GameMode;
 
-	li2DRenderer &Renderer;
+	liRenderer &Renderer;
 
 	const float dt = 1.0/60.0;
 
@@ -22,7 +22,7 @@ public:
 		GameMode->Logic(dt);
 	}
 
-	lGame(liConsole &console,liGameMode *game_mode,li2DRenderer &renderer)
+	lGame(liConsole &console,liGameMode *game_mode,liRenderer &renderer)
 		:Console(console),GameMode(game_mode),Renderer(renderer)
 	{
 		//Üres függvénytörzs
@@ -54,7 +54,7 @@ public:
 		GameMode->Logic(dt);
 	}
 	//
-	lSimulationGame(liConsole &console,liGameMode *game_mode,li2DRenderer &renderer,liWorld_T *world)
+	lSimulationGame(liConsole &console,liGameMode *game_mode,liRenderer &renderer,liWorld_T *world)
 		:lGame(console,game_mode,renderer),World(world)
 	{
 		//

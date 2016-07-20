@@ -23,11 +23,11 @@ public:
 	};
 	//
 	std::string  Title;
-	bool         Fullscreen;
-	unsigned int Width;
-	unsigned int Height;
+	bool         Fullscreen = false;
+	unsigned int Width = 640;
+	unsigned int Height = 480;
 	//
-	lRenderingApi RenderingApi;
+	lRenderingApi RenderingApi = OPENGL;
 	//
 	//Az SDL ablakkészítő függvényének szánt flageket állítja be a beállítások alapján.
 	void SetFlags(int *flags) const
@@ -62,7 +62,7 @@ public:
     };
 	//
 private:
-    lSDL2_Input		*Input = nullptr;			/**< Az inputkezelő példányára mutató pointer */
+    lSDL2_Input			*Input = nullptr;			/**< Az inputkezelő példányára mutató pointer */
     lSDL2_FrameLimiter	FrameLimiter;	/**< A frame limiter példányára mutató pointer */
 	lSDL2_ThreadFactory ThreadFactory;
     //

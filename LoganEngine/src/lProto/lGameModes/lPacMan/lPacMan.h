@@ -186,7 +186,7 @@ public:
 		Timer->Update(dt);
 	}
 
-	lPM_Game(liInput &input,li2DRenderer &renderer,double time_step)
+	lPM_Game(liInput &input,liRenderer &renderer,double time_step)
 		:GraphicalView(renderer)
 	{
 		//

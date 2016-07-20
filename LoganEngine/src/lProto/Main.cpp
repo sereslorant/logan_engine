@@ -25,7 +25,8 @@ private:
 	liThread *ConsoleThread = nullptr;
 
 	liGame *Game;
-	li2DRenderer *Renderer;
+	liRenderer *Renderer;
+	lrmResourceManager ResourceManager;
 
 public:
 
@@ -72,7 +73,7 @@ public:
 			Console = new lConsoleNullObject;
 		}
 		//
-		Renderer = new lffGLRenderer;
+		Renderer = new lffGLRenderer(ResourceManager);
 		//
 		#ifdef PAC_MAN
 			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),*Renderer,0.125);//new lGameMode();

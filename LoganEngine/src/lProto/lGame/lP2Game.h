@@ -2,6 +2,7 @@
 #define LP2_GAME_H
 
 #include "../../lRenderer/lr2DScene/lr2DScene.h"
+#include "../../lRenderer/lr3DScene/lr3DScene.h"
 #include "../../lInterfaces/lRenderer/li2DRenderer.h"
 #include "../../lGame/lGame.h"
 #include "liWorld2D.h"
@@ -25,6 +26,11 @@ protected:
 			layer.SetCamera(Camera);
 		}
 
+		virtual void Visit3DLayer(li3DLayer &layer) override
+		{
+			//Üres
+		}
+
 		Set2DLayer(li2DScene *scene,li2DCamera *camera)
 			:Scene(scene),Camera(camera)
 		{}
@@ -32,12 +38,41 @@ protected:
 		virtual ~Set2DLayer() override {}
 	};
 
+	class Set3DLayer : public liLayerVisitor
+	{
+	private:
+		//li3DScene *Scene;
+		liFrustum *Frustum;
+		li3DCamera *Camera;
+
+	public:
+
+		virtual void Visit2DLayer(li2DLayer &layer) override
+		{
+			//Üres
+		}
+
+		virtual void Visit3DLayer(li3DLayer &layer) override
+		{
+			//layer.SetScene(Scene);
+			layer.SetFrustum(Frustum);
+			layer.SetCamera(Camera);
+		}
+
+		Set3DLayer(/*li3DScene *scene,*/liFrustum *frustum,li3DCamera *camera)
+			:/*Scene(scene),*/Frustum(frustum),Camera(camera)
+		{}
+
+		virtual ~Set3DLayer() override {}
+	};
+
 	liInput &Input;
 	//
 	liWorld2D &World;
-	li2DRenderer &Renderer;
+	liRenderer &Renderer;
 	//
 	liViewport *Viewport;
+	liViewport *Viewport3D;
 	//
 	liLayer *GameLayer;
 	liLayer *GuiLayer;
@@ -47,6 +82,10 @@ protected:
 	//
 	lr2DScene *GuiScene;
 	lr2DCamera *GuiCamera;
+	//
+	lrFrustum *Frustum3D;
+	lr3DCamera *Camera3D;
+	liController *Controller;
 	//
 	constexpr static lmScalar RADIUS = 25.0;
 	//
@@ -137,42 +176,88 @@ protected:
 	//
 	std::list<liAgent *> Agents;
 	//
+	bool Mode = true;
+	//
 public:
 	//
 	virtual void Logic(double dt) override
 	{
-		for(auto I = Agents.begin();I != Agents.end();)
+		if(Mode)
 		{
-			if((*I)->IsRemovable())
+			if(Controller != nullptr)
 			{
-				auto J = I;
-				I++;
-				Agents.erase(J);
+				lmVector3D Displacement;
+				lmScalar Dist = 0.25;
+				if((Controller->GetAxis(1)->GetValue() / (float)Controller->GetAxis(1)->GetMaxValue()) > 0.01)
+				{
+					Displacement += Dist*Camera3D->GetDirection();
+				}
+				//
+				if((Controller->GetAxis(1)->GetValue() / (float)Controller->GetAxis(1)->GetMaxValue()) < -0.01)
+				{
+					Displacement -= Dist*Camera3D->GetDirection();
+				}
+				Camera3D->SetPosition(Camera3D->GetPosition() + Displacement);
+				//
+				float Angle = 0.0;
+				if((Controller->GetAxis(0)->GetValue() / (float)Controller->GetAxis(0)->GetMaxValue()) > 0.01)
+				{
+					Angle += PI/24.0;
+				}
+				//
+				if((Controller->GetAxis(0)->GetValue() / (float)Controller->GetAxis(0)->GetMaxValue()) < -0.01)
+				{
+					Angle -= PI/24.0;
+				}
+				Camera3D->SetYaw(Camera3D->GetYaw() + Angle);
 			}
-			else
+		}
+		else
+		{
+			for(auto I = Agents.begin();I != Agents.end();)
 			{
-				//liAgent *Agent = *I;
-				(*I)->Update(dt);
-				I++;
+				if((*I)->IsRemovable())
+				{
+					auto J = I;
+					I++;
+					Agents.erase(J);
+				}
+				else
+				{
+					//liAgent *Agent = *I;
+					(*I)->Update(dt);
+					I++;
+				}
 			}
 		}
 	}
 	//
-	lP2ProtoGameMode(liInput &input,liWorld2D &world,li2DRenderer &renderer)
+	lP2ProtoGameMode(liInput &input,liWorld2D &world,liRenderer &renderer)
 		:Input(input),World(world),Renderer(renderer)
 	{
 		unsigned int Width = Renderer.GetMainFramebuffer().GetWidth();
 		unsigned int Height = Renderer.GetMainFramebuffer().GetHeight();
 		//
-		Viewport = Renderer.GetMainFramebuffer().CreateViewport(0,0,Width,Height);
+		Viewport = Renderer.GetMainFramebuffer().CreateViewport(0,0,Width,Height/2);
+		Viewport3D = Renderer.GetMainFramebuffer().CreateViewport(0,Height/2,Width,Height/2);
 		//
+		liLayer *TestLayer = Viewport3D->Create3DLayer();
+		//
+		Frustum3D = new lrFrustum(0.5,-0.5,-0.5,0.5,100.0,1.0);
+		Camera3D = new lr3DCamera(lmVector3D({0.0,0.0,0.0}),0.0,0.0);
+		Controller = input.GetController(0);
+		//
+		Set3DLayer SetTestLayer(Frustum3D,Camera3D);
+		TestLayer->Accept(SetTestLayer);
+		//
+		TestLayer->Enable();
 		//
 		GameScene = new lr2DScene;
 		GameScene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
-		GameCamera = new lr2DCamera({0.0,0.0},Width,Height);
+		GameCamera = new lr2DCamera({0.0,0.0},Width,Height/2.0);
 		//
 		GuiScene = new lr2DScene;
-		GuiCamera = new lr2DCamera({0.0,0.0},Width,Height);
+		GuiCamera = new lr2DCamera({0.0,0.0},Width,Height/2.0);
 		//
 		Set2DLayer SetGameLayer(GameScene,GameCamera);
 		Set2DLayer SetGuiLayer(GuiScene,GuiCamera);
