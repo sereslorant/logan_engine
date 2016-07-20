@@ -14,6 +14,7 @@ class lPM_GraphicalView : public liPM_ModelObserver
 private:
 
 	static constexpr float dS = 40.0;
+	static constexpr float CoinSize = 20.0;
 
 
 	class Set2DLayer : public liLayerVisitor
@@ -148,7 +149,7 @@ private:
 		virtual void Visit(liPM_Coin *coin) override
 		{
 			lmVector2D NewPosition = {0*dS + dS/2.0,0*dS + dS/2.0};
-			lPM_CoinView *CoinView = new lPM_CoinView(ElementFactory.CreateRectangle(NewPosition,dS,dS));
+			lPM_CoinView *CoinView = new lPM_CoinView(ElementFactory.CreateRectangle(NewPosition,CoinSize,CoinSize));
 			//
 			coin->Subscribe(CoinView);
 			NewObserver = CoinView;

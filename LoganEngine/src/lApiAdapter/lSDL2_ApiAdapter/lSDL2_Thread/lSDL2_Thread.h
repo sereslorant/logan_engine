@@ -1,5 +1,5 @@
-#ifndef LSDL_THREAD_H
-#define LSDL_THREAD_H
+#ifndef LSDL2_THREAD_H
+#define LSDL2_THREAD_H
 
 #include "../../../lInterfaces/liThread.h"
 
@@ -219,4 +219,4 @@ public:
 };
 
 
-#endif // LSDL_THREAD_H
+#endif // LSDL2_THREAD_H

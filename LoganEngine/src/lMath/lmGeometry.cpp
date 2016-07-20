@@ -568,7 +568,7 @@ const unsigned int CS_RIGHT	 = 4;
 const unsigned int CS_AHEAD	 = 2;
 const unsigned int CS_BEHIND = 1;
 
-bool lmCohenSutherlandPointAABBPosition(const lmVector3D &point,const lmVector3D &aabb_min,const lmVector3D &aabb_max,unsigned int *flags = nullptr)
+void lmCohenSutherlandPointAABBPosition(const lmVector3D &point,const lmVector3D &aabb_min,const lmVector3D &aabb_max,unsigned int *flags = nullptr)
 {
 	if(flags != nullptr)
 	{
