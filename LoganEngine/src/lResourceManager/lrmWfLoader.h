@@ -47,7 +47,7 @@ public:
 /** \class lrmWfLoader
  * \brief Egy Wavefront .obj fájlt importáló osztály.
  *
- * \todo Dokumentálni kéne + tisztességesen meg kéne csinálni
+ * \todo Dokumentálni kéne + tisztességesen meg kéne csinálni + sscanf_s használata
  *
  * \author Seres Lóránt
  *

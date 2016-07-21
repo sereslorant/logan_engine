@@ -67,10 +67,10 @@ class liThreadFactory
 {
 public:
 
-	virtual liSemaphore *CreateSemaphore(unsigned int initial_value) = 0;
-	virtual liLock *CreateMutex() = 0;
-	virtual liLock *CreateSpinlock() = 0;
-	virtual liThread *CreateThread() = 0;
+	virtual liSemaphore *NewSemaphore(unsigned int initial_value) = 0;
+	virtual liLock *NewMutex() = 0;
+	virtual liLock *NewSpinlock() = 0;
+	virtual liThread *NewThread() = 0;
 
 	liThreadFactory(){}
 	virtual ~liThreadFactory(){}

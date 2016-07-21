@@ -179,22 +179,22 @@ class lSDL2_ThreadFactory : public liThreadFactory
 {
 public:
 
-	virtual liSemaphore *CreateSemaphore(unsigned int initial_value) override
+	virtual liSemaphore *NewSemaphore(unsigned int initial_value) override
 	{
 		return new lSDL2_Semaphore(initial_value);
 	}
 
-	virtual liLock *CreateMutex() override
+	virtual liLock *NewMutex() override
 	{
 		return new lSDL2_Mutex;
 	}
 
-	virtual liLock *CreateSpinlock() override
+	virtual liLock *NewSpinlock() override
 	{
 		return new lSpinlock;
 	}
 
-	virtual liThread *CreateThread() override
+	virtual liThread *NewThread() override
 	{
 		return new lSDL2_Thread(nullptr);
 	}

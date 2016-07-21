@@ -65,7 +65,7 @@ public:
 			lConsole *RunnableConsole = new lConsole(std::cin,std::cout,std::cerr);
 			Console = RunnableConsole;
 			//
-			ConsoleThread = ApiAdapter.GetThreadFactory().CreateThread();
+			ConsoleThread = ApiAdapter.GetThreadFactory().NewThread();
 			ConsoleThread->SetRunnable(RunnableConsole);
 		}
 		else

@@ -115,9 +115,9 @@ public:
 		if(I == StaticMeshes.end())
 		{
 			lrmStaticMesh *StaticMesh = new lrmStaticMesh;
-			StaticMesh->Vertices.push_back(lmVector3D({0.0,0.4,-3.0}));
-			StaticMesh->Vertices.push_back(lmVector3D({-0.2,-0.4,-3.0}));
-			StaticMesh->Vertices.push_back(lmVector3D({0.2,-0.4,-3.0}));
+			StaticMesh->Vertices.push_back(lmVector3D({0.0f,0.4f,-3.0f}));
+			StaticMesh->Vertices.push_back(lmVector3D({-0.2f,-0.4f,-3.0f}));
+			StaticMesh->Vertices.push_back(lmVector3D({0.2f,-0.4f,-3.0f}));
 			//
 			lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
 			MtlGroup->IndexBuffer.push_back(0);
