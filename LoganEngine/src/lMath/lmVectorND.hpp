@@ -3,10 +3,10 @@
 
 #include "lmTypedef.h"
 
+#include <cmath>
+
 #include <algorithm>
 #include <initializer_list>
-
-#include <iostream>
 
 /** \brief Egy 3D-s vektort definiáló osztály
  *
@@ -225,7 +225,7 @@ public:
 		else
 		{
 			return X[N-1];
-			std::cout << "EPIC FAIL!!!" << std::endl;
+			//std::cout << "EPIC FAIL!!!" << std::endl;
 		}
 	}
 
@@ -238,7 +238,7 @@ public:
 		else
 		{
 			return X[N-1];
-			std::cout << "EPIC FAIL!!!" << std::endl;
+			//std::cout << "EPIC FAIL!!!" << std::endl;
 		}
 	}
 

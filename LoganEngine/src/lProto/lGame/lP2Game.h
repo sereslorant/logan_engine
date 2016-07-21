@@ -163,7 +163,7 @@ protected:
 			Body->SetVelocity(NewVelocity);
 
 			lAgent::Update(dt);
-			Camera->SetPosition(Body->GetPosition() - lmVector2D({Camera->GetWidth()/2.0,Camera->GetHeight()/2.0}));
+			Camera->SetPosition(Body->GetPosition() - lmVector2D({Camera->GetWidth()/2.0f,Camera->GetHeight()/2.0f}));
 		}
 		//
 		lPlayerAgent(liBody2D *body,li2DElement *element,liController *controller,li2DCamera *camera)
@@ -273,15 +273,15 @@ public:
 		//
 		if(Input.GetNumControllers() != 0)
 		{
-			lmVector2D Position = {0.0,0.0};
-			lmVector2D Velocity = {0.0,0.0};
+			lmVector2D Position = {0.0f,0.0f};
+			lmVector2D Velocity = {0.0f,0.0f};
 			Agents.push_back(new lPlayerAgent(World.CreateBody(Position,Velocity),GameScene->GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0),Input.GetController(0),GameCamera));
 		}
 		//
 		for(unsigned int i=0;i < 5;i++)
 		{
-			lmVector2D Position = {100 + i*80.0,100.0};
-			lmVector2D Velocity = {0.0,0.0};
+			lmVector2D Position = {100.0f + i*80.0f,100.0f};
+			lmVector2D Velocity = {0.0f,0.0f};
 			Agents.push_back(new lAgent(World.CreateBody(Position,Velocity),GameScene->GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0)));
 		}
 	}

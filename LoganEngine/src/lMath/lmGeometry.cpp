@@ -618,6 +618,10 @@ bool lmCohenSutherlandLineAABBCollision(const lmVector3D &line_p0,const lmVector
 		}
 		else
 		{
+			/*
+			 * TODO: Le kell csekkolni, hogy unsigned inttel működik-e, mert
+			 * a compiler picsálkodik miatta.
+			 */
 			int NewFlags = P0Flags ? P0Flags : P1Flags;
 
 

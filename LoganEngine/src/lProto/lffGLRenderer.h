@@ -1,7 +1,7 @@
 #ifndef LFFGL_RENDERER_H
 #define LFFGL_RENDERER_H
 
-#include <GL/gl.h>
+#include <SDL2/SDL_opengl.h>
 
 class lffGL2DSceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
 {

@@ -3,6 +3,7 @@
 
 #include "../../lInterfaces/lRenderer/li3DScene.h"
 
+#include <cmath>
 
 /** \brief A játékos által látott térrészt leíró class. Arra való, hogy visszaadjon egy vetítőmátrixot.
  *
@@ -173,11 +174,12 @@ public:
      */
     virtual lmVector3D GetDirection() const override
     {
-        lmVector3D Direction = {cos(Pitch)*sin(Yaw),
-								sin(Pitch),
-								-cos(Pitch)*cos(Yaw)
-								};
-
+    	lmScalar X =  std::cos(Pitch)*std::sin(Yaw);
+    	lmScalar Y =  std::sin(Pitch);
+    	lmScalar Z = -std::cos(Pitch)*std::cos(Yaw);
+    	//
+        lmVector3D Direction = {X,Y,Z};
+        //
         return Direction;
     }
 

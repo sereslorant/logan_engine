@@ -347,7 +347,7 @@ private:
 public:
 	virtual void Visit(const liJSON_Array &param) override
 	{
-		for(int i=0;i < param.Size();i++)
+		for(unsigned int i=0;i < param.Size();i++)
 		{
 			param.GetElement(i)->Accept(*this);
 		}
@@ -386,7 +386,7 @@ public:
 
 	virtual void Visit(liJSON_Array &param) override
 	{
-		for(int i=0;i < param.Size();i++)
+		for(unsigned int i=0;i < param.Size();i++)
 		{
 			param.GetElement(i)->Accept(*this);
 		}

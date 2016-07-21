@@ -34,8 +34,8 @@ int lmSgn(lmScalar value,lmScalar epsilon)
 		{
 			return -1;
 		}
-
-		if(value > 0.0)
+		//if(value > 0.0) //Warningot csinál, hogy control reached end of non void function.
+		else
 		{
 			return 1;
 		}

@@ -58,11 +58,13 @@ private:
 			{
 				return;
 			}
-
+			//
 			X = x;
 			Y = y;
-
-			lmVector2D NewPosition = {X*dS + dS/2.0,Y*dS + dS/2.0};
+			//
+			//lmScalar PosX = X*dS + dS/2.0f;
+			//lmScalar PosY = Y*dS + dS/2.0f;
+			lmVector2D NewPosition = {X*dS + dS/2.0f,Y*dS + dS/2.0f};
 			Drawable->SetPosition(NewPosition);
 		}
 

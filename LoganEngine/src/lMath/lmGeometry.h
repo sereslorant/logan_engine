@@ -391,6 +391,14 @@ bool lmTriangleSwapVertices(const lmVectorND<T,TCD> *p2j_perm,const lmVectorND<T
 	return false;
 }
 
+/*
+ * TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+#include <iostream>
+/*
+ * TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+
 template<class T>
 LM_TRIANGLE_INTERSECTION lmTriangleTriangleCollision(const lmVectorND<T,TCD> &P0i,const lmVectorND<T,TCD> &P1i,const lmVectorND<T,TCD> &P2i,const lmVectorND<T,TCD> &Normal_i,const lmVectorND<T,TCD> &P0j,const lmVectorND<T,TCD> &P1j,const lmVectorND<T,TCD> &P2j,const lmVectorND<T,TCD> &Normal_j,int Pi_Sgn[],int Pj_Sgn[])
 {

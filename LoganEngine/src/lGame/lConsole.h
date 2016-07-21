@@ -98,7 +98,7 @@ public:
 			{
 				In >> Command;
 			}
-			catch(std::istream::failure Exception)
+			catch(std::istream::failure &Exception)
 			{
 				Error << "Failed to read from input" << std::endl;
 				ErrorFlag = true;
@@ -109,6 +109,8 @@ public:
 				ExecuteCommand(Command);
 			}
 		}
+
+		return 0;
 	}
 
 	lConsole(std::istream &in,std::ostream &out,std::ostream &error)
