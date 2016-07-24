@@ -2,7 +2,7 @@
 #include "../lGame/lConsole.h"
 
 #include "lGameModes/lPacMan/lPacMan.h"
-#include "lGame/lP2Game.h"
+#include "lGameModes/lP2_TestGameMode.h"
 #include "lGame/lP2World2D.h"
 
 #include "../lInterfaces/lRenderer/li2DRenderer.h"

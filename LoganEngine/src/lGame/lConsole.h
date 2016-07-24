@@ -33,7 +33,7 @@ private:
 	std::ostream &Out;
 	std::ostream &Error;
 
-	bool IsRunning;
+	bool IsRunning = false;
 
 	std::map<std::string,liCommand *> Commands;
 

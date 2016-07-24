@@ -1,11 +1,17 @@
 
 #include "lMath.h"
 
+/*
+ * TODO A compiler double-ből floatba konvertálás miatt rinyál.
+ */
 lmScalar lmDegToRad(lmScalar Deg)
 {
     return Deg*PI/180.0;
 }
 
+/*
+ * TODO A compiler double-ből floatba konvertálás miatt rinyál.
+ */
 lmScalar lmRadToDeg(lmScalar Rad)
 {
     return Rad*180.0/PI;

@@ -619,8 +619,7 @@ bool lmCohenSutherlandLineAABBCollision(const lmVector3D &line_p0,const lmVector
 		else
 		{
 			/*
-			 * TODO: Le kell csekkolni, hogy unsigned inttel működik-e, mert
-			 * a compiler picsálkodik miatta.
+			 * TODO: Le kell csekkolni, hogy unsigned inttel működik-e, mert a compiler picsálkodik miatta.
 			 */
 			int NewFlags = P0Flags ? P0Flags : P1Flags;
 
@@ -746,8 +745,14 @@ void lmAABBClosestPoint(const lmVector3D &point,const lmVector3D &aabb_min,const
 	{destination[2] = point[2];}
 }
 
+/*
+ * TODO Lehet, hogy érdemes átírni template-té.
+ */
 bool lmSphereAABBCollision(const lmVector3D &sphere_center,lmScalar sphere_radius,const lmVector3D &aabb_min,const lmVector3D &aabb_max,lmVector3D *intersection)
 {
+	/*
+	 * TODO: A compiler double-ből float-tá konvertálás miatt rinyál. Le kell csekkolni, hogy érdemes-e javítani.
+	 */
 	lmVector3D SphereMin = sphere_center;
 	SphereMin[0] -= sphere_radius/2.0;
 	SphereMin[1] -= sphere_radius/2.0;

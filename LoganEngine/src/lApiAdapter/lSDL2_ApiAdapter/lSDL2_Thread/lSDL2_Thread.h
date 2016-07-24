@@ -84,7 +84,7 @@ private:
 	bool Running = false;
 	//std::string Name;
 
-	SDL_Thread *Thread;
+	SDL_Thread *Thread = nullptr;
 	SDL_sem *Sem_StartSync;
 
 	liRunnable *Runnable;

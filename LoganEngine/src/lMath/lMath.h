@@ -19,6 +19,9 @@
 
 #include "lmMindenszar.hpp"
 
+/*
+ * TODO Át kéne ezeket írni template-té.
+ */
 
 /** \brief A paraméterként kapott szöget átkonvertálja fokból radiánba.
  *
@@ -40,6 +43,9 @@ lmScalar lmDegToRad(lmScalar Deg);
  */
 lmScalar lmRadToDeg(lmScalar Rad);
 
+/*
+ * TODO A compiler double-ből floatba konvertálás miatt rinyál.
+ */
 int lmSgn(lmScalar value,lmScalar epsilon = 1e-4);
 
 #endif // L_MATH_H

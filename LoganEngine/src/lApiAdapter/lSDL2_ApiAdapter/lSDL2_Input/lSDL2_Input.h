@@ -70,6 +70,9 @@ private:
 			return DeadZone;
 		}
 
+		/*
+		 * TODO: Meg kell nézni, hogy az unsigned int vs Uint16 warningot érdemes-e kijavítani.
+		 */
 		virtual void SetDeadzone(unsigned int value) override
 		{
 			DeadZone = value;
@@ -112,6 +115,10 @@ private:
 	std::vector<lSDL2Hat> Hats;
 
 public:
+
+	/*
+	 * TODO: Meg kell nézni, hogy az unsigned int vs std::vector<akarmi>::size_type warningot érdemes-e kijavítani.
+	 */
 
 	virtual unsigned int GetNumHats() override
 	{
@@ -279,6 +286,9 @@ public:
 		}
     }
 
+    /*
+	 * TODO: Meg kell nézni, hogy az unsigned int vs std::vector<akarmi>::size_type warningot érdemes-e kijavítani.
+	 */
     virtual unsigned int GetNumControllers() override
     {
     	return Controllers.size();

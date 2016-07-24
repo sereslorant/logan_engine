@@ -12,6 +12,9 @@ class lJSON_Array : public liJSON_Value, public liJSON_Array
 private:
 	std::vector<liJSON_Value *> Elements;
 
+	/*
+	 * TODO: Meg kell nézni, hogy az unsigned int vs std::vector<akarmi>::size_type warningot érdemes-e kijavítani.
+	 */
 	template<class Iterator>
 	lJSON_Array(Iterator begin,Iterator end,unsigned int size)
 		:Elements(size)
@@ -35,6 +38,9 @@ public:
 		visitor.Visit(*this);
 	}
 
+	/*
+	 * TODO Meg kell nézni, hogy érdemes-e a size_type vs unsigned int dolgot javítani.
+	 */
 	virtual unsigned int Size() const override
 	{
 		return Elements.size();
@@ -435,6 +441,9 @@ public:
 class lJSON_StatefulParser
 {
 private:
+	/*
+	 * TODO: A compiler rinyál, hogy nincs inicializálva.
+	 */
 	char NextChar;
 	std::istream &In;
 

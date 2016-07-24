@@ -13,7 +13,7 @@ protected:
 
 	liRenderer &Renderer;
 
-	const float dt = 1.0/60.0;
+	const float dt = 1.0f/60.0f;
 
 public:
 

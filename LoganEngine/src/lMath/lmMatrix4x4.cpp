@@ -98,7 +98,10 @@ void lmTranslate4x4(lmMatrix4x4 &Target,const lmVector3D &V)
 void lmRotate_X4x4(lmMatrix4x4 &Target,lmScalar Alpha)
 {
     lmMatrix4x4 A;
-
+    /*
+     * TODO A compiler rinyál amiatt, hogy a sin és a cos double-t ad vissza,
+     * a mátrix meg floatot fogad, érdemes lecsekkolni.
+     */
     A[0][0] = 1;A[1][0] =          0;A[2][0] =           0;A[3][0] = 0;
     A[0][1] = 0;A[1][1] = cos(Alpha);A[2][1] = -sin(Alpha);A[3][1] = 0;
     A[0][2] = 0;A[1][2] = sin(Alpha);A[2][2] =  cos(Alpha);A[3][2] = 0;
@@ -110,7 +113,10 @@ void lmRotate_X4x4(lmMatrix4x4 &Target,lmScalar Alpha)
 void lmRotate_Y4x4(lmMatrix4x4 &Target,lmScalar Alpha)
 {
     lmMatrix4x4 A;
-
+    /*
+     * TODO A compiler rinyál amiatt, hogy a sin és a cos double-t ad vissza,
+     * a mátrix meg floatot fogad, érdemes lecsekkolni.
+     */
     A[0][0] = cos(Alpha);A[1][0] = 0;A[2][0] = sin(Alpha);A[3][0] = 0;
     A[0][1] =          0;A[1][1] = 1;A[2][1] =          0;A[3][1] = 0;
     A[0][2] =-sin(Alpha);A[1][2] = 0;A[2][2] = cos(Alpha);A[3][2] = 0;
@@ -122,7 +128,10 @@ void lmRotate_Y4x4(lmMatrix4x4 &Target,lmScalar Alpha)
 void lmRotate_Z4x4(lmMatrix4x4 &Target,lmScalar Alpha)
 {
     lmMatrix4x4 A;
-
+    /*
+     * TODO A compiler rinyál amiatt, hogy a sin és a cos double-t ad vissza,
+     * a mátrix meg floatot fogad, érdemes lecsekkolni.
+     */
     A[0][0] = cos(Alpha);A[1][0] = -sin(Alpha);A[2][0] = 0;A[3][0] = 0;
     A[0][1] = sin(Alpha);A[1][1] =  cos(Alpha);A[2][1] = 0;A[3][1] = 0;
     A[0][2] =          0;A[1][2] =           0;A[2][2] = 1;A[3][2] = 0;

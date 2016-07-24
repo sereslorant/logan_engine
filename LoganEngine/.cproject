@@ -24,6 +24,9 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.816642319" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.1646332596" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.dialect.std.79314410" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.c++11" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.warnings.extrawarn.1361021548" name="Extra warnings (-Wextra)" superClass="gnu.cpp.compiler.option.warnings.extrawarn" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wconversion.653433450" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.cpp.compiler.option.warnings.wconversion" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.pedantic.669888669" name="Pedantic (-pedantic)" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2126408293" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.335248950" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
@@ -158,9 +161,14 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lApiAdapter"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lGame"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lInterfaces"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lJSON"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lMath"/>
-						<entry excluding="lResourceManager.h" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lResourceManager"/>
-						<entry excluding="TestJSON.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lTest"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lProto"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lRenderer"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lResourceManager"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
