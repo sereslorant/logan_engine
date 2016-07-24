@@ -1,7 +1,16 @@
 #ifndef LRM_WF_LOADER_H
 #define LRM_WF_LOADER_H
 
+/*
+ * Matekkönyvtár include
+ */
+#include "../lMath/lMath.h"
+
+/*
+ * STL include-ok
+ */
 #include <string>
+#include <vector>
 
 class lrmWfObj
 {

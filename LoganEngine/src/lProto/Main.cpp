@@ -80,7 +80,7 @@ public:
 			Game = new lGame(*Console,GameMode,*Renderer);
 		#else
 			liWorld2D *World = new lP2World2D;
-			liGameMode *GameMode = new lP2ProtoGameMode(ApiAdapter.GetInput(),*World,*Renderer);
+			liGameMode *GameMode = new lP2_TestGameMode(ApiAdapter.GetInput(),*World,*Renderer);
 			Game = new lSimulationGame<liWorld2D>(*Console,GameMode,*Renderer,World);
 		#endif
     }
