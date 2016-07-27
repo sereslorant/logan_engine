@@ -136,6 +136,8 @@ public:
 #include "lPM_PacManJoystickController.h"
 #include "lPM_GraphicalView.h"
 
+#include "lPM_AI.h"
+
 #include <sstream>
 
 #include "../../../lInterfaces/lGame/liGame.h"
@@ -200,6 +202,10 @@ public:
 		{
 			liController *Controller = input.GetController(0);
 			AgentController = new lPM_PacManJoystickController(Controller);
+		}
+		else
+		{
+			AgentController = new lPM_AI_Controller;
 		}
 		//
 		const char *Map0 =
