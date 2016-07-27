@@ -16,6 +16,9 @@ private:
 
 	unsigned int X = 0;
 	unsigned int Y = 0;
+	//
+	unsigned int Width = 0;
+	unsigned int Height = 0;
 
 	bool Puszcsy;
 
@@ -43,6 +46,8 @@ private:
 
 	void LoadRow(const liJSON_Array &row)
 	{
+		if(Width < row.Size())
+			{Width = row.Size();}
 		X = 0;
 		for(unsigned int i=0;i < row.Size();i++)
 		{
@@ -53,6 +58,8 @@ private:
 
 	void LoadMap(const liJSON_Array &pm_map)
 	{
+		if(Height < pm_map.Size())
+			{Height = pm_map.Size();}
 		Puszcsy = true;
 		Y = 0;
 		for(unsigned int i=0;i < pm_map.Size();i++)
@@ -65,6 +72,12 @@ private:
 	}
 
 public:
+
+	unsigned int GetWidth()
+	{return Width;}
+
+	unsigned int GetHeight()
+	{return Height;}
 
 	virtual void Visit(const liJSON_Array &param) override
 	{

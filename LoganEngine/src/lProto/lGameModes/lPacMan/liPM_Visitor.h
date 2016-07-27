@@ -20,6 +20,9 @@ public:
 class liPM_Agent
 {
 public:
+	virtual int GetX() = 0;
+	virtual int GetY() = 0;
+	//
 	virtual void Subscribe(liPM_AgentObserver *agent_observer) = 0;
 
 	liPM_Agent()

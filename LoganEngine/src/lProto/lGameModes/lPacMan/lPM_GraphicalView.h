@@ -187,6 +187,11 @@ public:
 		agent->Accept(&AgentSubscriber);
 	}
 
+	virtual void SetDimensions(unsigned int width,unsigned int height) override
+	{
+		//
+	}
+
 	virtual void LoopEnded() override
 	{
 		//Itt tudnánk értesülni arról, hogy a ciklus véget ért.

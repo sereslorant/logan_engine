@@ -20,12 +20,12 @@ protected:
 
 public:
 
-	int GetX()
+	virtual int GetX() override
 	{
 		return X;
 	}
 
-	int GetY()
+	virtual int GetY() override
 	{
 		return Y;
 	}

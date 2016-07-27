@@ -175,6 +175,7 @@ protected:
 	//
 	lPacManStepCallback *PacManStepCallback;
 	liPM_AgentController *AgentController = nullptr;
+	lPM_AI_Percept *AI_Percept = nullptr;
 	//
 	lPM_Model Model;
 	//
@@ -205,7 +206,12 @@ public:
 		}
 		else
 		{
-			AgentController = new lPM_AI_Controller;
+			AI_Percept = new lPM_AI_Percept;
+			Model.Subscribe(AI_Percept);
+			//
+			lPM_AI_Controller *Ctrl = new lPM_AI_Controller;
+			Ctrl->SetPercept(AI_Percept);
+			AgentController = Ctrl;
 		}
 		//
 		const char *Map0 =
@@ -241,6 +247,8 @@ public:
 		lPM_JSONLoader MapLoader(Model.GetAgentFactory(),AgentController);
 		Map->Accept(MapLoader);
 		//
+		Model.SetDimensions(MapLoader.GetWidth(),MapLoader.GetHeight());
+		//
 		//Model.Subscribe(&CommandLineView);
 		Model.Subscribe(&GraphicalView);
 		//
@@ -253,6 +261,7 @@ public:
 		delete PacManStepCallback;
 
 		delete AgentController;
+		delete AI_Percept;
 	}
 };
 

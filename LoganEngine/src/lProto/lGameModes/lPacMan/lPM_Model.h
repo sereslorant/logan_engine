@@ -27,6 +27,7 @@ class liPM_ModelObserver
 {
 public:
 	virtual void Subscribe(lPM_Agent *agent) = 0;
+	virtual void SetDimensions(unsigned int width,unsigned int height) = 0;
 
 	virtual void LoopEnded() = 0;
 
@@ -105,6 +106,8 @@ private:
 	/*
 	 * Attribútumok
 	 */
+	unsigned int Width = 0;
+	unsigned int Height = 0;
 
 	std::list<lPM_Agent *> Agents;
 	lPM_AgentFactory AgentFactory;
@@ -122,6 +125,17 @@ private:
 
 public:
 
+	void SetDimensions(unsigned int width,unsigned int height)
+	{
+		Width = width;
+		Height = height;
+		//
+		for(liPM_ModelObserver *Observer : Observers)
+		{
+			Observer->SetDimensions(Width,Height);
+		}
+	}
+
 	liPM_AgentFactory *GetAgentFactory()
 	{
 		return &AgentFactory;
@@ -130,6 +144,7 @@ public:
 	void Subscribe(liPM_ModelObserver *observer)
 	{
 		Observers.push_back(observer);
+		observer->SetDimensions(Width,Height);
 
 		for(lPM_Agent *Agent : Agents)
 		{
