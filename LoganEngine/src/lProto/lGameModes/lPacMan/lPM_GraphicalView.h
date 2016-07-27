@@ -201,8 +201,8 @@ public:
 		Viewport = Renderer.GetMainFramebuffer().CreateViewport(0,0,Width,Height);
 		//
 		Scene = new lr2DScene;
-		Scene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
-		Camera = new lr2DCamera({0.0,0.0},Width,Height);
+		Scene->SetBackgroundColor(lrColor(1.0f,1.0f,1.0f,1.0f));
+		Camera = new lr2DCamera({0.0f,0.0f},Width,Height);
 		//
 		Set2DLayer SetLayer(Scene,Camera);
 		//

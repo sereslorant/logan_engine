@@ -32,10 +32,22 @@ public:
 	virtual ~liCircle(){}
 };
 
+/*
+class liParticle
+{
+public:
+	virtual const lmVector2D &GetPosition() = 0;
+	virtual const lmVector2D &GetVelocity() = 0;
+	//
+	liParticle(){}
+	virtual ~liParticle(){}
+};
+*/
 class liShapeVisitor
 {
 public:
 	virtual void VisitCircle(liCircle *circle) = 0;
+	//virtual void VisitParticle(liParticle *circle) = 0;
 	//
 	liShapeVisitor(){}
 	virtual ~liShapeVisitor(){}
@@ -110,6 +122,9 @@ public:
 class liWorld2D
 {
 public:
+	//
+	virtual void Pause() = 0;
+	virtual void Continue() = 0;
 	//
 	virtual liBody2D *CreateBody(const lmVector2D &position,const lmVector2D &velocity) = 0;
 	//

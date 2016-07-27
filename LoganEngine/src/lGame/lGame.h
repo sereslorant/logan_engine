@@ -40,16 +40,12 @@ class lSimulationGame : public lGame
 protected:
 	//
 	liWorld_T *World;
-	bool SimulationPaused = false;
 	//
 public:
 	//
 	virtual void Step() override
 	{
-		if(!SimulationPaused)
-		{
-			World->Simulate(dt);
-		}
+		World->Simulate(dt);
 		//
 		GameMode->Logic(dt);
 	}
