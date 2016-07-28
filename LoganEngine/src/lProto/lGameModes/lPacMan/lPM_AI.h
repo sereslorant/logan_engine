@@ -7,6 +7,8 @@
 #include <iostream>
 #include <vector>
 
+
+// just a test
 enum lPM_AI_Cell
 {
 	URES,
