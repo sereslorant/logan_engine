@@ -280,7 +280,7 @@ lmVectorND<T,3> lmQuaternionRotate(const lmVectorND<T,3> &v,const lmQuaternionT<
 
 	Qv = q*Qv*q.GetInverse();
 
-	lmVector3D V;
+	lmVectorND<T,3> V;
 	V[0] = Qv.X;
 	V[1] = Qv.Y;
 	V[2] = Qv.Z;
