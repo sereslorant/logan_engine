@@ -16,22 +16,26 @@ public:
 	virtual void Draw() = 0;
 };
 
-#include "../lResourceManager/TreeGen/Turtles/TurtleInterpreter.hpp"
-#include "../lResourceManager/TreeGen/Turtles/Turtle2D.hpp"
+#include "../TreeGen/Turtles/TurtleInterpreter.hpp"
+#include "../TreeGen/Turtles/Turtle2D.hpp"
 
 
 template<typename Type_T,unsigned int Dim_T>
-class DrawSkeleton : public ITreeVisitor<Type_T,Dim_T>
+class DrawSkeleton : public ITreeVisitor<Type_T,Dim_T>,public ITreeNode<Type_T,Dim_T>::ITreeOperation
 {
-public:
+private:
 
-	class DrawSegment : public ITreeVisitor<Type_T,Dim_T>,public ITreeOperation<Type_T,Dim_T>
+	class DrawSegment : public ITreeVisitor<Type_T,Dim_T>,public ITreeNode<Type_T,Dim_T>::ITreeOperation
 	{
 	private:
-		ITrunkNode<Type_T,Dim_T> *Parent;
+		ITrunkNode<Type_T,Dim_T> *Parent = nullptr;
 
 	public:
-		bool Value = false;
+
+		void SetParent(ITrunkNode<Type_T,Dim_T> *parent)
+		{
+			Parent = parent;
+		}
 
 		virtual void Operation(ITreeNode<Type_T,Dim_T> *node) override
 		{
@@ -60,18 +64,35 @@ public:
 
 		}
 
-		DrawSegment(ITrunkNode<Type_T,Dim_T> *parent)
-			:Parent(parent)
+		DrawSegment()
 		{}
 
 		virtual ~DrawSegment() override {}
 	};
 
+	DrawSegment Puszcsy;
+	bool TrunkFound = false;
+
+public:
+
+	virtual void Operation(ITreeNode<Type_T,Dim_T> *node) override
+	{
+		node->Accept(this);
+
+		if(TrunkFound)
+		{
+			node->ForeachChildren(&Puszcsy);
+			TrunkFound = false;
+		}
+	}
+
 	virtual void Visit(ITrunkNode<Type_T,Dim_T> *node) override
 	{
-		DrawSegment Puszcsy(node);
+		//DrawSegment Puszcsy(node);
+		Puszcsy.SetParent(node);
+		TrunkFound = true;
 
-		node->ForeachChildren(&Puszcsy);
+		//node->ForeachChildren(&Puszcsy);
 
 		/*for(auto I = node->GetChildrenBegin();I != node->GetChildrenEnd();I++)
 		{
@@ -127,7 +148,7 @@ public:
 			NodeList.pop_front();
 		}
 		*/
-		Search<Type_T,Dim_T,BFS_FifoWrapper<Type_T,Dim_T,std::list<ITreeNode<Type_T,Dim_T> *> > >(node,this);
+		BreadthFirstSearch<Type_T,Dim_T,std::list<ITreeNode<Type_T,Dim_T> *> >(node,this);
 
 		glEnd();
 	}
@@ -183,7 +204,7 @@ public:
 	}
 };
 
-#include "../lResourceManager/TreeGen/L_Systems/DOL_System.h"
+#include "../TreeGen/L_Systems/DOL_System.h"
 
 class DrawQuadraticKochCurve : public DrawCurve
 {
@@ -288,7 +309,7 @@ public:
 	{}
 };
 
-#include "../lResourceManager/TreeGen/Turtles/Turtle3D.hpp"
+#include "../TreeGen/Turtles/Turtle3D.hpp"
 
 class Demo3D : public IDemo
 {
@@ -320,11 +341,214 @@ float Z = 20.0;
 
 float CameraAngle = 0.0;
 
+#include "../TreeGen/TrunkGenerator.hpp"
+
+template<typename Type_T>
+void DrawSpline(const liCurve<Type_T,3> &curve,Type_T t_begin,Type_T t_end,Type_T dt)
+{
+	glBegin(GL_LINES);
+
+	glColor3f(1.0,0.75,0.0);
+
+	Type_T t = t_begin;
+	lmVectorND<Type_T,3> Begin = curve.GetPoint(t);
+	glVertex3f(Begin[0],Begin[1],Begin[2]);
+
+	t += dt;
+	lmVectorND<Type_T,3> V = curve.GetPoint(t);
+	glVertex3f(V[0],V[1],V[2]);
+
+	while(t < t_end)
+	{
+		glColor3f(1.0,0.75,0.0);
+
+		glVertex3f(V[0],V[1],V[2]);
+
+		V = curve.GetPoint(t);
+		glVertex3f(V[0],V[1],V[2]);
+		/*
+		glm::vec3 V1;
+		glm::vec3 V2;
+		glm::vec3 V3;
+
+		const bool FRENET_FRAME = false;
+
+		if(FRENET_FRAME)
+		{
+			ICurve::GetFrenetFrame(curve,t,&V1,&V2,&V3,true);
+		}
+		else
+		{
+			ICurve::GetExplicitUpFrame(curve,UP,t,1.0/25.0,&V1,&V2,&V3,true);
+		}
+
+		V1 = V + 5.0f*glm::normalize(V1);
+		V2 = V + 5.0f*glm::normalize(V2);
+		V3 = V + 5.0f*glm::normalize(V3);
+
+		glColor3f(1.0,0.0,0.0);
+
+		glVertex3f(V.x,V.y,V.z);
+		glVertex3f(V1.x,V1.y,V1.z);
+
+		glColor3f(0.0,1.0,0.0);
+
+		glVertex3f(V.x,V.y,V.z);
+		glVertex3f(V2.x,V2.y,V2.z);
+
+		glColor3f(0.0,0.0,1.0);
+
+		glVertex3f(V.x,V.y,V.z);
+		glVertex3f(V3.x,V3.y,V3.z);
+		*/
+
+		t += dt;
+	}
+
+	//glVertex3f(Begin[0],Begin[1],Begin[2]);
+
+	glEnd();
+}
+
+template<typename Type_T>
+class lmGeneralizedCylinder
+{
+public:
+	bool TEST_FrenetFrame = false;
+
+	liCurve<Type_T,3> &Spine;
+	Type_T Radius;
+
+	lmVectorND<Type_T,3> Up;
+
+	lmVectorND<Type_T,3> GetPoint(Type_T spine_param,Type_T angle) const
+	{
+		lmVectorND<Type_T,3> i,j,k;
+
+		if(TEST_FrenetFrame)
+		{
+			lmGetFrenetFrame(Spine,spine_param,&i,&j,&k,true);
+		}
+		else
+		{
+			lmGetExplicitUpFrame(Spine,Up,spine_param,/*1.0/30.0,*/&i,&j,&k,true);
+		}
+
+		lmVectorND<Type_T,3> DiskPoint = std::cos(angle)*i + std::sin(angle)*k;
+
+		return Spine.GetPoint(spine_param) + Radius * DiskPoint;
+	}
+
+	lmGeneralizedCylinder(liCurve<Type_T,3> &spine,Type_T radius)
+		:Spine(spine),Radius(radius)
+	{
+		Up[0] = 0.0;
+		Up[1] = 1.0;
+		Up[2] = 0.0;
+	}
+
+	~lmGeneralizedCylinder()
+	{}
+};
+
+void DrawTrunkSpline(TreeTrunk<double,3> *trunk)
+{
+	for(auto I : trunk->Branches)
+	{
+		DrawSpline(*I->Curve,I->t_Begin,I->t_End,(I->t_End - I->t_Begin)/20.0);
+	}
+}
+
+constexpr unsigned int CYLINDER_ARRAY_WIDTH = 6;
+constexpr unsigned int CYLINDER_ARRAY_HEIGHT = 6;
+
+template<typename Type_T>
+void DrawGeneralizedCylinder(const lmGeneralizedCylinder<Type_T> &cylinder,Type_T t0,Type_T t_fin)
+{
+	lmVectorND<Type_T,3> CylinderArray[CYLINDER_ARRAY_HEIGHT][CYLINDER_ARRAY_WIDTH];
+
+	Type_T dt = (t_fin - t0)/(CYLINDER_ARRAY_HEIGHT - 1);
+
+	Type_T dAngle = 2.0*PI/CYLINDER_ARRAY_WIDTH;
+
+	for(unsigned int i=0;i < CYLINDER_ARRAY_HEIGHT;i++)
+	{
+		for(unsigned int j=0;j < CYLINDER_ARRAY_WIDTH;j++)
+		{
+			CylinderArray[i][j] = cylinder.GetPoint(t0 + i*dt,j*dAngle);
+		}
+	}
+
+	glColor3f(1.0,0.0,1.0);
+
+	glBegin(GL_QUADS);
+
+	for(unsigned int i=0;i < CYLINDER_ARRAY_HEIGHT - 1;i++)
+	{
+		for(unsigned int j=0;j < CYLINDER_ARRAY_WIDTH;j++)
+		{
+			unsigned int I = (i+1);
+			unsigned int J = (j+1) % CYLINDER_ARRAY_WIDTH;
+
+			glVertex3f(CylinderArray[i][j][0],CylinderArray[i][j][1],CylinderArray[i][j][2]);
+			glVertex3f(CylinderArray[I][j][0],CylinderArray[I][j][1],CylinderArray[I][j][2]);
+			glVertex3f(CylinderArray[I][J][0],CylinderArray[I][J][1],CylinderArray[I][J][2]);
+			glVertex3f(CylinderArray[i][J][0],CylinderArray[i][J][1],CylinderArray[i][J][2]);
+		}
+	}
+
+	glEnd();
+}
+
+
+void DrawTrunkCylinder(TreeTrunk<double,3> *trunk)
+{
+	//std::cout << "Begin" << std::endl;
+	for(auto I : trunk->Branches)
+	{
+		//std::cout << I->Depth << std::endl;
+		DrawGeneralizedCylinder(lmGeneralizedCylinder<double>(*I->Curve,2.0*pow(0.6,I->Depth)),I->t_Begin,I->t_End);
+	}
+	//
+	GLUquadricObj *Quadric = gluNewQuadric();
+	gluQuadricDrawStyle(Quadric,GLU_FILL);
+	//
+	for(auto I : trunk->Junctions)
+	{
+		lmVectorND<double,3> Pos;
+		double Radius;
+		if(I->Root == nullptr)
+		{
+			Radius = 2.0;
+			glPushMatrix();
+				gluSphere(Quadric,Radius,8,8);
+			glPopMatrix();
+		}
+		else
+		{
+			Pos = I->Root->Curve->GetPoint(I->Root->t_End);
+			Radius = 2.0;
+
+			glPushMatrix();
+				glTranslatef(Pos[0],Pos[1],Pos[2]);
+				gluSphere(Quadric,Radius,8,8);
+			glPopMatrix();
+		}
+	}
+	//
+	gluDeleteQuadric(Quadric);
+}
+
+bool DrawSplineFlag = true;
+bool DrawCylinderFlag = true;
+
 class DrawCurve3D : public Demo3D
 {
 protected:
 	ITreeNode<double,3> *CurveSkeleton = nullptr;
-
+	//
+	TreeTrunk<double,3> *Result = nullptr;
+	//
 public:
 
 	virtual void Draw() override
@@ -344,6 +568,16 @@ public:
 
 		DrawSkeleton3D DrawSkel;
 		DrawSkel.Draw(CurveSkeleton);
+
+		if(DrawSplineFlag && Result != nullptr)
+		{
+			DrawTrunkSpline(Result);
+		}
+
+		if(DrawCylinderFlag && Result != nullptr)
+		{
+			DrawTrunkCylinder(Result);
+		}
 	}
 
 	DrawCurve3D(){}
@@ -388,7 +622,6 @@ public:
 	{}
 };
 
-
 class DrawTree : public DrawCurve3D
 {
 public:
@@ -430,6 +663,9 @@ public:
 		Turtle.Set_dAngle((PI/180.0)*22.5);
 		Turtle.Set_dDist(7.0);
 		Turtle.ExecuteCommands(Command,CurveSkeleton);
+
+		TrunkGenerator<double,3> TrunkGen;
+		TrunkGen.Process(CurveSkeleton,Result);
 	}
 
 	virtual ~DrawTree() override
@@ -451,6 +687,7 @@ void onInitialization() {
 	{
 		DemoArray.push_back(new DrawTree(j,0));
 	}
+	//
 }
 
 unsigned int screenWidth = 512;

@@ -115,8 +115,8 @@ void lmGetFrenetFrame(const liCurve<Type_T,3> &curve,Type_T t,lmVectorND<Type_T,
 	lmVectorND<Type_T,3> SecondDerivative = curve.GetSecondDerivative(t);
 	//
 	*j = curve.GetDerivative(t);
-	*i = lmCross<Type_T,3>(SecondDerivative,*j);
-	*k = lmCross<Type_T,3>(*i,*j);
+	*i = lmCross<Type_T>(SecondDerivative,*j);
+	*k = lmCross<Type_T>(*i,*j);
 	//
 	if(normalize)
 	{
@@ -125,11 +125,11 @@ void lmGetFrenetFrame(const liCurve<Type_T,3> &curve,Type_T t,lmVectorND<Type_T,
 		k->Normalize();
 	}
 }
-/*
+
 template<typename Type_T>
-static void lmGetExplicitUpFrame(const liCurve<Type_T,3> &curve,const glm::vec3 &up,float t,float dt,glm::vec3 *i,glm::vec3 *j,glm::vec3 *k,bool normalize = false)
+static void lmGetExplicitUpFrame(const liCurve<Type_T,3> &curve,const lmVectorND<Type_T,3> &up,float t,/*float dt,*/lmVectorND<Type_T,3> *i,lmVectorND<Type_T,3> *j,lmVectorND<Type_T,3> *k,bool normalize = false)
 {
-	if(normalize)
+	/*if(normalize)
 	{
 		*j = glm::normalize(curve.GetDerivative(t));
 		if(glm::length(*j) < 1e-2)
@@ -145,25 +145,36 @@ static void lmGetExplicitUpFrame(const liCurve<Type_T,3> &curve,const glm::vec3 
 		*i = glm::cross(up,*j);
 		*k = glm::cross(*i,*j);
 	}
+	*/
+	*j = curve.GetDerivative(t);
+	*i = lmCross<Type_T>(up,*j);
+	*k = lmCross<Type_T>(*i,*j);
+
+	if(normalize)
+	{
+		i->Normalize();
+		j->Normalize();
+		k->Normalize();
+	}
 }
-*/
+
 template<typename Type_T,unsigned int Dim_T>
 lmVectorND<Type_T,Dim_T> Hermite(const lmVectorND<Type_T,Dim_T> &p0,const lmVectorND<Type_T,Dim_T> &p1,const lmVectorND<Type_T,Dim_T> &v0,const lmVectorND<Type_T,Dim_T> &v1,Type_T t0,Type_T t1,Type_T t)
 {
 	lmVectorND<Type_T,Dim_T> a0 = p0;
 	lmVectorND<Type_T,Dim_T> a1 = v0;
-	lmVectorND<Type_T,Dim_T> a2 = (3.0f*(p1-p0)/((float)pow(t1-t0,2))) - ((v1+2.0f*v0)/((float)(t1-t0)));
-	lmVectorND<Type_T,Dim_T> a3 = (2.0f*(p0-p1)/((float)pow(t1-t0,3))) + ((v1+v0)/((float)pow(t1-t0,2)));
+	lmVectorND<Type_T,Dim_T> a2 = (3.0f*(p1-p0)*(1.0/pow(t1-t0,2))) - ((v1+2.0f*v0)*(1.0/(t1-t0)));
+	lmVectorND<Type_T,Dim_T> a3 = (2.0f*(p0-p1)*(1.0/pow(t1-t0,3))) + ((v1+v0)*(1.0/pow(t1-t0,2)));
 
-	return a0 + a1*(t-t0) + a2*((float)pow(t-t0,2)) + a3*((float)pow(t-t0,3));
+	return a0 + a1*(t-t0) + a2*(pow(t-t0,2)) + a3*(pow(t-t0,3));
 }
 
 template<typename Type_T,unsigned int Dim_T>
 lmVectorND<Type_T,Dim_T> HermiteDerivative(const lmVectorND<Type_T,Dim_T> &p0,const lmVectorND<Type_T,Dim_T> &p1,const lmVectorND<Type_T,Dim_T> &v0,const lmVectorND<Type_T,Dim_T> &v1,Type_T t0,Type_T t1,Type_T t)
 {
 	lmVectorND<Type_T,Dim_T> a1 = v0;
-	lmVectorND<Type_T,Dim_T> a2 = (3.0f*(p1-p0)/((float)pow(t1-t0,2))) - ((v1+2.0f*v0)/((float)(t1-t0)));
-	lmVectorND<Type_T,Dim_T> a3 = (2.0f*(p0-p1)/((float)pow(t1-t0,3))) + ((v1+v0)/((float)pow(t1-t0,2)));
+	lmVectorND<Type_T,Dim_T> a2 = (3.0f*(p1-p0)*(1.0/pow(t1-t0,2))) - ((v1+2.0f*v0)*(1.0/(t1-t0)));
+	lmVectorND<Type_T,Dim_T> a3 = (2.0f*(p0-p1)*(1.0/pow(t1-t0,3))) + ((v1+v0)*(1.0/pow(t1-t0,2)));
 
 	return a1 + 2.0f*a2*(t-t0) + 3.0f*a3*((float)pow(t-t0,2));
 }
@@ -171,8 +182,8 @@ lmVectorND<Type_T,Dim_T> HermiteDerivative(const lmVectorND<Type_T,Dim_T> &p0,co
 template<typename Type_T,unsigned int Dim_T>
 lmVectorND<Type_T,Dim_T> HermiteSecondDerivative(const lmVectorND<Type_T,Dim_T> &p0,const lmVectorND<Type_T,Dim_T> &p1,const lmVectorND<Type_T,Dim_T> &v0,const lmVectorND<Type_T,Dim_T> &v1,Type_T t0,Type_T t1,Type_T t)
 {
-	lmVectorND<Type_T,Dim_T> a2 = (3.0f*(p1-p0)/((float)pow(t1-t0,2))) - ((v1+2.0f*v0)/((float)(t1-t0)));
-	lmVectorND<Type_T,Dim_T> a3 = (2.0f*(p0-p1)/((float)pow(t1-t0,3))) + ((v1+v0)/((float)pow(t1-t0,2)));
+	lmVectorND<Type_T,Dim_T> a2 = (3.0f*(p1-p0)*(1.0/pow(t1-t0,2))) - ((v1+2.0f*v0)*(1.0/(t1-t0)));
+	lmVectorND<Type_T,Dim_T> a3 = (2.0f*(p0-p1)*(1.0/pow(t1-t0,3))) + ((v1+v0)*(1.0/pow(t1-t0,2)));
 
 	return 2.0f*a2 + 6.0f*a3*(t-t0);
 }
@@ -180,7 +191,7 @@ lmVectorND<Type_T,Dim_T> HermiteSecondDerivative(const lmVectorND<Type_T,Dim_T> 
 template<typename Type_T,unsigned int Dim_T>
 lmVectorND<Type_T,Dim_T> AverageVelocity(const lmVectorND<Type_T,Dim_T> &p0,const lmVectorND<Type_T,Dim_T> &p1,float t0,float t1)
 {
-	return (p1-p0)/(t1-t0);
+	return (p1-p0)*(1.0/(t1-t0));
 }
 
 template<typename Type_T,unsigned int Dim_T>
@@ -195,6 +206,34 @@ private:
 	lmVectorND<Type_T,Dim_T> EndVelocity;
 	//
 public:
+	//
+	lmCatmullRomSpline<Type_T,Dim_T> *Clone()
+	{
+		lmCatmullRomSpline<Type_T,Dim_T> *NewSpline = new lmCatmullRomSpline<Type_T,Dim_T>(InitVelocity,EndVelocity);
+
+		NewSpline->cps.resize(cps.size());
+		NewSpline->Velocity.resize(Velocity.size());
+		NewSpline->ts.resize(ts.size());
+
+		for(unsigned int i=0;i < cps.size();i++)
+		{
+			NewSpline->cps[i] = cps[i];
+			NewSpline->Velocity[i] = Velocity[i];
+			NewSpline->ts[i] = ts[i];
+		}
+
+		NewSpline->SetInitVelocity(InitVelocity);
+		//NewSpline->SetEndVelocity(EndVelocity);
+
+		return NewSpline;
+	}
+	//
+	void Clear()
+	{
+		cps.clear();
+		ts.clear();
+		Velocity.clear();
+	}
 	//
 	void SetInitVelocity(const lmVectorND<Type_T,Dim_T> &init_velocity)
 	{
@@ -232,11 +271,11 @@ public:
 			const lmVectorND<Type_T,Dim_T> &Pprev1 = cps[cps.size() - 2]; Type_T tprev1 = ts[ts.size() - 2];
 			const lmVectorND<Type_T,Dim_T> &Pfin   = cps[cps.size() - 1]; Type_T tfin   = ts[ts.size() - 1];
 
-			Velocity[Velocity.size()-2] = (AverageVelocity(Pprev2,Pprev1,tprev2,tprev1) + AverageVelocity(Pprev1,Pfin,tprev1,tfin)) / 2.0f;
+			Velocity[Velocity.size()-2] = (AverageVelocity(Pprev2,Pprev1,tprev2,tprev1) + AverageVelocity(Pprev1,Pfin,tprev1,tfin)) * (1.0 / 2.0);
 		}
 	}
 	//
-	virtual lmVectorND<Type_T,Dim_T> GetPoint(float t) const override
+	virtual lmVectorND<Type_T,Dim_T> GetPoint(Type_T t) const override
 	{
 		lmVectorND<Type_T,Dim_T> RetVal;
 		//
@@ -251,7 +290,7 @@ public:
 		return RetVal;
 	}
 	//
-	virtual lmVectorND<Type_T,Dim_T> GetDerivative(float t) const override
+	virtual lmVectorND<Type_T,Dim_T> GetDerivative(Type_T t) const override
 	{
 		lmVectorND<Type_T,Dim_T> RetVal;
 		//
@@ -266,7 +305,7 @@ public:
 		return RetVal;
 	}
 	//
-	virtual lmVectorND<Type_T,Dim_T> GetSecondDerivative(float t) const override
+	virtual lmVectorND<Type_T,Dim_T> GetSecondDerivative(Type_T t) const override
 	{
 		lmVectorND<Type_T,Dim_T> RetVal;
 		//
@@ -280,6 +319,10 @@ public:
 		//
 		return RetVal;
 	}
+	//
+	lmCatmullRomSpline()
+		:InitVelocity(lmVectorND<Type_T,Dim_T>::NULLVEC),EndVelocity(lmVectorND<Type_T,Dim_T>::NULLVEC)
+	{}
 	//
 	lmCatmullRomSpline(const lmVectorND<Type_T,Dim_T> &init_velocity,const lmVectorND<Type_T,Dim_T> &end_velocity)
 		:InitVelocity(init_velocity),EndVelocity(end_velocity)

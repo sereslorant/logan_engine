@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <list>
+
 #include "../Interfaces/ITreeGraph.hpp"
 
 template<typename Type_T,unsigned int Dim_T>
@@ -15,7 +16,7 @@ private:
 	//
 public:
 	//
-	virtual void ForeachChildren(ITreeOperation<Type_T,Dim_T> *operation) override
+	virtual void ForeachChildren(typename ITreeNode<Type_T,Dim_T>::ITreeOperation *operation) override
 	{
 		for(TreeNode *Child : Children)
 		{operation->Operation(Child);}
@@ -88,11 +89,6 @@ public:
 		return Position;
 	}
 	//
-	virtual void ForeachChildren(ITreeOperation<Type_T,Dim_T> *operation) override
-	{
-		TreeNode<Type_T,Dim_T>::ForeachChildren(operation);
-	}
-	//
 	TrunkNode(const lmVectorND<Type_T,Dim_T> position)
 		:Position(position)
 	{
@@ -150,11 +146,6 @@ public:
 	virtual const lmVectorND<Type_T,Dim_T> *GetArray() const override
 	{
 		return &VertexArray[0];
-	}
-	//
-	virtual void ForeachChildren(ITreeOperation<Type_T,Dim_T> *operation) override
-	{
-		TreeNode<Type_T,Dim_T>::ForeachChildren(operation);
 	}
 	//
 	class PolygonNodeBuilder

@@ -1,9 +1,8 @@
 #ifndef I_TURTLE_H
 #define I_TURTLE_H
 
-#include "ITreeGraph.hpp"
-
 #include <string>
+#include "ITreeGraph.hpp"
 
 template<typename Type_T,unsigned int Dim_T>
 class ITurtle
