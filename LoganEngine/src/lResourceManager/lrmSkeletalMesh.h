@@ -25,7 +25,13 @@ struct lrmSkeletalMesh
         /** \brief Konstruktor, amely minden súlyt 0-ra inicializál.
          *
          */
-        lrmWeight();
+        lrmWeight()
+		{
+			for(unsigned int i=0;i < MAX_WEIGHT_COUNT;i++)
+			{
+				Weight[i] = 0.0;
+			}
+		}
 
         /** \brief Operátor, mellyel el lehet érni a megadott indexű súlyt.
          *
@@ -33,7 +39,10 @@ struct lrmSkeletalMesh
          * \return float& - az i-edik súlyra mutató referencia.
          *
          */
-        float &operator[](unsigned int i);
+        float &operator[](unsigned int i)
+        {
+			return Weight[i];
+		}
 
         /** \brief Operátor, mellyel el lehet érni a megadott indexű súlyt. Konstans tagfüggvény.
          *
@@ -41,7 +50,10 @@ struct lrmSkeletalMesh
          * \return float - az i-edik súly értéke.
          *
          */
-        const float &operator[](unsigned int i) const;
+        const float &operator[](unsigned int i) const
+        {
+			return Weight[i];
+		}
     };
 
     /** \brief A vertexre ható csont indexe.
@@ -55,7 +67,13 @@ struct lrmSkeletalMesh
         /** \brief Konstruktor, amely minden tömbelemet (-1)-re inicializál.
          *
          */
-        lrmBoneId();
+        lrmBoneId()
+		{
+			for(unsigned int i=0;i < MAX_WEIGHT_COUNT;i++)
+			{
+				Id[i] = -1;
+			}
+		}
 
         /** \brief Operátor, mellyel el lehet érni a megadott indexű bone id-t.
          *
@@ -63,7 +81,10 @@ struct lrmSkeletalMesh
          * \return int& - az i-edik bone id-re mutató referencia.
          *
          */
-        int &operator[](unsigned int i);
+        int &operator[](unsigned int i)
+        {
+			return Id[i];
+		}
 
         /** \brief Operátor, mellyel el lehet érni a megadott indexű bone id-t. Konstans tagfüggvény.
          *
@@ -71,7 +92,10 @@ struct lrmSkeletalMesh
          * \return int - az i-edik bone id értéke.
          *
          */
-        const int &operator[](unsigned int i) const;
+        const int &operator[](unsigned int i) const
+        {
+        	return Id[i];
+        }
     };
 
     lrmStaticMesh BindPoseMesh;

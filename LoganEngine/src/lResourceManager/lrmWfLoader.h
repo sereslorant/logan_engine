@@ -158,6 +158,10 @@ public:
 			for(lmVector3D &Normal : Obj.SmoothNormals)
 			{
 				Normal.Normalize();
+				/*
+				 * TODO IDE KELL TENNI AZ Md5 BETÖLTŐBŐL A TANGENT VEKTOROKAT
+				 * LÉTREHOZÓ FÜGGVÉNYT
+				 */
 			}
 		}
 	}
