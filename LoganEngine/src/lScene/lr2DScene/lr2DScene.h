@@ -1,8 +1,8 @@
 #ifndef LR_2D_SCENE_H
 #define LR_2D_SCENE_H
 
-#include "../../lInterfaces/lRenderer/li2DScene.h"
-#include "../lrColor.h"
+#include "../../lInterfaces/lScene/l2DScene/li2DScene.h"
+#include "../../lScene/lrColor.h"
 
 
 class lr2DCamera : public li2DCamera

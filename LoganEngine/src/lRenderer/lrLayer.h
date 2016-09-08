@@ -1,7 +1,7 @@
 #ifndef LR_LAYER_H
 #define LR_LAYER_H
 
-#include "../lInterfaces/lRenderer/li2DRenderer.h"
+#include "../lInterfaces/lRenderer/liRenderer.h"
 
 class lrLayer : public liLayer
 {

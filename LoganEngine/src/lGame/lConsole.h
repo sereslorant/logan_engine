@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 
+#include "../lInterfaces/lApiAdapter/liThread.h"
 #include "../lInterfaces/lGame/liConsole.h"
-#include "../lInterfaces/liThread.h"
 
 class lConsoleNullObject : public liConsole
 {

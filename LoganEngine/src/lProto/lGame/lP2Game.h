@@ -1,72 +1,17 @@
 #ifndef LP2_GAME_H
 #define LP2_GAME_H
 
-#include "../../lRenderer/lr2DScene/lr2DScene.h"
-#include "../../lRenderer/lr3DScene/lr3DScene.h"
-#include "../../lInterfaces/lRenderer/li2DRenderer.h"
 #include "../../lGame/lGame.h"
 #include "liWorld2D.h"
 
 #include <list>
+#include "../../lInterfaces/lRenderer/liRenderer.h"
+#include "../../lScene/lr2DScene/lr2DScene.h"
+#include "../../lScene/lr3DScene/lr3DScene.h"
 
 class lP2ProtoGameMode : public liGameMode
 {
 protected:
-	//
-	class Set2DLayer : public liLayerVisitor
-	{
-	private:
-		li2DScene *Scene;
-		li2DCamera *Camera;
-
-	public:
-
-		virtual void Visit2DLayer(li2DLayer &layer) override
-		{
-			layer.SetScene(Scene);
-			layer.SetCamera(Camera);
-		}
-
-		virtual void Visit3DLayer(li3DLayer &layer) override
-		{
-			//Üres
-		}
-
-		Set2DLayer(li2DScene *scene,li2DCamera *camera)
-			:Scene(scene),Camera(camera)
-		{}
-
-		virtual ~Set2DLayer() override {}
-	};
-	//
-	class Set3DLayer : public liLayerVisitor
-	{
-	private:
-		//li3DScene *Scene;
-		liFrustum *Frustum;
-		li3DCamera *Camera;
-
-	public:
-
-		virtual void Visit2DLayer(li2DLayer &layer) override
-		{
-			//Üres
-		}
-
-		virtual void Visit3DLayer(li3DLayer &layer) override
-		{
-			//layer.SetScene(Scene);
-			layer.SetFrustum(Frustum);
-			layer.SetCamera(Camera);
-		}
-
-		Set3DLayer(/*li3DScene *scene,*/liFrustum *frustum,li3DCamera *camera)
-			:/*Scene(scene),*/Frustum(frustum),Camera(camera)
-		{}
-
-		virtual ~Set3DLayer() override
-		{}
-	};
 	//
 	liInput &Input;
 	//

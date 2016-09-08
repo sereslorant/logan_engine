@@ -1,8 +1,8 @@
 #ifndef LI_API_ADAPTER_H
 #define LI_API_ADAPTER_H
 
-#include "liInput.h"
 #include "liFrameLimiter.h"
+#include "liInput.h"
 #include "liThread.h"
 
 /** \brief Ez a class felelős az összes platformspecifikus rendszerhívás (ablakkészítés, input, output, stb.) összefogásáért.

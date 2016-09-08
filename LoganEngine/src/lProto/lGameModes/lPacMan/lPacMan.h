@@ -141,10 +141,9 @@ public:
 #include <sstream>
 
 #include "../../../lInterfaces/lGame/liGame.h"
-#include "../../../lInterfaces/lRenderer/li2DRenderer.h"
-#include "../../../lInterfaces/liApiAdapter.h"
-
 #include "../../../lGame/lTimer.h"
+#include "../../../lInterfaces/lApiAdapter/liApiAdapter.h"
+#include "../../../lInterfaces/lRenderer/liRenderer.h"
 
 class lPM_Game : public liGameMode
 {

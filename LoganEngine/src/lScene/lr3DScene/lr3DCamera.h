@@ -1,9 +1,7 @@
-#ifndef LR_3D_SCENE_H
-#define LR_3D_SCENE_H
+#ifndef LR_3D_CAMERA_H
+#define LR_3D_CAMERA_H
 
-#include "../../lInterfaces/lRenderer/li3DScene.h"
-
-#include <cmath>
+#include "../../lInterfaces/lScene/l3DScene/lModScene/li3DModCamera.h"
 
 /** \brief A játékos által látott térrészt leíró class. Arra való, hogy visszaadjon egy vetítőmátrixot.
  *
@@ -12,7 +10,7 @@
  * \author Seres Lóránt Gábor
  *
  */
-class lrFrustum : public liFrustum
+class lrFrustum : public liModFrustum
 {
 private:
     float Top;
@@ -24,22 +22,22 @@ private:
 
 public:
 
-    virtual float GetTop() override
+    virtual float GetTop() const override
     {return Top;}
 
-    virtual float GetBottom() override
+    virtual float GetBottom() const override
     {return Bottom;}
 
-    virtual float GetLeft() override
+    virtual float GetLeft() const override
     {return Left;};
 
-    virtual float GetRight() override
+    virtual float GetRight() const override
     {return Right;}
 
-    virtual float GetFar() override
+    virtual float GetFar() const override
     {return Far;}
 
-    virtual float GetNear() override
+    virtual float GetNear() const override
     {return Near;}
 
     virtual void SetTop(float top) override
@@ -85,7 +83,7 @@ public:
  * \author Seres Lóránt Gábor
  *
  */
-class lr3DCamera : public li3DCamera
+class lr3DCamera : public li3DModCamera
 {
 private:
     lmVector3D Position; /**< A kamera pozíciója */
@@ -162,7 +160,7 @@ public:
      * \return const lmVector3D & - a kamera pozíciója.
      *
      */
-    virtual const lmVector3D &GetPosition() override
+    virtual const lmVector3D &GetPosition() const override
     {
     	return Position;
     }
@@ -188,7 +186,7 @@ public:
      * \return float - a kamera y tengely körüli elfordulása radiánban.
      *
      */
-    virtual float GetYaw() override
+    virtual float GetYaw() const override
     {
     	return Yaw;
     }
@@ -198,7 +196,7 @@ public:
      * \return float - a kamera x tengely körüli elfordulása radiánban.
      *
      */
-    virtual float GetPitch() override
+    virtual float GetPitch() const override
     {
     	return Pitch;
     }
@@ -226,4 +224,4 @@ public:
 };
 
 
-#endif // LR_3D_SCENE_H
+#endif // LR_3D_CAMERA_H

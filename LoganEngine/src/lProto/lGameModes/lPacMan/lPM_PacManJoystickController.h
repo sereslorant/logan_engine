@@ -1,7 +1,7 @@
 #ifndef LPM_PAC_MAN_JOYSTICK_CONTROLLER_H
 #define LPM_PAC_MAN_JOYSTICK_CONTROLLER_H
 
-#include "../../../lInterfaces/liInput.h"
+#include "../../../lInterfaces/lApiAdapter/liInput.h"
 
 struct lPM_PacManJoystickController : public liPM_AgentController
 {

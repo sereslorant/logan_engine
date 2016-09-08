@@ -1,12 +1,12 @@
 #ifndef LSDL2_INPUT_H
 #define LSDL2_INPUT_H
 
-#include "../../../lInterfaces/liInput.h"
-
 #include <SDL2/SDL.h>
 
 #include <string>
 #include <vector>
+
+#include "../../../lInterfaces/lApiAdapter/liInput.h"
 
 class lSDL2Controller : public liController
 {

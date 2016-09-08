@@ -6,6 +6,11 @@
 #include "lmMindenszar.hpp"
 #include "lmVectorND.hpp"
 
+/*
+ * TODO: Kéne gettert csinálni a szögéhez és a tengelyéhez!
+ *
+ */
+
 /** \brief Egy kvaterniót definiáló osztály.
  *
  * \author Seres Lóránt Gábor

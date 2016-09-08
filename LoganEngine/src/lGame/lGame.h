@@ -3,7 +3,7 @@
 
 #include "../lInterfaces/lGame/liConsole.h"
 #include "../lInterfaces/lGame/liGame.h"
-#include "../lInterfaces/lRenderer/li2DRenderer.h"
+#include "../lInterfaces/lRenderer/liRenderer.h"
 
 class lGame : public liGame
 {

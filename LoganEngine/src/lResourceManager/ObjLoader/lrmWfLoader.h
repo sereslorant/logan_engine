@@ -1,54 +1,7 @@
 #ifndef LRM_WF_LOADER_H
 #define LRM_WF_LOADER_H
 
-/*
- * Matekkönyvtár include
- */
-#include "../lMath/lMath.h"
-
-/*
- * STL include-ok
- */
-#include <string>
-#include <vector>
-
-class lrmWfObj
-{
-public:
-	struct lrmWfTriangle
-	{
-		int V1,V2,V3;
-		int Tx1,Tx2,Tx3;
-		int Normal;
-	};
-	//
-	struct lrmWfMatGroup
-	{
-		std::string Material;
-		std::vector<lrmWfTriangle> Triangles;
-	};
-	//
-	std::vector<lrmWfMatGroup *> MatGroups;
-	//
-	std::vector<lmVector3D> Vertices;
-	std::vector<lmVector2D> TexCoords;
-	std::vector<lmVector3D> Normals;
-	//
-	std::vector<lmVector3D> SmoothNormals;
-	//
-	lrmWfObj()
-	{
-		//Üres
-	}
-	//
-	~lrmWfObj()
-	{
-		for(auto i = MatGroups.begin();i != MatGroups.end();i++)
-		{
-			delete *i;
-		}
-	}
-};
+#include "lrmWfObj.h"
 
 #include <istream>
 #include <cstdio>
@@ -158,16 +111,16 @@ public:
 			for(lmVector3D &Normal : Obj.SmoothNormals)
 			{
 				Normal.Normalize();
-				/*
-				 * TODO IDE KELL TENNI AZ Md5 BETÖLTŐBŐL A TANGENT VEKTOROKAT
-				 * LÉTREHOZÓ FÜGGVÉNYT
-				 */
 			}
 		}
 	}
 	//
 	~lrmWfLoader()
-	{}
+	{
+		/*
+		 * Empty
+		 */
+	}
 };
 
 

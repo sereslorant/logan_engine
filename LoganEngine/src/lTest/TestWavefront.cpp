@@ -9,7 +9,7 @@
 /*
  * Wavefront loader include-ok
  */
-#include "../lResourceManager/lrmWfLoader.h"
+#include "../lResourceManager/ObjLoader/lrmWfLoader.h"
 
 /*
  * STL include-ok

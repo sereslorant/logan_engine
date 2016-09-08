@@ -1,8 +1,8 @@
 #ifndef LI_2D_SCENE_H
 #define LI_2D_SCENE_H
 
-#include "../../lMath/lmVectorND.hpp"
-#include "liColor.h"
+#include "../../../lMath/lmVectorND.hpp"
+#include "../liColor.h"
 
 class li2DCamera
 {
@@ -63,6 +63,9 @@ public:
 	virtual ~li2DSceneDrawer(){}
 };
 
+/*
+ * TODO: Kurvasok kódduplikálás lesz a 3D-s színtérrel, esélyes, hogy refaktorálni kell!
+ */
 class li2DScene
 {
 public:

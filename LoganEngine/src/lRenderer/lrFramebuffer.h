@@ -1,7 +1,7 @@
 #ifndef LR_FRAMEBUFFER_H
 #define LR_FRAMEBUFFER_H
 
-#include "../lInterfaces/lRenderer/li2DRenderer.h"
+#include "../lInterfaces/lRenderer/liRenderer.h"
 
 class lrFramebuffer : public liFramebuffer
 {

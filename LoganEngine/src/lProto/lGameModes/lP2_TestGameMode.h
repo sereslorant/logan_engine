@@ -3,6 +3,8 @@
 
 #include "../lGame/lP2Game.h"
 
+#include "../../lUtils/luSetLayer.h"
+
 class lP2_TestGameMode : public lP2ProtoGameMode
 {
 protected:
@@ -179,7 +181,7 @@ public:
 		Camera3D = new lr3DCamera(lmVector3D({0.0,0.0,0.0}),0.0,0.0);
 		Controller = Input.GetController(0);
 		//
-		Set3DLayer SetTestLayer(Frustum3D,Camera3D);
+		luSet3DLayer SetTestLayer(nullptr,Frustum3D,Camera3D);
 		TestLayer->Accept(SetTestLayer);
 		//
 		TestLayer->Enable();
@@ -191,8 +193,8 @@ public:
 		GuiScene = new lr2DScene;
 		GuiCamera = new lr2DCamera({0.0,0.0},Width,Height/2.0);
 		//
-		Set2DLayer SetGameLayer(GameScene,GameCamera);
-		Set2DLayer SetGuiLayer(GuiScene,GuiCamera);
+		luSet2DLayer SetGameLayer(GameScene,GameCamera);
+		luSet2DLayer SetGuiLayer(GuiScene,GuiCamera);
 		//
 		GameLayer = Viewport->Create2DLayer();
 		GuiLayer = Viewport->Create2DLayer();

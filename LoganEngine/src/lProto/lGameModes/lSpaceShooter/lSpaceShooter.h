@@ -117,10 +117,10 @@ public:
 	{}
 };
 
-#include "../../../lInterfaces/lRenderer/li2DScene.h"
+#include "../../../lInterfaces/lScene/l2DScene/li2DScene.h"
 
 
-#include "../../../lRenderer/lr2DScene/lr2DScene.h"
+#include "../../../lScene/lr2DScene/lr2DScene.h"
 
 class lSS_GameMode : public lP2ProtoGameMode
 {

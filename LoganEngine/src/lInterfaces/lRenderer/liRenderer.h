@@ -1,8 +1,8 @@
 #ifndef LI_RENDERER_H
 #define LI_RENDERER_H
 
-#include "li2DScene.h"
-#include "li3DScene.h"
+#include "../lScene/l2DScene/li2DScene.h"
+#include "../lScene/l3DScene/li3DScene.h"
 
 class li2DLayer
 {
@@ -17,7 +17,7 @@ public:
 class li3DLayer
 {
 public:
-	//virtual void SetScene(li3DScene *scene) = 0;
+	virtual void SetScene(li3DScene *scene) = 0;
 	virtual void SetFrustum(liFrustum *frustum) = 0;
 	virtual void SetCamera(li3DCamera *camera) = 0;
 

@@ -1,7 +1,7 @@
 #ifndef LR_COLOR_H
 #define LR_COLOR_H
 
-#include "../lInterfaces/lRenderer/liColor.h"
+#include "../lInterfaces/lScene/liColor.h"
 
 /** \todo Dokumentálni kéne.
  *

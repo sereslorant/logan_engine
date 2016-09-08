@@ -1,9 +1,9 @@
 #ifndef LSDL2_FRAME_LIMITER
 #define LSDL2_FRAME_LIMITER
 
-#include "../../lInterfaces/liFrameLimiter.h"
-
 #include <SDL2/SDL.h>
+
+#include "../../lInterfaces/lApiAdapter/liFrameLimiter.h"
 
 class lSDL2_FrameLimiter : public liFrameLimiter
 {

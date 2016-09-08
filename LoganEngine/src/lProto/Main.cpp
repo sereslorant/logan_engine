@@ -5,16 +5,11 @@
 #include "lGameModes/lP2_TestGameMode.h"
 #include "lGame/lP2World2D.h"
 
-#include "../lInterfaces/lRenderer/li2DRenderer.h"
-#include "lffGLRenderer.h"
-
-
-#include "../lInterfaces/liApiAdapter.h"
-
-/*
- * A konzol miatt kell.
- */
 #include <iostream>
+
+#include "../lInterfaces/lApiAdapter/liApiAdapter.h"
+#include "../lInterfaces/lRenderer/liRenderer.h"
+#include "../lTest/lffGLRenderer/lffGLRenderer.h"
 
 class lP2_Program
 {
@@ -73,7 +68,7 @@ public:
 			Console = new lConsoleNullObject;
 		}
 		//
-		Renderer = new lffGLRenderer(ResourceManager);
+		Renderer = new lffGLRenderer(800,600,ResourceManager);
 		//
 		#ifdef PAC_MAN
 			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),*Renderer,0.125);//new lGameMode();

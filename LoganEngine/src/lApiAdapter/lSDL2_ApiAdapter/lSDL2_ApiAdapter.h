@@ -1,8 +1,6 @@
 #ifndef L_SDL2_INTERFACE_H
 #define L_SDL2_INTERFACE_H
 
-#include "../../lInterfaces/liApiAdapter.h"
-
 #include <SDL2/SDL.h>
 
 #include "lSDL2_Input/lSDL2_Input.h"
@@ -11,6 +9,8 @@
 
 #include <fstream>
 #include <string>
+
+#include "../../lInterfaces/lApiAdapter/liApiAdapter.h"
 
 struct lSDL2_Settings
 {

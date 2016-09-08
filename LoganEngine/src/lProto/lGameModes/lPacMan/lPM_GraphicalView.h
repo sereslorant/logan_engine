@@ -1,13 +1,12 @@
 #ifndef LPM_GRAPHICAL_VIEW_H
 #define LPM_GRAPHICAL_VIEW_H
 
+#include "../../../lInterfaces/lRenderer/liRenderer.h"
 #include "lPM_Model.h"
 
-#include "../../../lRenderer/lr2DScene/lr2DScene.h"
-#include "../../../lInterfaces/lRenderer/li2DRenderer.h"
-
 #include "../../../lMath/lMath.h"
-#include "../../../lRenderer/lrColor.h"
+#include "../../../lScene/lr2DScene/lr2DScene.h"
+#include "../../../lScene/lrColor.h"
 
 class lPM_GraphicalView : public liPM_ModelObserver
 {
