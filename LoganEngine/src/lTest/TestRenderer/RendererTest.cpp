@@ -63,9 +63,11 @@ void RendererTest::Initialize()
 
 void RendererTest::Loop()
 {
-	Angle += PI/64.0;
+	Angle += PI/128.0;
 	//Camera3D->SetYaw(Angle);
-	lmQuaternion NewOrientation(lmVector3D({-1.0f,1.0f,0.0f}),Angle);
+	lmVector3D Axle = lmVector3D({-1.0f,1.0f,0.0f});
+	Axle.Normalize();
+	lmQuaternion NewOrientation(Axle,Angle);
 	//
 	TestElement->SetOrientation(NewOrientation);
 }

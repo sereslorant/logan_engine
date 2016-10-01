@@ -4,7 +4,7 @@
 #include "lGLIncludes.h"
 #include "lffGLResourceLoader.h"
 
-#include "lffGL3DSceneCache.h"
+#include "lffGLUtils.h"
 
 class lffGL3DSceneDrawer : public li3DSceneDrawer, public li3DElementVisitor, public li3DMeshVisitor
 {
@@ -12,6 +12,7 @@ private:
 	lffGLResourceLoader &ResourceLoader;
 	const liMaterialLibrary *MtlLib = nullptr;
 	//
+	/*
 	void Translate(const lmVector3D &pos)
 	{
 		glTranslatef(pos[0],pos[1],pos[2]);
@@ -36,6 +37,7 @@ private:
 	{
 		glScalef(scale[0],scale[1],scale[2]);
 	}
+	*/
 	//
 	void SetMaterial(const liMaterial &material)
 	{
@@ -70,9 +72,10 @@ public:
 	{
 		glPushMatrix();
 			//
-			Scale(mesh.GetScale());
-			Translate(mesh.GetPosition());
-			Rotate(mesh.GetOrientation());
+			lmMatrix4x4 ModelMatrix(lmMatrix4x4::IDENTITY);
+			lffGLUtils::GetModelMatrix(mesh,ModelMatrix);
+			//
+			glMultMatrixf(ModelMatrix[0]);
 			//
 			MtlLib = &mesh.GetMaterialLibrary();
 			//
@@ -125,27 +128,44 @@ private:
 		//
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glFrustum(	Frustum->GetLeft(),Frustum->GetRight(),
-					Frustum->GetBottom(),Frustum->GetTop(),
-					Frustum->GetNear(),Frustum->GetFar());
+		lmMatrix4x4 ProjectionMatrix(lmMatrix4x4::IDENTITY);
+		lffGLUtils::GetProjectionMatrix(*Frustum,ProjectionMatrix);
+		//
+		glMultMatrixf(ProjectionMatrix[0]);
+		//glFrustum(	Frustum->GetLeft(),Frustum->GetRight(),
+		//			Frustum->GetBottom(),Frustum->GetTop(),
+		//			Frustum->GetNear(),Frustum->GetFar());
 		//
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		//
-		glRotatef(Camera->GetPitch()*(180/PI),1.0,0.0,0.0);
-        glRotatef(Camera->GetYaw()*(180/PI),0.0,1.0,0.0);
-        glTranslatef(-1.0*Camera->GetPosition()[0],-1.0*Camera->GetPosition()[1],-1.0*Camera->GetPosition()[2]);
+		lmMatrix4x4 ViewMatrix(lmMatrix4x4::IDENTITY);
+		lffGLUtils::GetViewMatrix(*Camera,ViewMatrix);
+		//
+		glMultMatrixf(ViewMatrix[0]);
+		//glRotatef(Camera->GetPitch()*(180/PI),1.0,0.0,0.0);
+        //glRotatef(Camera->GetYaw()*(180/PI),0.0,1.0,0.0);
+        //glTranslatef(-1.0*Camera->GetPosition()[0],-1.0*Camera->GetPosition()[1],-1.0*Camera->GetPosition()[2]);
         //
-        glColor3f(1.0,1.0,1.0);
+        //glColor3f(1.0,1.0,1.0);
         //
-        lr3DSceneReader SceneReader(ResourceLoader);
-        Scene->Draw(SceneReader);
+        //lr3DSceneReader SceneReader(ResourceLoader);
+        //Scene->Draw(SceneReader);
         //
-        SceneReader.Print();
+        //lffGL3DSceneCache SceneCache;
+        //SceneReader.InitializeSceneCache(SceneCache);
         //
+        //lr3DSceneCacher SceneCacher(ResourceLoader,SceneCache);
+        //Scene->Draw(SceneCacher);
+        //
+        //SceneCacher.Print();
+        //lffGL3DCacheDrawer CacheDrawer(ResourceLoader,SceneCache);
+        //CacheDrawer.DrawScene();
+        //
+        // /*
         lffGL3DSceneDrawer SceneDrawer(ResourceLoader);
         Scene->Draw(SceneDrawer);
-        //
+        // */
 	}
 	//
 public:

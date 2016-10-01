@@ -85,7 +85,7 @@ public:
 			}
 			else if(mesh_name == "Cone")
 			{
-				std::cout << "Cone loaded" << std::endl;
+				//std::cout << "Cone loaded" << std::endl;
 				lrmResourceManager::GenerateSphere(*StaticMesh,3,3);
 			}
 			else if(mesh_name == "Box")

@@ -50,7 +50,6 @@ public:
 		//
 		const std::string &GetMaterial()
 		{
-			if(MtlGroup == nullptr) {return "Dummy";}
 			return MtlGroup->Material;
 		}
 		//
@@ -72,11 +71,14 @@ public:
 			glEnd();
 		}
 		//
-		void DrawInstanced(lmMatrix4x4 mv_matrices[],lffGLMaterial materials[],unsigned int num_instances)
+		void DrawInstanced(lmMatrix4x4 model_matrices[],lffGLMaterial materials[],unsigned int num_instances)
 		{
 			for(unsigned int i=0;i < num_instances;i++)
 			{
 				glPushMatrix();
+					//
+					glMultMatrixf(model_matrices[i][0]);
+					materials[i].Apply();
 					//
 					Draw();
 				glPopMatrix();
@@ -192,16 +194,10 @@ public:
 		{
 			lrmStaticMesh *LoadedMesh = ResourceManager.GetStaticMesh(resource_id);
 			//
-			std::cout << LoadedMesh << std::endl;
-			//
-			std::cout << LoadedMesh->Vertices[0][0] << std::endl;
-			//
 			lffGLStaticMesh *NewStaticMesh = new lffGLStaticMesh(*LoadedMesh);
 			//
-			std::cout << "Assigning" << std::endl;
 			StaticMeshes[resource_id] = NewStaticMesh;
 			//
-			std::cout << "Returning" << std::endl;
 			return StaticMeshes[resource_id];
 		}
 		//

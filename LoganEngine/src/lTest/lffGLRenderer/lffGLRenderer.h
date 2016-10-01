@@ -5,6 +5,7 @@
 
 #include "lffGL2DLayer.h"
 #include "lffGL3DDumbLayer.h"
+#include "lffGL3DCachedLayer.h"
 
 #include "../../lRenderer/lrViewport.h"
 #include <list>
@@ -27,7 +28,8 @@ public:
 
 	virtual liLayer *Create3DLayer() override
 	{
-		lrLayer *NewLayer = new lffGL3DDumbLayer(ResourceLoader);
+		//lrLayer *NewLayer = new lffGL3DDumbLayer(ResourceLoader);
+		lrLayer *NewLayer = new lffGL3DCachedLayer(ResourceLoader);
 		Layers.push_back(NewLayer);
 		//
 		return NewLayer;
