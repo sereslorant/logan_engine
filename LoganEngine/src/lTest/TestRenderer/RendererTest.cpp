@@ -8,6 +8,8 @@
 #include "../../lUtils/luSetLayer.h"
 #include "../../lUtils/luGetModMesh.h"
 
+#include <chrono>
+
 lrMaterial CreateMaterial(const std::string &texture_name)
 {
 	lrMaterial Material;
@@ -50,6 +52,22 @@ void RendererTest::Initialize()
 		ModElement->Accept(Getter);
 		TestElement = Getter.GetModMesh();
 		//
+		ModElement = Scene3D->GetElementFactory().CreatePointLight({0.0f,0.0f,0.0f});
+		luGetModLight GetLight;
+		ModElement->Accept(GetLight);
+		li3DModLight &ModLight = *GetLight.GetModLight();
+		//
+		ModLight.SetDiffuse(L_RED_INDEX,0.5);
+		ModLight.SetDiffuse(L_GREEN_INDEX,0.5);
+		ModLight.SetDiffuse(L_BLUE_INDEX,0.5);
+		//
+		ModElement = Scene3D->GetElementFactory().CreatePointLight({0.0f,0.0f,0.0f});
+		ModElement->Accept(GetLight);
+		TestLight = GetLight.GetModLight();
+		//
+		TestLight->SetDiffuse(L_RED_INDEX,0.5);
+		TestLight->SetDiffuse(L_GREEN_INDEX,0.5);
+		//
 		luSet3DLayer SetTestLayer(Scene3D,Frustum3D,Camera3D);
 		TestLayer->Accept(SetTestLayer);
 		//
@@ -64,19 +82,34 @@ void RendererTest::Initialize()
 void RendererTest::Loop()
 {
 	Angle += PI/128.0;
+	OtherAngle += PI/128.0;
 	//Camera3D->SetYaw(Angle);
 	lmVector3D Axle = lmVector3D({-1.0f,1.0f,0.0f});
 	Axle.Normalize();
 	lmQuaternion NewOrientation(Axle,Angle);
 	//
 	TestElement->SetOrientation(NewOrientation);
+
+	lmVector3D LightPos;
+	LightPos[0] = 10.0f*cos(OtherAngle);
+	LightPos[1] = 0.0;
+	LightPos[2] = 10.0f*sin(OtherAngle);
+	TestLight->SetPosition(LightPos);
 }
 
 void RendererTest::Draw()
 {
 	if(Renderer != nullptr)
 	{
+		auto Before = std::chrono::steady_clock::now();
 		Renderer->Render();
+		auto After = std::chrono::steady_clock::now();
+		//
+		std::chrono::nanoseconds Difference = After - Before;
+		//std::chrono::seconds Difference_sec = After - Before;
+		//
+		std::cout << "Frame time = " << Difference.count() / 1000000.0 << "ms" << std::endl;
+		//std::cout << "FPS = " << 1.0/Difference_sec.count() << std::endl;
 	}
 	else
 	{

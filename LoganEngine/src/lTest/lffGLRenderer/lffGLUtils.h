@@ -1,7 +1,7 @@
 #ifndef LFF_GL_UTILS_H
 #define LFF_GL_UTILS_H
 
-#include "lGLIncludes.h"
+#include "../../lRenderer/lGLRenderer/lGLIncludes.h"
 
 class lffGLUtils
 {
@@ -34,9 +34,14 @@ public:
 		lmScale4x4(dest,mesh.GetScale());
 	}
 
-	static void ComputeMatGroupName(const std::string &mesh_name,unsigned int mat_group_id,std::string &dest)
+	static void ComputeTextureGroupKey(const liMaterial &material,std::string &dest)
 	{
-		dest = mesh_name + "_" + std::to_string(mat_group_id);
+		dest = material.GetDiffuseMap();
+	}
+
+	static void ComputeMaterialGroupKey(const std::string &mesh_name,const std::string &mat_group_name,std::string &dest)
+	{
+		dest = mesh_name + "/" + mat_group_name;
 	}
 };
 

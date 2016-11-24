@@ -3,6 +3,33 @@
 
 #include "../lInterfaces/lScene/l3DScene/lModScene/li3DModScene.h"
 
+
+class luGetModLight : public li3DModElementVisitor
+{
+private:
+	li3DModLight *ModLight = nullptr;
+
+public:
+
+	li3DModLight *GetModLight()
+	{
+		return ModLight;
+	}
+
+	virtual void VisitLight(li3DModLight &light) override
+	{
+		ModLight = &light;
+	}
+
+	virtual void VisitMesh(li3DModMesh &mesh) override
+	{
+		//
+	}
+
+	luGetModLight() {}
+	virtual ~luGetModLight() override {}
+};
+
 class luGetModMesh : public li3DModElementVisitor
 {
 private:
@@ -13,6 +40,11 @@ public:
 	li3DModMesh *GetModMesh()
 	{
 		return ModMesh;
+	}
+
+	virtual void VisitLight(li3DModLight &light) override
+	{
+		//
 	}
 
 	virtual void VisitMesh(li3DModMesh &mesh) override

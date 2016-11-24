@@ -3,8 +3,10 @@
 
 #include <SDL2/SDL.h>
 
-#include "lSDL2_Input/lSDL2_Input.h"
 #include "lSDL2_FrameLimiter.h"
+#include "lSDL2_GLExtFunctionLoader.h"
+
+#include "lSDL2_Input/lSDL2_Input.h"
 #include "lSDL2_Thread/lSDL2_Thread.h"
 
 #include <fstream>

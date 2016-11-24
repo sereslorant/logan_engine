@@ -183,37 +183,44 @@ bool lmSphereTriangleIntersection(const lmVectorND<T,N> &SphereCenter,const T Sp
 }
 
 template<class T,unsigned int N>
-bool lmRaySphereIntersection(const lmVectorND<T,N> &ray_point,const lmVectorND<T,N> &ray_dir,const lmVectorND<T,N> &sphere_center,T sphere_radius,T *t1 = nullptr,T *t2 = nullptr)
+bool lmRaySphereIntersection(const lmVectorND<T,N> &ray_point,const lmVectorND<T,N> &ray_dir,const lmVectorND<T,N> &sphere_center,T sphere_radius,T *t1 = nullptr,T *t2 = nullptr,unsigned int *num_solutions = nullptr)
 {
 	/*
 	 * Az egyenes-gömb metszéspontját másodfokú egyenlet megoldóképletével számoljuk:
 	 * K2*(t^2) + K1*t + K0 = 0;
 	 */
-
+	//
 	T K2 = ray_dir.LengthSquared();
 	T K1 = 2.0*lmDot(ray_point-sphere_center,ray_dir);
 	T K0 = ray_point.LengthSquared() + sphere_center.LengthSquared()  - 2.0*lmDot(ray_point,sphere_center) - (sphere_radius*sphere_radius);
-
+	//
 	T Discriminant = K1*K1 - 4.0*K2*K0;
-
+	//
 	if(Discriminant < 0.0)
 	{
 		return false;
 	}
 	if(Discriminant > 0.0)
 	{
+		if(num_solutions != nullptr)
+			{*num_solutions = 2;}
+		//
 		if(t1 != nullptr)
 			{*t1 = (-K1 + std::sqrt(Discriminant))/(2.0*K2);}
-
+		//
 		if(t2 != nullptr)
 			{*t2 = (-K1 - std::sqrt(Discriminant))/(2.0*K2);}
-
+		//
 		return true;
 	}
 	else
 	{
+		if(num_solutions != nullptr)
+			{*num_solutions = 1;}
+		//
 		if(t1 != nullptr)
 			{*t1 = -K1/(2.0*K2);}
+		//
 		return true;
 	}
 }

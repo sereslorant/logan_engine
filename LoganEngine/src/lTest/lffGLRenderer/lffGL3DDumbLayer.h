@@ -1,8 +1,10 @@
 #ifndef LFF_GL_3D_DUMB_LAYER_H
 #define LFF_GL_3D_DUMB_LAYER_H
 
-#include "lGLIncludes.h"
+#include "../lGL/lGLIncludes.h"
+
 #include "lffGLResourceLoader.h"
+#include "lffGL3DSceneCache.h"
 
 #include "lffGLUtils.h"
 
@@ -82,6 +84,11 @@ public:
 			mesh.Accept(*this);
 			//
 		glPopMatrix();
+	}
+	//
+	virtual void VisitLight(const li3DLight &light) override
+	{
+		//
 	}
 	//
 	virtual void Draw(const li3DElement &element) override

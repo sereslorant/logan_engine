@@ -31,7 +31,12 @@ private:
 	constexpr static unsigned int TEXTURE_X = 2;
 	constexpr static unsigned int TEXTURE_Y = 2;
     //
-	Color Texture[TEXTURE_X][TEXTURE_Y] = {{Color(0.0,1.0,0.0),Color(0.0,0.8,0.2)},{Color(0.0,0.8,0.0),Color(0.0,1.0,0.2)}};
+	Color Texture[2][TEXTURE_X][TEXTURE_Y] = {
+												{{Color(0.0,1.0,0.0),Color(0.0,0.8,0.2)},{Color(0.0,0.8,0.0),Color(0.0,1.0,0.2)}},
+												{{Color(0.0,0.2,1.0),Color(0.4,0.2,0.8)},{Color(0.0,0.2,0.8),Color(0.4,0.2,1.0)}}
+												};
+	//
+	unsigned int TexId = 0;
     //
 public:
     //
@@ -47,7 +52,7 @@ public:
     //
     virtual char *GetPixelArray() override
     {
-    	return (char *)&Texture[0][0];
+    	return (char *)&Texture[TexId][0][0];
     }
     //
     /*
@@ -56,7 +61,8 @@ public:
 
     }
 	*/
-	DummyImage()
+	DummyImage(unsigned int tex_id)
+		:TexId(tex_id % 2)
 	{}
 	//
 	virtual ~DummyImage() override
@@ -68,7 +74,8 @@ class DummyRM : public liResourceManager
 private:
 	std::map<std::string,lrmStaticMesh *> StaticMeshes;
 
-	DummyImage *Image = new DummyImage;
+	DummyImage *Image = new DummyImage(0);
+	DummyImage *Image2 = new DummyImage(1);
 
 public:
 	//
@@ -113,6 +120,10 @@ public:
 	//
 	virtual liBitmap *GetBitmap(const std::string &resource_identifier) override
 	{
+		if(resource_identifier == "Puszcsy")
+		{
+			return Image2;
+		}
 		return Image;
 	}
 	//

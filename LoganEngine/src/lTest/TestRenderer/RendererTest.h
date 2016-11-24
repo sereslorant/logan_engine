@@ -16,10 +16,12 @@ private:
 	li3DModCamera *Camera3D = nullptr;
 	//
 	li3DModMesh *TestElement = nullptr;
+	li3DModLight *TestLight = nullptr;
 	//
 	liViewport *Viewport3D = nullptr;
 	//
 	float Angle = 0.0;
+	float OtherAngle = 0.0;
 	//
 public:
 	//
@@ -34,7 +36,11 @@ public:
 	{}
 	//
 	~RendererTest()
-	{}
+	{
+		delete Scene3D;
+		delete Frustum3D;
+		delete Camera3D;
+	}
 };
 
 #endif // RENDERER_TEST_H

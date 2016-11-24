@@ -7,7 +7,7 @@ class li3DModStaticMesh : public li3DStaticMesh
 {
 public:
 	//
-	virtual void SetModelname(std::string &model_name) = 0;
+	virtual void SetModelName(const std::string &model_name) = 0;
 	//
 	li3DModStaticMesh()
 	{}

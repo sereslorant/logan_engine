@@ -620,7 +620,8 @@ void md5ExtractBindPoseMesh(md5File &file,bool y_up,bool smooth_normals,unsigned
     bind_pose_mesh.Normals.resize(file.Meshes[mesh_index].Vertices.size());
     //
     lrmStaticMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMesh::lrmMtlGroup;
-    bind_pose_mesh.MtlGroups.push_back(newMtlGroup);
+    //bind_pose_mesh.MtlGroups.push_back(newMtlGroup);
+    bind_pose_mesh.AddMaterialGroup(newMtlGroup);
     //
     newMtlGroup->Material = file.Meshes[mesh_index].Material;
     newMtlGroup->IndexBuffer.resize(file.Meshes[mesh_index].Triangles.size()*3);

@@ -1,50 +1,39 @@
 #ifndef LFF_GL_RESOURCE_LOADER_H
 #define LFF_GL_RESOURCE_LOADER_H
 
-#include "lGLIncludes.h"
+#include "../../lRenderer/lGLRenderer/lGLIncludes.h"
 
 #include "../../lResourceManager/lResourceManager.h"
-
-struct lffGLMaterial
-{
-	GLfloat Diffuse[4] = {0.0,0.0,0.0,1.0};
-	GLfloat Specular[4] = {0.0,0.0,0.0,1.0};
-	GLfloat Shininess = 0.0;
-
-	void Apply()
-	{
-		glMaterialfv(GL_FRONT,GL_AMBIENT_AND_DIFFUSE,Diffuse);
-		glMaterialfv(GL_FRONT,GL_SPECULAR,Specular);
-		glMaterialfv(GL_FRONT,GL_SHININESS,&Shininess);
-	}
-
-	void SetMaterial(const liMaterial &material)
-	{
-		Diffuse[0] = material.GetDiffuse(L_RED_INDEX);
-		Specular[0] = material.GetSpecular(L_RED_INDEX);
-		//
-		Diffuse[1] = material.GetDiffuse(L_GREEN_INDEX);
-		Specular[1] = material.GetSpecular(L_GREEN_INDEX);
-		//
-		Diffuse[2] = material.GetDiffuse(L_BLUE_INDEX);
-		Specular[2] = material.GetSpecular(L_BLUE_INDEX);
-		//
-		Shininess = material.GetShininess();
-	}
-};
 
 class lffGLStaticMesh
 {
 private:
 	lrmStaticMesh &StaticMesh;
+	std::vector<GLuint> DisplayLists;
 	//
 public:
+	//
+	static void DrawMesh(lrmStaticMesh &static_mesh,lrmStaticMesh::lrmMtlGroup &mtl_group)
+	{
+		glBegin(GL_TRIANGLES);
+		//
+		for(unsigned int i=0;i < mtl_group.IndexBuffer.size();i++)
+		{
+			unsigned int Index = mtl_group.IndexBuffer[i];
+			glTexCoord2f(static_mesh.TexCoords[Index][0],static_mesh.TexCoords[Index][1]);
+			glNormal3f(static_mesh.Normals[Index][0],static_mesh.Normals[Index][1],static_mesh.Normals[Index][2]);
+			glVertex3f(static_mesh.Vertices[Index][0],static_mesh.Vertices[Index][1],static_mesh.Vertices[Index][2]);
+		}
+		//
+		glEnd();
+	}
 	//
 	class lffGLMaterialGroup
 	{
 	private:
 		lrmStaticMesh *StaticMesh = nullptr;
 		lrmStaticMesh::lrmMtlGroup *MtlGroup = nullptr;
+		GLuint DisplayList = 0;
 		//
 	public:
 		//
@@ -58,31 +47,7 @@ public:
 			if(StaticMesh == nullptr || MtlGroup == nullptr)
 				{return;}
 			//
-			glBegin(GL_TRIANGLES);
-			//
-			for(unsigned int i=0;i < MtlGroup->IndexBuffer.size();i++)
-			{
-				unsigned int Index = MtlGroup->IndexBuffer[i];
-				glTexCoord2f(StaticMesh->TexCoords[Index][0],StaticMesh->TexCoords[Index][1]);
-				glNormal3f(StaticMesh->Normals[Index][0],StaticMesh->Normals[Index][1],StaticMesh->Normals[Index][2]);
-				glVertex3f(StaticMesh->Vertices[Index][0],StaticMesh->Vertices[Index][1],StaticMesh->Vertices[Index][2]);
-			}
-			//
-			glEnd();
-		}
-		//
-		void DrawInstanced(lmMatrix4x4 model_matrices[],lffGLMaterial materials[],unsigned int num_instances)
-		{
-			for(unsigned int i=0;i < num_instances;i++)
-			{
-				glPushMatrix();
-					//
-					glMultMatrixf(model_matrices[i][0]);
-					materials[i].Apply();
-					//
-					Draw();
-				glPopMatrix();
-			}
+			glCallList(DisplayList);
 		}
 		//
 		lffGLMaterialGroup()
@@ -90,8 +55,8 @@ public:
 			//
 		}
 		//
-		lffGLMaterialGroup(lrmStaticMesh *static_mesh,lrmStaticMesh::lrmMtlGroup *mtl_group)
-			:StaticMesh(static_mesh),MtlGroup(mtl_group)
+		lffGLMaterialGroup(lrmStaticMesh *static_mesh,lrmStaticMesh::lrmMtlGroup *mtl_group,GLuint display_list)
+			:StaticMesh(static_mesh),MtlGroup(mtl_group),DisplayList(display_list)
 		{
 			//
 		}
@@ -99,40 +64,40 @@ public:
 	//
 	unsigned int GetNumMtlGroups()
 	{
-		return StaticMesh.MtlGroups.size();
+		return StaticMesh.GetNumMtlGroups();
+	}
+	//
+	const std::string &GetMaterialName(unsigned int mat_group_id)
+	{
+		return StaticMesh.GetMaterialGroup(mat_group_id).Material;
 	}
 	//
 	lffGLMaterialGroup GetMtlGroup(unsigned int index)
 	{
-		return lffGLMaterialGroup(&StaticMesh,StaticMesh.MtlGroups[index]);
+		return lffGLMaterialGroup(&StaticMesh,&StaticMesh.GetMaterialGroup(index),DisplayLists[index]);
 	}
-	//
-	/*
-	void Draw(lrmStaticMesh::lrmMtlGroup &mtl_group)
-	{
-		glBegin(GL_TRIANGLES);
-		//
-		/*for(lrmStaticMesh::lrmMtlGroup *MtlGroup : StaticMesh.MtlGroups)
-		{* /
-			for(unsigned int i=0;i < mtl_group.IndexBuffer.size();i++)
-			{
-				unsigned int Index = mtl_group.IndexBuffer[i];
-				glTexCoord2f(StaticMesh.TexCoords[Index][0],StaticMesh.TexCoords[Index][1]);
-				glNormal3f(StaticMesh.Normals[Index][0],StaticMesh.Normals[Index][1],StaticMesh.Normals[Index][2]);
-				glVertex3f(StaticMesh.Vertices[Index][0],StaticMesh.Vertices[Index][1],StaticMesh.Vertices[Index][2]);
-			}
-		//}
-		//
-		glEnd();
-	}
-	*/
 	//
 	lffGLStaticMesh(lrmStaticMesh &static_mesh)
 		:StaticMesh(static_mesh)
-	{}
+	{
+		DisplayLists.resize(StaticMesh.GetNumMtlGroups());
+		for(unsigned int i=0;i < DisplayLists.size();i++)
+		{
+			DisplayLists[i] = glGenLists(1);
+
+			glNewList(DisplayLists[i],GL_COMPILE);
+				DrawMesh(StaticMesh,StaticMesh.GetMaterialGroup(i));
+			glEndList();
+		}
+	}
 	//
 	virtual ~lffGLStaticMesh()
-	{}
+	{
+		for(auto Index : DisplayLists)
+		{
+			glDeleteLists(Index,1);
+		}
+	}
 };
 
 class lffGLTexture
@@ -177,6 +142,105 @@ public:
 	}
 };
 
+#include <string>
+/*
+class liResourcePath
+{
+public:
+	//
+	virtual void GetRest(std::string &str) = 0;
+	//
+	virtual void GetChild(std::string &str) = 0;
+	//
+	liResourcePath(){}
+	virtual ~liResourcePath(){}
+};
+*//*
+class luResourcePath //: public liResourcePath
+{
+private:
+	std::istringstream StringStream;
+	const char Delim;
+	//
+public:
+	//
+	virtual void GetRest(std::string &str) //override
+	{
+		std::getline(StringStream,str);
+	}
+	//
+	virtual void GetChild(std::string &str) //override
+	{
+		std::getline(StringStream,str,Delim);
+	}
+	//
+	luResourcePath(const std::string &str,const char delim)
+		:StringStream(str),Delim(delim)
+	{
+		//
+	}
+	//
+	virtual ~luResourcePath() //override
+	{
+		//
+	}
+};*/
+/*
+template<class Texture_T,class StaticMesh_T,class SkeletalMesh_T>
+class lrResourceLoaderBase
+{
+public:
+	//
+	virtual Texture_T &GetTexture(const std::string &texture_path)
+	{
+		return Texture_T::NULL_OBJECT;
+	}
+	//
+	virtual StaticMesh_T &GetStaticMesh(const std::string &static_mesh_path)
+	{
+		return StaticMesh_T::NULL_OBJECT;
+	}
+	//
+	virtual SkeletalMesh_T &GetSkeletalMesh(const std::string &skeletal_mesh_path)
+	{
+		return SkeletalMesh_T::NULL_OBJECT;
+	}
+	//
+	lrResourceLoaderBase()
+	{}
+	//
+	virtual ~lrResourceLoaderBase()
+	{}
+};
+
+template<class Texture_T,class StaticMesh_T,class SkeletalMesh_T>
+class lrResourceLoader : lrResourceLoaderBase<Texture_T,StaticMesh_T,SkeletalMesh_T>
+{
+private:
+
+public:
+	//
+	virtual Texture_T &GetTexture()
+	{
+		return Texture_T::NULL_OBJECT;
+	}
+	//
+	virtual StaticMesh_T &GetStaticMesh()
+	{
+		return StaticMesh_T::NULL_OBJECT;
+	}
+	virtual SkeletalMesh_T &GetSkeletalMesh()
+	{
+		return SkeletalMesh_T::NULL_OBJECT;
+	}
+	//
+	lrResourceLoader()
+	{}
+	//
+	virtual ~lrResourceLoader() override
+	{}
+};
+*/
 class lffGLResourceLoader
 {
 private:

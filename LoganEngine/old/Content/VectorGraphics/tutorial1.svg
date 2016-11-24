@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<svg width = "100" height = "100" >
+
+  <!-- Egy egyszerű téglalap -->
+  <rect x = "5" y = "5" width = "90" height = "90" fill = "blue">
+    <animate attributeName="x" from="0" to="100" dur="10s" fill="freeze" repeatCount = "1.5"/>
+
+  </rect>
+
+  <!-- Egy lelapított sarkú téglalap. Az ry és az ry lapítja le a sarkait.
+    Körvonala is van, amiket a stroke width-hel és a stroke-kel lehet beállítani.
+    -->
+  <rect x = "10" y = "10" rx = "10" ry = "10" width = "80" height = "80" stroke = "white" stroke-width = "2" fill = "blue">
+
+  </rect>
+
+  <!-- Egy egyszerű kör -->
+  <circle cx = "50" cy = "50" r = "40" fill = "orange">
+
+  </circle>
+
+</svg>

@@ -1,7 +1,7 @@
 #ifndef LFF_GL_2D_LAYER_H
 #define LFF_GL_2D_LAYER_H
 
-#include "lGLIncludes.h"
+#include "../../lRenderer/lGLRenderer/lGLIncludes.h"
 
 class lffGL2DSceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
 {
@@ -38,12 +38,10 @@ public:
 
 #include "../../lRenderer/lrLayer.h"
 
-class lffGL2DLayer : public lrLayer, public li2DLayer
+class lffGL2DLayer : public lr2DLayer
 {
 private:
-	li2DScene *Scene = nullptr;
-	li2DCamera *Camera = nullptr;
-
+	//
 	virtual void DrawScene() override
 	{
 		if((Scene == nullptr) || (Camera == nullptr))
@@ -71,24 +69,9 @@ private:
 		lffGL2DSceneDrawer SceneDrawer;
 		Scene->Draw(SceneDrawer);
 	}
-
+	//
 public:
-
-	virtual void Accept(liLayerVisitor &layer_visitor) override
-	{
-		layer_visitor.Visit2DLayer(*this);
-	}
-
-	virtual void SetScene(li2DScene *scene) override
-	{
-		Scene = scene;
-	}
-
-	virtual void SetCamera(li2DCamera *camera) override
-	{
-		Camera = camera;
-	}
-
+	//
 	lffGL2DLayer(){}
 	virtual ~lffGL2DLayer() override {}
 };

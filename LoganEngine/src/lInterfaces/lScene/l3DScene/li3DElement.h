@@ -3,11 +3,29 @@
 
 #include "li3DMesh.h"
 
+
+class li3DLight
+{
+public:
+    //
+    virtual const lmVector3D &GetPosition() const = 0;
+	//
+	virtual float GetAmbient(lColorIndex index) const = 0;
+	//
+	virtual float GetDiffuse(lColorIndex index) const = 0;
+	//
+	virtual float GetSpecular(lColorIndex index) const = 0;
+	//
+	li3DLight(){}
+	virtual ~li3DLight(){}
+};
+
 class li3DElementVisitor
 {
 public:
 	//
 	virtual void VisitMesh(const li3DMesh &mesh) = 0;
+	virtual void VisitLight(const li3DLight &light) = 0;
 	//
 	li3DElementVisitor(){}
 	virtual ~li3DElementVisitor(){}

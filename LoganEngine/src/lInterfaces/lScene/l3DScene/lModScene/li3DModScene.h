@@ -14,6 +14,7 @@ public:
 	public:
 		//
 		virtual li3DModElement *CreateStaticMesh(const lmVector3D &position,const lmQuaternion &orientation,const lmVector3D &scale,const liMaterialLibrary &mtl_lib,const std::string &model_name) = 0;
+		virtual li3DModElement *CreatePointLight(const lmVector3D &position) = 0;
 		//
 		liElementFactory(){}
 		virtual ~liElementFactory(){}

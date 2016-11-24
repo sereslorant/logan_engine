@@ -45,11 +45,11 @@ public:
 				{
 					if((Mode == IDENTITY) && (i==j))
 					{
-							(*this)[i][j] = 1;
+							M[i][j] = 1;
 					}
 					else
 					{
-						(*this)[i][j] = 0;
+						M[i][j] = 0;
 					}
 				}
 			}
@@ -67,7 +67,7 @@ public:
 		{
 			for(int j=0;j < N;j++)
 			{
-				(*this)[i][j] = A[i][j];
+				M[i][j] = A[i][j];
 			}
 		}
 	}
@@ -92,7 +92,7 @@ public:
 		{
 			for(int j=0;j < N;j++)
 			{
-				Target[i][j] = (*this)[j][i];
+				Target.M[i][j] = M[j][i];
 			}
 		}
 	}
@@ -116,11 +116,11 @@ public:
 					{
 						if(I_Passed)
 						{
-							Target[i-1][j-1] = (*this)[i-1][j-1];
+							Target.M[i-1][j-1] = M[i-1][j-1];
 						}
 						else
 						{
-							Target[i][j-1] = (*this)[i][j-1];
+							Target.M[i][j-1] = M[i][j-1];
 						}
 					}
 					else if(j == J)
@@ -131,11 +131,11 @@ public:
 					{
 						if(I_Passed)
 						{
-							Target[i-1][j] = (*this)[i-1][j];
+							Target.M[i-1][j] = M[i-1][j];
 						}
 						else
 						{
-							Target[i][j] = (*this)[i][j];
+							Target.M[i][j] = M[i][j];
 						}
 					}
 				}
@@ -206,6 +206,12 @@ public:
 
     //Operátorok
 
+	/*
+	 * TODO: Buffer overflow sérülékenység!
+	 *
+	 * Be kell csomagolni a visszaadott pointert, hogy bound checket hajtsunk végre.
+	 */
+
     /** \brief Megindexeli a mátrix oszlopait
      *
      * \param i int: index
@@ -223,6 +229,12 @@ public:
 			return nullptr;
 		}
 	}
+
+	/*
+	 * TODO: Buffer overflow sérülékenység!
+	 *
+	 * Be kell csomagolni a visszaadott pointert, hogy bound checket hajtsunk végre.
+	 */
 
     /** \brief Megindexeli a mátrix oszlopait - konstans tagfüggvény
      *
@@ -356,7 +368,7 @@ public:
 		{
 			for(int j=0;j < N;j++)
 			{
-				(*this)[i][j] = A[i][j];
+				M[i][j] = A.M[i][j];
 			}
 		}
 
@@ -430,7 +442,7 @@ public:
 			{
 				for(int k=0;k < N;k++)
 				{
-					Tmp[i][j] += (*this)[k][j]*A[i][k];
+					Tmp.M[i][j] += this->M[k][j]*A.M[i][k];
 				}
 			}
 		}

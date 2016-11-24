@@ -5,11 +5,29 @@
 
 #include "li3DModMesh.h"
 
+class li3DModLight : public li3DLight
+{
+public:
+    //
+    virtual void SetPosition(const lmVector3D &position) = 0;
+    //
+    virtual void SetAmbient(lColorIndex index,float ambient_color) = 0;
+    //
+    virtual void SetDiffuse(lColorIndex index,float diffuse_color) = 0;
+    //
+    virtual void SetSpecular(lColorIndex index,float specular_color) = 0;
+	//
+	li3DModLight(){}
+	virtual ~li3DModLight(){}
+};
+
+
 class li3DModElementVisitor
 {
 public:
 	//
 	virtual void VisitMesh(li3DModMesh &mesh) = 0;
+	virtual void VisitLight(li3DModLight &mesh) = 0;
 	//
 	li3DModElementVisitor(){}
 	virtual ~li3DModElementVisitor(){}

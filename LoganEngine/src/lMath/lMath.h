@@ -333,9 +333,8 @@ public:
 };
 
 /*
- * TODO Át kéne ezeket írni template-té.
+ * TODO A compiler double-ből floatba konvertálás miatt rinyál.
  */
-
 /** \brief A paraméterként kapott szöget átkonvertálja fokból radiánba.
  *
  * \param Deg lmScalar: A kapott szög fokokban.
@@ -344,8 +343,15 @@ public:
  * \author Seres Lóránt Gábor
  *
  */
-lmScalar lmDegToRad(lmScalar Deg);
+template<class Type_T>
+Type_T lmDegToRad(Type_T Deg)
+{
+    return Deg*PI/180.0;
+}
 
+/*
+ * TODO A compiler double-ből floatba konvertálás miatt rinyál.
+ */
 /** \brief A paraméterként kapott szöget átkonvertálja radiánból fokba.
  *
  * \param Rad lmScalar: A kapott szög radiánban.
@@ -354,11 +360,34 @@ lmScalar lmDegToRad(lmScalar Deg);
  * \author Seres Lóránt Gábor
  *
  */
-lmScalar lmRadToDeg(lmScalar Rad);
+template<class Type_T>
+Type_T lmRadToDeg(Type_T Rad)
+{
+    return Rad*180.0/PI;
+}
 
 /*
  * TODO A compiler double-ből floatba konvertálás miatt rinyál.
  */
-int lmSgn(lmScalar value,lmScalar epsilon = 1e-4);
+template<class Type_T>
+int lmSgn(Type_T value,Type_T epsilon = 1e-4)
+{
+	if(std::abs(value) < epsilon)
+	{
+		return 0;
+	}
+	else
+	{
+		if(value < 0.0)
+		{
+			return -1;
+		}
+		//if(value > 0.0) //Warningot csinál, hogy control reached end of non void function.
+		else
+		{
+			return 1;
+		}
+	}
+}
 
 #endif // L_MATH_H

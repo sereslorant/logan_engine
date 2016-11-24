@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<svg width = "100" height = "100" >
+
+   <!-- Egy kör, aminek nincs kitöltési színe. A gimp szerint ha nincs kitöltési szín, akkor az automatikusan fekete lesz. -->
+  <circle cx = "50" cy = "50" r = "30" stroke = "white" stroke-width = "4">
+    <!-- TMP!!! -->
+  	<animate id = "szercsy" attributeName="cy" to="100" dur="1s" fill = "remove"/>
+    <animate id = "lavcsy" begin = "szercsy.begin;" attributeName="cx" from="50" by="50" dur="1s" fill = "remove"/>
+    <animate id = "arcsy" begin = "lavcsy.end;" attributeName="cx" from="50" by="-50" dur="1s" fill = "remove"/>
+    <animate begin = "arcsy.begin" attributeName="cy" to="100" dur="1s" fill = "remove"/>
+    <animate begin = "arcsy.end; faszcsy.end" attributeName="r" by="60" dur="8s" fill = "remove"/>
+    <!-- TMP!!! -->
+  </circle>
+
+  <!-- 4 db egyenes, amik 4pixel vastagságúak, és fehérek. -->
+  <line x1 = "0" y1 = "50" x2 = "100" y2 = "0" stroke = "white" stroke-width = "4">
+  	<animate attributeName="y2" to="-60" dur="10s" fill = "freeze"/>
+  </line>
+  <line x1 = "0" y1 = "0" x2 = "100" y2 = "50" stroke = "white" stroke-width = "4">
+  	<animate attributeName="y1" to="-60" dur="10s" fill = "freeze"/>
+  </line>
+  <line x1 = "0" y1 = "100" x2 = "100" y2 = "50" stroke = "white" stroke-width = "4">
+  	<animate attributeName="y1" to="160" dur="10s" fill = "freeze"/>
+  </line>
+  <line x1 = "0" y1 = "50" x2 = "100" y2 = "100" stroke = "white" stroke-width = "4">
+  	<animate attributeName="y2" to="160" dur="10s" fill = "freeze"/>
+  </line>
+
+  <!-- Egy egyszerű ellipszis. -->
+  <ellipse cx = "50" cy = "50" rx = "30" ry = "15" fill = "orange">
+
+  </ellipse>
+
+  <!-- Egy ellipszis, aminek körvonala is van. -->
+  <ellipse cx = "50" cy = "50" rx = "5" ry = "15" stroke = "white" stroke-width = "1" fill = "black">
+  	<!-- TMP!!! -->
+    <animate id = "faszcsy" begin = "lavcsy.end" attributeName="ry" by="60" dur="10s" fill = "freeze"/>
+    <animate begin = "lavcsy.end" attributeName="rx" to="2" dur="10s" fill = "remove"/>
+    <!-- TMP!!! -->
+  </ellipse>
+
+</svg>

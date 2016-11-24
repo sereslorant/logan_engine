@@ -1,104 +1,40 @@
 
-#include "../lGame/lConsole.h"
-
-#include "lGameModes/lPacMan/lPacMan.h"
-#include "lGameModes/lP2_TestGameMode.h"
-#include "lGame/lP2World2D.h"
 
 #include <iostream>
 
-#include "../lInterfaces/lApiAdapter/liApiAdapter.h"
-#include "../lInterfaces/lRenderer/liRenderer.h"
+#include "lP2_Program.h"
+
 #include "../lTest/lffGLRenderer/lffGLRenderer.h"
 
-class lP2_Program
-{
-private:
-	liApiAdapter &ApiAdapter;
-
-	liConsole *Console;
-	liThread *ConsoleThread = nullptr;
-
-	liGame *Game;
-	liRenderer *Renderer;
-	lrmResourceManager ResourceManager;
-
-public:
-
-	void MainLoop()
-	{
-		if(ConsoleThread != nullptr)
-			{ConsoleThread->Start();}
-		//
-		ApiAdapter.GetFrameLimiter().SetFPS(60);
-		//
-		bool IsRunning = true;
-		while(IsRunning)
-		{
-			ApiAdapter.GetFrameLimiter().StartFrameLimiter();
-			//
-			ApiAdapter.PollInput();
-			if(ApiAdapter.GetInput().GetQuit())
-				{IsRunning = false;}
-			//
-			Game->Step();
-			//
-			Renderer->Render();
-			ApiAdapter.SwapBuffers();
-			//
-			ApiAdapter.GetFrameLimiter().CheckFrameLimiter();
-		}
-		//
-		//ConsoleThread->Kill();
-	}
-
-    lP2_Program(liApiAdapter &api_adapter,bool has_console = false)
-		:ApiAdapter(api_adapter)
-    {
-		if(has_console)
-		{
-			lConsole *RunnableConsole = new lConsole(std::cin,std::cout,std::cerr);
-			Console = RunnableConsole;
-			//
-			ConsoleThread = ApiAdapter.GetThreadFactory().NewThread();
-			ConsoleThread->SetRunnable(RunnableConsole);
-		}
-		else
-		{
-			Console = new lConsoleNullObject;
-		}
-		//
-		Renderer = new lffGLRenderer(800,600,ResourceManager);
-		//
-		#ifdef PAC_MAN
-			liGameMode *GameMode = new lPM_Game(ApiAdapter.GetInput(),*Renderer,0.125);//new lGameMode();
-			Game = new lGame(*Console,GameMode,*Renderer);
-		#else
-			liWorld2D *World = new lP2World2D;
-			liGameMode *GameMode = new lP2_TestGameMode(ApiAdapter.GetInput(),*World,*Renderer);
-			Game = new lSimulationGame<liWorld2D>(*Console,GameMode,*Renderer,World);
-		#endif
-    }
-
-    ~lP2_Program()
-    {
-    	delete Game;
-		delete Renderer;
-		//
-		if(ConsoleThread != nullptr)
-			{delete ConsoleThread;}
-		//
-		delete Console;
-    }
-};
-
 #include "../lApiAdapter/lSDL2_ApiAdapter/lSDL2_ApiAdapter.h"
+//#include "../lTest/lGL/lGLExt.h"
 
 static const std::string DEF_TITLE = "A kurva anyadat";
 static const bool DEF_FULLSCREEN = false;
 static const unsigned int DEF_WIDTH = 800;
 static const unsigned int DEF_HEIGHT = 600;
 static const lSDL2_Settings::lRenderingApi DEF_RENDERING_API = lSDL2_Settings::OPENGL;
+
+class lP2_GameInstantiator : public liGameInstantiator
+{
+public:
+	virtual liGame *CreateGame(liApiAdapter &api_adapter,lrmResourceManager &resource_manager,liRenderer &renderer,liConsole &console) override
+	{
+		liGame *Game;
+		#ifdef PAC_MAN
+			liGameMode *GameMode = new lPM_Game(api_adapter.GetInput(),renderer,0.125);//new lGameMode();
+			Game = new lGame(console,GameMode,renderer);
+		#else
+			liWorld2D *World = new lP2World2D;
+			liGameMode *GameMode = new lP2_TestGameMode(api_adapter.GetInput(),*World,renderer);
+			Game = new lSimulationGame<liWorld2D>(console,GameMode,renderer,World);
+		#endif
+		return Game;
+	}
+
+	lP2_GameInstantiator(){}
+	virtual ~lP2_GameInstantiator(){}
+};
 
 int main(int argc, char *argv[])
 {
@@ -111,8 +47,21 @@ int main(int argc, char *argv[])
 	Settings.RenderingApi = DEF_RENDERING_API;
 
 	lSDL2_ApiAdapter ApiAdapter(Settings);
+	//lSDL2_GLExtFunctionLoader GLExtFunctionLoader;
 
-	lP2_Program Program(ApiAdapter);
+	//liGLExtLoader &GLExtLoader = lGetGLExtLoader();
+
+	//GLExtLoader.SetExtFunctionLoader(&GLExtFunctionLoader);
+	//GLExtLoader.LoadExtensions();
+	//GLExtLoader.PrintExtStatus(std::cout);
+
+	lrmResourceManager ResourceManager;
+
+	lffGLRenderer Renderer(800,600,ResourceManager);
+
+	lP2_GameInstantiator GameInstantiator;
+
+	lP2_Program Program(ApiAdapter,ResourceManager,Renderer,GameInstantiator);
 
 	Program.MainLoop();
 	//fclose(stdin);

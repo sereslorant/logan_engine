@@ -192,7 +192,7 @@ public:
 		static_mesh.TexCoords[15] = {1.0f,1.0f};
 		//
 		lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
-		static_mesh.MtlGroups.push_back(MtlGroup);
+		static_mesh.AddMaterialGroup(MtlGroup);
 		//
 		constexpr unsigned int NUM_TRIANGLES = 12;
 		constexpr unsigned int INDEX_BUFFER_SIZE = NUM_TRIANGLES * 3;
@@ -272,7 +272,7 @@ public:
 		}
 		//
 		lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
-		static_mesh.MtlGroups.push_back(MtlGroup);
+		static_mesh.AddMaterialGroup(MtlGroup);
 		//
 		unsigned int NumTrianglesInFan = resolution_xz - 1;
 		unsigned int NumTrianglesInMid = (resolution_xy) * (resolution_xz) * 2;

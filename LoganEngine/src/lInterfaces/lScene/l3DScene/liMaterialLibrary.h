@@ -41,6 +41,10 @@ public:
 	 */
 };
 
+/*
+ * TODO: Ezt a MaterialLibraryt valszeg ki kéne venni.
+ */
+
 /** \brief Több materialt összefogó osztály. Egy static meshhez vagy characterhez tartozik egy material library.
  * Az egyes material groupokhoz és skeletal meshekhez tartozik a material libraryn belül 1-1 material.
  *

@@ -1,11 +1,13 @@
 #ifndef LFFGL_RENDERER_H
 #define LFFGL_RENDERER_H
 
-#include "lGLIncludes.h"
+#include "../../lRenderer/lGLRenderer/lGLIncludes.h"
 
 #include "lffGL2DLayer.h"
+/*
 #include "lffGL3DDumbLayer.h"
-#include "lffGL3DCachedLayer.h"
+*/
+#include "lffGL3DLayer/lffGL3DCachedLayer.h"
 
 #include "../../lRenderer/lrViewport.h"
 #include <list>
