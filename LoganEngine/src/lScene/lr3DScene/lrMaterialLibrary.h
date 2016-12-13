@@ -3,6 +3,8 @@
 
 #include "../../lInterfaces/lScene/l3DScene/liMaterialLibrary.h"
 
+#include "../lrColor.h"
+
 /** \brief A modellek fényvisszaveréssel kapcsolatos anyagi tulajdonságai
  *
  * \todo Dokumentálni kéne.
@@ -13,17 +15,24 @@
 class lrMaterial : public liMaterial
 {
 private:
-    float Shininess = 0.0f;
+    //float Shininess = 0.0f;
     //
-    float Diffuse[3] = {0.0f,0.0f,0.0f};
-    float Specular[3] = {0.0f,0.0f,0.0f};
+    //float Diffuse[3] = {0.0f,0.0f,0.0f};
+    //float Specular[3] = {0.0f,0.0f,0.0f};
+	//
+	lrColor Albedo = lrColor(0.0,0.0,0.0,1.0);
+	float Fresnel = 0.0;
+	float Roughness = 0.0;
+	float Reflectiveness = 0.0;
+	float Metallic = 0.0;
     //
-    bool hasDiffuseMap	= false;	/**< True, ha a materialnak van diffuse mapja, false, ha nincs.  */
+    bool hasAlbedoMap	= false;	/**< True, ha a materialnak van diffuse mapja, false, ha nincs.  */
     //
-    std::string DiffuseMap;			/**< A diffuse map kulcsa.  */
+    std::string AlbedoMap;			/**< Az albedo map kulcsa.  */
     //
 public:
     //
+    /*
     virtual float GetShininess() const override
 	{
     	return Shininess;
@@ -38,17 +47,44 @@ public:
     {
     	return Specular[index];
     }
+    */
+	//
+    virtual const liColor &GetAlbedo() const override
+	{
+    	return Albedo;
+	}
     //
-    virtual bool HasDiffuseMap() const override
+    virtual float GetFresnel() const override
+	{
+    	return Fresnel;
+	}
+    //
+    virtual float GetRoughness() const override
+	{
+    	return Roughness;
+	}
+    //
+    virtual float GetReflectiveness() const override
+	{
+    	return Reflectiveness;
+	}
+    //
+    virtual float GetMetallic() const override
+	{
+    	return Metallic;
+	}
+    //
+    virtual bool HasAlbedoMap() const override
     {
-    	return hasDiffuseMap;
+    	return hasAlbedoMap;
    	}
     //
-    virtual const std::string &GetDiffuseMap() const override
+    virtual const std::string &GetAlbedoMap() const override
     {
-    	return DiffuseMap;
+    	return AlbedoMap;
     }
     //
+    /*
     void SetDiffuse(lColorIndex index,float diffuse_color)
     {
     	Diffuse[index] = diffuse_color;
@@ -63,32 +99,54 @@ public:
 	{
     	Shininess = shininess;
 	}
+    */
+    virtual void SetAlbedo(const liColor &albedo)// override
+    {
+    	Albedo = albedo;
+    }
     //
-    void SetDiffuseMap(const std::string &diffuse_map)
+    virtual void SetFresnel(float fresnel)// override
+    {
+    	Fresnel = fresnel;
+    }
+    //
+    virtual void SetRoughness(float roughness)// override
+    {
+    	Roughness = roughness;
+    }
+    //
+    virtual void SetReflectiveness(float reflectiveness)// override
+    {
+    	Reflectiveness = reflectiveness;
+    }
+    //
+    virtual void SetMetallic(float metallic)// override
+    {
+    	Metallic = metallic;
+    }
+    //
+    void SetAlbedoMap(const std::string &albedo_map)
 	{
-		hasDiffuseMap = true;
-		DiffuseMap = diffuse_map;
+		hasAlbedoMap = true;
+		AlbedoMap = albedo_map;
 	}
     //
     void Assign(const liMaterial &material)
     {
-    	Diffuse[L_RED_INDEX]	= material.GetDiffuse(L_RED_INDEX);
-    	Diffuse[L_GREEN_INDEX]	= material.GetDiffuse(L_GREEN_INDEX);
-    	Diffuse[L_BLUE_INDEX]	= material.GetDiffuse(L_BLUE_INDEX);
+    	Albedo = material.GetAlbedo();
     	//
-    	Specular[L_RED_INDEX]	= material.GetSpecular(L_RED_INDEX);
-    	Specular[L_GREEN_INDEX]	= material.GetSpecular(L_GREEN_INDEX);
-    	Specular[L_BLUE_INDEX]	= material.GetSpecular(L_BLUE_INDEX);
+    	Fresnel = material.GetFresnel();
+		Roughness = material.GetRoughness();
+		Reflectiveness = material.GetReflectiveness();
+		Metallic = material.GetMetallic();
     	//
-    	Shininess = material.GetShininess();
-    	//
-    	if(material.HasDiffuseMap())
+    	if(material.HasAlbedoMap())
     	{
-    		SetDiffuseMap(material.GetDiffuseMap());
+    		SetAlbedoMap(material.GetAlbedoMap());
     	}
     	else
     	{
-    		hasDiffuseMap = false;
+    		hasAlbedoMap = false;
     	}
     }
     //

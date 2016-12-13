@@ -207,6 +207,8 @@ public:
     	//
 		SDL_GL_DeleteContext(GLContext);
 		SDL_DestroyWindow(Window);
+		//
+		SDL_Quit();
     }
 };
 

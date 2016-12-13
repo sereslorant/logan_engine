@@ -1,9 +1,7 @@
 #ifndef LFF_GL_UTILS_H
 #define LFF_GL_UTILS_H
 
-#include "../../lRenderer/lGLRenderer/lGLIncludes.h"
-
-class lffGLUtils
+class lrUtils
 {
 public:
 	/*
@@ -36,7 +34,7 @@ public:
 
 	static void ComputeTextureGroupKey(const liMaterial &material,std::string &dest)
 	{
-		dest = material.GetDiffuseMap();
+		dest = material.GetAlbedoMap();
 	}
 
 	static void ComputeMaterialGroupKey(const std::string &mesh_name,const std::string &mat_group_name,std::string &dest)

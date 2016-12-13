@@ -38,14 +38,19 @@ public:
 	 */
 };
 
+#include "../lrColor.h"
+
 class lr3DLight : public lr3DElement, public li3DModLight
 {
 protected:
 	lmVector3D Position;
 	//
-    float Ambient[3] = {0.0f,0.0f,0.0f};
-    float Diffuse[3] = {0.0f,0.0f,0.0f};
-    float Specular[3] = {0.0f,0.0f,0.0f};
+	lrColor Color = lrColor(0.0,0.0,0.0,1.0);
+	//
+	float Intensity = 0;
+    //float Ambient[3] = {0.0f,0.0f,0.0f};
+    //float Diffuse[3] = {0.0f,0.0f,0.0f};
+    //float Specular[3] = {0.0f,0.0f,0.0f};
 	//
 public:
     //
@@ -53,7 +58,18 @@ public:
     {
     	return Position;
     }
+    //
+    virtual const liColor &GetColor() const  override
+    {
+    	return Color;
+    }
 	//
+    virtual float GetIntensity() const  override
+    {
+    	return Intensity;
+    }
+	//
+    /*
 	virtual float GetAmbient(lColorIndex index) const override
 	{
 		return Ambient[index];
@@ -68,6 +84,7 @@ public:
 	{
 		return Specular[index];
 	}
+	*/
 	//
 	virtual void Accept(li3DElementVisitor &visitor) const override
 	{
@@ -79,6 +96,7 @@ public:
     	Position = position;
     }
     //
+    /*
     virtual void SetAmbient(lColorIndex index,float ambient_color) override
     {
     	Ambient[index] = ambient_color;
@@ -92,6 +110,17 @@ public:
     virtual void SetSpecular(lColorIndex index,float specular_color) override
     {
     	Specular[index] = specular_color;
+    }
+    */
+    //
+    virtual void SetColor(const liColor &color) override
+    {
+    	Color = color;
+    }
+	//
+    virtual void SetIntensity(float intensity) override
+    {
+    	Intensity = intensity;
     }
 	//
 	virtual void Accept(li3DModElementVisitor &visitor) override

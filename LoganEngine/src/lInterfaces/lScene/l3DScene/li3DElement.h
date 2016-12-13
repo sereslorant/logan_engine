@@ -3,18 +3,23 @@
 
 #include "li3DMesh.h"
 
+#include "../liColor.h"
 
 class li3DLight
 {
 public:
     //
     virtual const lmVector3D &GetPosition() const = 0;
+    //
+    virtual const liColor &GetColor() const = 0;
 	//
-	virtual float GetAmbient(lColorIndex index) const = 0;
+    virtual float GetIntensity() const = 0;
+    //
+	//virtual float GetAmbient(lColorIndex index) const = 0;
 	//
-	virtual float GetDiffuse(lColorIndex index) const = 0;
+	//virtual float GetDiffuse(lColorIndex index) const = 0;
 	//
-	virtual float GetSpecular(lColorIndex index) const = 0;
+	//virtual float GetSpecular(lColorIndex index) const = 0;
 	//
 	li3DLight(){}
 	virtual ~li3DLight(){}

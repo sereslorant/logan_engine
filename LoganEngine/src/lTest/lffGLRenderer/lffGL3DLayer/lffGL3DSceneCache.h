@@ -6,7 +6,7 @@
 #include "../lffGLData.h"
 
 #include "../lffGLResourceLoader.h"
-#include "../lffGLUtils.h"
+#include "../../../lRenderer/lrUtils.h"
 
 #include <vector>
 
@@ -26,8 +26,8 @@ public:
 			//
 			std::string TextureGroupKey;
 			std::string MaterialGroupKey;
-			lffGLUtils::ComputeTextureGroupKey(material_library.GetMaterial(MtlGroup.GetMaterial()),TextureGroupKey);
-			lffGLUtils::ComputeMaterialGroupKey(model_name,MtlGroup.GetMaterial(),MaterialGroupKey);
+			lrUtils::ComputeTextureGroupKey(material_library.GetMaterial(MtlGroup.GetMaterial()),TextureGroupKey);
+			lrUtils::ComputeMaterialGroupKey(model_name,MtlGroup.GetMaterial(),MaterialGroupKey);
 			//
 			static_mesh_stats.Increment(TextureGroupKey,MaterialGroupKey);
 		}
@@ -131,6 +131,7 @@ public:
 		return (unsigned int)ModelMatrices.size();
 	}
 	//
+	/*
 	void AssignMtlGroup(lffGLStaticMesh &static_mesh,unsigned int index)
 	{
 		if(!MeshInitialized)
@@ -139,6 +140,7 @@ public:
 			MeshInitialized = true;
 		}
 	}
+	*/
 	//
 	void Resize(unsigned int size)
 	{
@@ -162,7 +164,7 @@ public:
 		{
 			Materials[instance_id].SetMaterial(material);
 			ModelMatrices[instance_id] = lmMatrix4x4(lmMatrix4x4::IDENTITY);
-			lffGLUtils::GetModelMatrix(mesh,ModelMatrices[instance_id]);
+			lrUtils::GetModelMatrix(mesh,ModelMatrices[instance_id]);
 		}
 	}
 };
@@ -174,7 +176,7 @@ class lffGL3DTextureList
 {
 private:
 	std::string DiffuseMapName;
-	lffGLTexture *DiffuseMap;
+	lrGLTexture2DView DiffuseMap;
 	//
 	std::vector<lffGL3DMeshInstances> MeshInstances;
 	std::map<std::string,lffGL3DMeshInstances *> ModelDictionary;
@@ -212,12 +214,12 @@ public:
 		return DiffuseMapName;
 	}
 	//
-	lffGLTexture *GetDiffuseMap()
+	lrGLTexture2DView &GetDiffuseMap()
 	{
 		return DiffuseMap;
 	}
 	//
-	void Construct(const std::string &diffuse_map_name,lffGLTexture *diffuse_map,unsigned int num_material_groups)
+	void Construct(const std::string &diffuse_map_name,lrGLTexture2DView diffuse_map,unsigned int num_material_groups)
 	{
 		DiffuseMapName = diffuse_map_name;
 		DiffuseMap = diffuse_map;
@@ -376,8 +378,8 @@ private:
 				//
 				std::string TextureGroupName;
 				std::string MaterialGroupName;
-				lffGLUtils::ComputeTextureGroupKey(Material,TextureGroupName);
-				lffGLUtils::ComputeMaterialGroupKey(static_mesh.GetModelName(),MtlGroup.GetMaterial(),MaterialGroupName);
+				lrUtils::ComputeTextureGroupKey(Material,TextureGroupName);
+				lrUtils::ComputeMaterialGroupKey(static_mesh.GetModelName(),MtlGroup.GetMaterial(),MaterialGroupName);
 				//
 				lffGL3DMeshInstances &MeshInstances = SceneCache.GetMeshInstances(TextureGroupName,MaterialGroupName);
 				//
@@ -465,8 +467,8 @@ private:
 	{
 		for(lffGL3DTextureList &TextureList : TextureLists)
 		{
-			lffGLTexture *Texture = TextureList.GetDiffuseMap();
-			Texture->Enable();
+			lrGLTexture2DView Texture = TextureList.GetDiffuseMap();
+			Texture.Bind();
 			//
 			TextureList.DrawTextureList();
 			/*
@@ -475,7 +477,7 @@ private:
 				MeshInstances.DrawInstanced();
 			}
 			*/
-			Texture->Disable();
+			Texture.Unbind();
 		}
 	}
 	//
@@ -534,8 +536,8 @@ public:
 	lffGL3DSceneCache(const liFrustum &frustum,const li3DCamera &camera,const liSceneCacheStats &scene_cache_stats,lffGLResourceLoader &resource_loader)
 		:SceneCacher(resource_loader,*this),ProjectionMatrix(lmMatrix4x4::IDENTITY),ViewMatrix(lmMatrix4x4::IDENTITY)
 	{
-		lffGLUtils::GetProjectionMatrix(frustum,ProjectionMatrix);
-		lffGLUtils::GetViewMatrix(camera,ViewMatrix);
+		lrUtils::GetProjectionMatrix(frustum,ProjectionMatrix);
+		lrUtils::GetViewMatrix(camera,ViewMatrix);
 		//
 		Lights.Resize(scene_cache_stats.GetNumLights());
 		//

@@ -6,25 +6,33 @@
  */
 
 #include <string>
-
+/*
 enum lColorIndex
 {
 	L_RED_INDEX = 0,
 	L_GREEN_INDEX = 1,
 	L_BLUE_INDEX = 2,
 };
+*/
+#include "../liColor.h"
 
 class liMaterial
 {
 public:
 	//
-    virtual float GetDiffuse(lColorIndex index) const = 0;
-    virtual float GetSpecular(lColorIndex index) const = 0;
-    virtual float GetShininess() const = 0;
+    //virtual float GetDiffuse(lColorIndex index) const = 0;
+    //virtual float GetSpecular(lColorIndex index) const = 0;
+    //virtual float GetShininess() const = 0;
+	//
+    virtual const liColor &GetAlbedo() const	= 0;
+    virtual float GetFresnel() const			= 0;
+    virtual float GetRoughness() const			= 0;
+    virtual float GetReflectiveness() const		= 0;
+    virtual float GetMetallic() const			= 0;
     //
-    virtual bool HasDiffuseMap() const = 0;
+    virtual bool HasAlbedoMap() const = 0;
     //
-    virtual const std::string &GetDiffuseMap()	const = 0;
+    virtual const std::string &GetAlbedoMap()	const = 0;
     //
     liMaterial()
     {

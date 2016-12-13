@@ -3,6 +3,8 @@
 
 #include "../../lRenderer/lGLRenderer/lGLIncludes.h"
 
+#include <cmath>
+
 struct lffGLLightData
 {
 	GLfloat Position[4] = {0.0,0.0,0.0,1.0};
@@ -17,17 +19,17 @@ struct lffGLLightData
 			Position[i] = light.GetPosition()[i];
 		}
 		//
-		Ambient[0] = light.GetAmbient(L_RED_INDEX);
-		Diffuse[0] = light.GetDiffuse(L_RED_INDEX);
-		Specular[0] = light.GetSpecular(L_RED_INDEX);
+		//Ambient[0] = light.GetAmbient(L_RED_INDEX);
+		Diffuse[0] = light.GetColor().GetRed();// * light.GetIntensity();
+		Specular[0] = light.GetColor().GetRed();// * light.GetIntensity();
 		//
-		Ambient[1] = light.GetAmbient(L_GREEN_INDEX);
-		Diffuse[1] = light.GetDiffuse(L_GREEN_INDEX);
-		Specular[1] = light.GetSpecular(L_GREEN_INDEX);
+		//Ambient[1] = light.GetAmbient(L_GREEN_INDEX);
+		Diffuse[1] = light.GetColor().GetGreen();// * light.GetIntensity();
+		Specular[1] = light.GetColor().GetGreen();// * light.GetIntensity();
 		//
-		Ambient[2] = light.GetAmbient(L_BLUE_INDEX);
-		Diffuse[2] = light.GetDiffuse(L_BLUE_INDEX);
-		Specular[2] = light.GetSpecular(L_BLUE_INDEX);
+		//Ambient[2] = light.GetAmbient(L_BLUE_INDEX);
+		Diffuse[2] = light.GetColor().GetBlue();// * light.GetIntensity();
+		Specular[2] = light.GetColor().GetBlue();// * light.GetIntensity();
 	}
 };
 
@@ -39,16 +41,26 @@ struct lffGLMaterialData
 	//
 	void SetMaterial(const liMaterial &material)
 	{
-		Diffuse[0] = material.GetDiffuse(L_RED_INDEX);
-		Specular[0] = material.GetSpecular(L_RED_INDEX);
+		if(material.GetMetallic() > 0.9)
+		{
+			Specular[0] = material.GetAlbedo().GetRed();
+			Specular[1] = material.GetAlbedo().GetGreen();
+			Specular[2] = material.GetAlbedo().GetBlue();
+		}
+		else
+		{
+			float DiffuseWeight = (1.0 - material.GetReflectiveness());
+
+			Diffuse[0] = material.GetAlbedo().GetRed() * DiffuseWeight;
+			Diffuse[1] = material.GetAlbedo().GetGreen() * DiffuseWeight;
+			Diffuse[2] = material.GetAlbedo().GetBlue() * DiffuseWeight;
+			//
+			Specular[0] = material.GetFresnel() * material.GetReflectiveness();
+			Specular[1] = material.GetFresnel() * material.GetReflectiveness();
+			Specular[2] = material.GetFresnel() * material.GetReflectiveness();
+		}
 		//
-		Diffuse[1] = material.GetDiffuse(L_GREEN_INDEX);
-		Specular[1] = material.GetSpecular(L_GREEN_INDEX);
-		//
-		Diffuse[2] = material.GetDiffuse(L_BLUE_INDEX);
-		Specular[2] = material.GetSpecular(L_BLUE_INDEX);
-		//
-		Shininess = material.GetShininess();
+		Shininess = std::exp(-1.0 * material.GetRoughness());
 	}
 };
 

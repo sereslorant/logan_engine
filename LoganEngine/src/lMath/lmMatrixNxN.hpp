@@ -116,11 +116,11 @@ public:
 					{
 						if(I_Passed)
 						{
-							Target.M[i-1][j-1] = M[i-1][j-1];
+							Target[i-1][j-1] = M[i-1][j-1];
 						}
 						else
 						{
-							Target.M[i][j-1] = M[i][j-1];
+							Target[i][j-1] = M[i][j-1];
 						}
 					}
 					else if(j == J)
@@ -131,11 +131,11 @@ public:
 					{
 						if(I_Passed)
 						{
-							Target.M[i-1][j] = M[i-1][j];
+							Target[i-1][j] = M[i-1][j];
 						}
 						else
 						{
-							Target.M[i][j] = M[i][j];
+							Target[i][j] = M[i][j];
 						}
 					}
 				}

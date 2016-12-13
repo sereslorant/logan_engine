@@ -40,17 +40,17 @@ private:
     //
 public:
     //
-    virtual int32_t GetWidth() override
+    virtual int32_t GetWidth() const override
 	{
     	return TEXTURE_X;
 	}
     //
-    virtual int32_t GetHeight() override
+    virtual int32_t GetHeight() const override
 	{
     	return TEXTURE_Y;
 	}
     //
-    virtual char *GetPixelArray() override
+    virtual const char *GetPixelArray() const override
     {
     	return (char *)&Texture[TexId][0][0];
     }
@@ -88,7 +88,8 @@ public:
 			lrmStaticMesh *StaticMesh = new lrmStaticMesh;
 			if(mesh_name == "Sphere")
 			{
-				lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
+				//lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
+				lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
 			}
 			else if(mesh_name == "Cone")
 			{
@@ -103,9 +104,14 @@ public:
 			{
 				lrmResourceManager::GenerateCube(*StaticMesh,true);
 			}
+			else if(mesh_name == "Anything")
+			{
+				lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
+			}
 			else
 			{
 				lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
+				//lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
 			}
 			//
 			StaticMeshes[mesh_name] = StaticMesh;

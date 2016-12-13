@@ -2,102 +2,59 @@
 #define LFFGL_RENDERER_H
 
 #include "../../lRenderer/lGLRenderer/lGLIncludes.h"
+#include "../../lRenderer/lGLRenderer/lrGLViewport.h"
+#include "../../lRenderer/lGLRenderer/lrGLFramebuffer.h"
 
 #include "lffGL2DLayer.h"
-/*
-#include "lffGL3DDumbLayer.h"
-*/
+/*#include "lffGL3DDumbLayer.h"*/
 #include "lffGL3DLayer/lffGL3DCachedLayer.h"
 
-#include "../../lRenderer/lrViewport.h"
-#include <list>
-
-class lrGLViewport : public lrViewport
+class lffGLViewport : public lrGLViewport
 {
 private:
-	std::list<lrLayer *> Layers;
 	lffGLResourceLoader &ResourceLoader;
-
+	//
+	virtual lrLayer *CreateGL2DLayer() override
+	{
+		return new lffGL2DLayer;
+	}
+	//
+	virtual lrLayer *CreateGL3DLayer() override
+	{
+		return new lffGL3DCachedLayer(ResourceLoader);
+	}
+	//
 public:
-
-	virtual liLayer *Create2DLayer() override
+	//
+	lffGLViewport(int x,int y,int width,int height,lffGLResourceLoader &resource_loader)
+		:lrGLViewport(x,y,width,height),ResourceLoader(resource_loader)
 	{
-		lrLayer *NewLayer = new lffGL2DLayer;
-		Layers.push_back(NewLayer);
-		//
-		return NewLayer;
-	}
 
-	virtual liLayer *Create3DLayer() override
-	{
-		//lrLayer *NewLayer = new lffGL3DDumbLayer(ResourceLoader);
-		lrLayer *NewLayer = new lffGL3DCachedLayer(ResourceLoader);
-		Layers.push_back(NewLayer);
-		//
-		return NewLayer;
 	}
-
-	void Draw()
-	{
-		glViewport(X,Y,Width,Height);
-		//Ez kell, hogy a glClear() csak a viewportot érintse.
-		glScissor(X,Y,Width,Height);
-		//
-		for(lrLayer *Layer : Layers)
-		{
-			Layer->Draw();
-		}
-	}
-
-	lrGLViewport(int x,int y,int width,int height,lffGLResourceLoader &resource_loader)
-		:lrViewport(x,y,width,height),ResourceLoader(resource_loader)
+	//
+	virtual ~lffGLViewport() override
 	{}
-
-	virtual ~lrGLViewport() override
-	{
-		for(lrLayer *Layer : Layers)
-		{
-			delete Layer;
-		}
-	}
 };
 
-#include "../../lRenderer/lrFramebuffer.h"
-
-class lffGLFramebuffer : public lrFramebuffer
+class lffGLFramebuffer : public lrGLFramebuffer
 {
 private:
-	std::list<lrGLViewport *> Viewports;
 	lffGLResourceLoader &ResourceLoader;
-
+	//
+	virtual lrGLViewport *CreateGLViewport(int x,int y,int width,int height) override
+	{
+		return new lffGLViewport(x,y,width,height,ResourceLoader);
+	}
+	//
 public:
-
-	virtual liViewport *CreateViewport(int x,int y,int width,int height) override
-	{
-		lrGLViewport *NewViewport = new lrGLViewport(x,y,width,height,ResourceLoader);
-		Viewports.push_back(NewViewport);
-		//
-		return NewViewport;
-	}
-
-	void Draw()
-	{
-		for(lrGLViewport *Viewport : Viewports)
-		{
-			Viewport->Draw();
-		}
-	}
-
+	//
 	lffGLFramebuffer(unsigned int width,unsigned int height,lffGLResourceLoader &resource_loader)
-		:lrFramebuffer(width,height),ResourceLoader(resource_loader)
+		:lrGLFramebuffer(width,height),ResourceLoader(resource_loader)
 	{}
-
+	//
 	virtual ~lffGLFramebuffer() override
 	{
-		for(lrGLViewport *Viewport : Viewports)
-		{
-			delete Viewport;
-		}
+		//
 	}
 };
 

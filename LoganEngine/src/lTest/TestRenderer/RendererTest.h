@@ -27,6 +27,24 @@ public:
 	//
 	void Initialize();
 	//
+	void Input(bool up,bool down,bool left,bool right)
+	{
+		float Displacement = 0.0;
+		if(up)
+		{Displacement += 0.125;}
+		if(down)
+		{Displacement -= 0.125;}
+		//
+		float dYaw = 0.0;
+		if(left)
+		{dYaw -= 0.0125;}
+		if(right)
+		{dYaw += 0.0125;}
+		//
+		Camera3D->SetPosition(Camera3D->GetPosition() + Displacement * Camera3D->GetDirection());
+		Camera3D->SetYaw(Camera3D->GetYaw() + dYaw);
+	}
+	//
 	void Loop();
 	//
 	void Draw();

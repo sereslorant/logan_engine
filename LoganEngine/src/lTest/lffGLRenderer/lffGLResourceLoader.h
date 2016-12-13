@@ -100,6 +100,9 @@ public:
 	}
 };
 
+#include "../../lRenderer/lGLRenderer/lGLResources/lrGLTextureResource.h"
+
+/*
 class lffGLTexture
 {
 private:
@@ -117,6 +120,12 @@ public:
 		glBindTexture(GL_TEXTURE_2D,0);
 	}
 	//
+	lffGLTexture(GLuint texture_id)
+		:TextureId(texture_id)
+	{
+		//
+	}
+	//
 	lffGLTexture(liBitmap &bitmap)
 	{
 		glGenTextures(1,&TextureId);
@@ -130,18 +139,12 @@ public:
 		glBindTexture(GL_TEXTURE_2D,0);
 	}
 	//
-	lffGLTexture(GLuint texture_id)
-		:TextureId(texture_id)
-	{
-		//
-	}
-	//
 	~lffGLTexture()
 	{
 		glDeleteTextures(1,&TextureId);
 	}
 };
-
+*/
 #include <string>
 /*
 class liResourcePath
@@ -247,7 +250,8 @@ private:
 	liResourceManager &ResourceManager;
 	//
 	std::map<std::string,lffGLStaticMesh *> StaticMeshes;
-	std::map<std::string,lffGLTexture *> Textures;
+	//std::map<std::string,lffGLTexture *> Textures;
+	std::map<std::string,lrGLTextureResource> Textures;
 	//
 public:
 	//
@@ -268,26 +272,26 @@ public:
 		return I->second;
 	}
 	//
-	lffGLTexture *GetTexture(const std::string &resource_id)
+	lrGLTexture2DView GetTexture(const std::string &resource_id)
 	{
 		auto I = Textures.find(resource_id);
 		if(I == Textures.end())
 		{
 			liBitmap *LoadedBitmap = ResourceManager.GetBitmap(resource_id);
 			//
+			lrGLTextureResource	*TextureResource = &Textures[resource_id];
+			lrGLTexture2DView	Texture2DView(TextureResource);
+			//
 			if(LoadedBitmap != nullptr)
 			{
-				Textures[resource_id] = new lffGLTexture(*LoadedBitmap);
-			}
-			else
-			{
-				Textures[resource_id] = new lffGLTexture(0);
+				TextureResource->Initialize();
+				Texture2DView.Fill(*LoadedBitmap);
 			}
 			//
-			return Textures[resource_id];
+			return Texture2DView;
 		}
 		//
-		return I->second;
+		return lrGLTexture2DView(&I->second);
 	}
 	//
 	lffGLResourceLoader(liResourceManager &resource_manager)
@@ -303,10 +307,12 @@ public:
 			delete I.second;
 		}
 		//
+		/*
 		for(auto I : Textures)
 		{
 			delete I.second;
 		}
+		*/
 	}
 };
 

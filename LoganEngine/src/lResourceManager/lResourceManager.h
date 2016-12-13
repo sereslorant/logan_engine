@@ -44,10 +44,10 @@ public:
 		{}
     };
 
-    virtual int32_t GetWidth() = 0;
-    virtual int32_t GetHeight() = 0;
+    virtual int32_t GetWidth() const = 0;
+    virtual int32_t GetHeight() const = 0;
 
-    virtual char *GetPixelArray() = 0;
+    virtual const char *GetPixelArray() const = 0;
     //virtual liSampler &GetSampler() = 0;
 
 	liBitmap(){}
@@ -168,6 +168,8 @@ public:
 				static_mesh.Normals[i] *= -1.0;
 			}
 		}
+		static_mesh.Tangents.resize(NUM_VERTICES);
+		static_mesh.Bitangents.resize(NUM_VERTICES);
 		//
 		static_mesh.TexCoords.resize(NUM_VERTICES);
 		//Front
@@ -233,6 +235,8 @@ public:
 		unsigned int NumVertices = resolution_xz*resolution_xy + 2;
 		static_mesh.Vertices.resize(NumVertices);
 		static_mesh.Normals.resize(NumVertices);
+		static_mesh.Tangents.resize(NumVertices);
+		static_mesh.Bitangents.resize(NumVertices);
 		static_mesh.TexCoords.resize(NumVertices);
 		//
 		unsigned int TopIndex = resolution_xz*resolution_xy + 1;
