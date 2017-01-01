@@ -8,7 +8,7 @@
 
 class RendererTest
 {
-private:
+protected:
 	liRenderer *Renderer;
 	//
 	li3DModScene *Scene3D = nullptr;
@@ -22,6 +22,8 @@ private:
 	//
 	float Angle = 0.0;
 	float OtherAngle = 0.0;
+	//
+	virtual void SetScene() = 0;
 	//
 public:
 	//
@@ -53,12 +55,34 @@ public:
 		:Renderer(renderer)
 	{}
 	//
-	~RendererTest()
+	virtual ~RendererTest()
 	{
 		delete Scene3D;
 		delete Frustum3D;
 		delete Camera3D;
 	}
+	/*
+	 * End of class
+	 */
+};
+
+class RendererFunctionalityTest : public RendererTest
+{
+protected:
+	//
+	virtual void SetScene() override;
+	//
+public:
+	//
+	RendererFunctionalityTest(liRenderer *renderer)
+		:RendererTest(renderer)
+	{}
+	//
+	virtual ~RendererFunctionalityTest() override
+	{}
+	/*
+	 * End of class
+	 */
 };
 
 #endif // RENDERER_TEST_H

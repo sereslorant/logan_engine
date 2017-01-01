@@ -1,9 +1,11 @@
 #ifndef LR_GL3_SCENE_CACHE_H
 #define LR_GL3_SCENE_CACHE_H
 
-#include "../lGLResources/lrGLResourceLoader.h"
+#include "../../../lGLResources/lrGLResourceLoader.h"
 
-#include "../../lrUtils.h"
+#include "../../../../lr3DSceneReader.h"
+
+#include "../../../../lrUtils.h"
 
 class lrGLModelCacher : public liModelCacher
 {
@@ -36,55 +38,12 @@ public:
 	{}
 };
 
-#include "../lGLIncludes.h"
+#include "lrGLData.h"
 
-struct lrGLLightData
-{
-	GLfloat Position[4] = {0.0,0.0,0.0,1.0};
-	//GLfloat Ambient[4] = {0.0,0.0,0.0,1.0};
-	GLfloat Color[4] = {0.0,0.0,0.0,1.0};
-	GLfloat Intensity = 0.0;
-	//
-	void SetLight(const li3DLight &light)
-	{
-		for(int i=0;i < 3;i++)
-		{
-			Position[i] = light.GetPosition()[i];
-		}
-		//
-		Color[0] = light.GetColor().GetRed();
-		Color[1] = light.GetColor().GetGreen();
-		Color[2] = light.GetColor().GetBlue();
-		//
-		Intensity = light.GetIntensity();
-	}
-};
+#include "../../../liGLShaderInterfaces.h"
 
-struct lrGLMaterialData
-{
-	/*
-	 * Material[0]: albedo
-	 * Material[1]: Fresnel,roughness,reflectiveness,metallic
-	 */
-	GLfloat Material[2][4] = {{0.0,0.0,0.0,1.0},{0.0,0.0,0.0,0.0}};
-	//
-	void SetMaterial(const liMaterial &material)
-	{
-		Material[0][0] = material.GetAlbedo().GetRed();
-		Material[0][1] = material.GetAlbedo().GetGreen();
-		Material[0][2] = material.GetAlbedo().GetBlue();
-		//
-		Material[1][0] = material.GetFresnel();
-		Material[1][1] = material.GetRoughness();
-		Material[1][2] = material.GetReflectiveness();
-		Material[1][3] = material.GetMetallic();
-	}
-};
-
-#include "../liGLShaderInterfaces.h"
-
-#include "../lGLIncludes.h"
-#include "../lGLExt.h"
+#include "../../../lGLIncludes.h"
+#include "../../../lGLExt.h"
 
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 using namespace lGLExt;
@@ -103,7 +62,7 @@ private:
 	unsigned int Next = 0;
 	std::vector<lrGLMaterialData> Materials;
 	std::vector<lmMatrix4x4> ModelMatrices;
-	std::vector<lmMatrix4x4> MvMatrices;
+	//std::vector<lmMatrix4x4> MvMatrices;
 	std::vector<lmMatrix4x4> MvpMatrices;
 	std::vector<lmMatrix3x3> NormalMatrices;
 	//
@@ -111,13 +70,14 @@ private:
 	{
 		glUniformMatrix4fv(shader.GetModelMatrixLocation(),1,GL_FALSE,ModelMatrices[instance_id][0]);
 		glUniformMatrix3fv(shader.GetNormalMatrixLocation(),1,GL_FALSE,NormalMatrices[instance_id][0]);
+		glUniformMatrix4fv(shader.GetMvpMatrixLocation(),1,GL_FALSE,MvpMatrices[instance_id][0]);
 	}
 	//
-	void ApplyMaterial(liGLShader &shader,unsigned int instance_id)
+	void ApplyMaterial(liGLPbMatShader &shader,unsigned int instance_id)
 	{
 		lrGLMaterialData &Material = Materials[instance_id];
 		//
-		glUniform3fv(shader.GetMaterial0Location(),1,Material.Material[0]);
+		glUniform3fv(shader.GetMatAlbedoLocation(),1,Material.Material[0]);
 		glUniform4fv(shader.GetMaterial1Location(),1,Material.Material[1]);
 	}
 	//
@@ -139,12 +99,12 @@ public:
 		}
 	}
 	//
-	void DrawInstances(liGLShader &shader)
+	void DrawInstances(liGLShader &shader,liGLPbMatShader &mat_shader)
 	{
 		for(unsigned int i=0;i < NumInstances();i++)
 		{
 			ApplyMatrix(shader,i);
-			ApplyMaterial(shader,i);
+			ApplyMaterial(mat_shader,i);
 			//
 			glBindVertexArray(VertexArrayObject);
 			MaterialGroup.Draw();
@@ -190,7 +150,7 @@ public:
 	{
 		Materials.resize(size);
 		ModelMatrices.resize(size);
-		MvMatrices.resize(size);
+		//MvMatrices.resize(size);
 		MvpMatrices.resize(size);
 		NormalMatrices.resize(size);
 		Next = 0;
@@ -213,8 +173,9 @@ public:
 			ModelMatrices[instance_id] = lmMatrix4x4(lmMatrix4x4::IDENTITY);
 			lrUtils::GetModelMatrix(mesh,ModelMatrices[instance_id]);
 			//
-			MvMatrices[instance_id] = view_matrix * ModelMatrices[instance_id];
-			MvpMatrices[instance_id] = projection_matrix * MvMatrices[instance_id];
+			//MvMatrices[instance_id] = view_matrix * ModelMatrices[instance_id];
+			//MvpMatrices[instance_id] = projection_matrix MvMatrices[instance_id];
+			MvpMatrices[instance_id] = projection_matrix * view_matrix * ModelMatrices[instance_id];
 			ModelMatrices[instance_id].GetSubMatrix(3,3).Invert().Transpose(NormalMatrices[instance_id]);
 		}
 	}
@@ -238,16 +199,19 @@ private:
 	std::string AlbedoMapName;
 	lrGLTexture2DView AlbedoMap;
 	//
+	std::string EnvironmentMapName;
+	lrGLTextureCubemapView EnvironmentMap;
+	//
 	std::vector<lrGL3MeshInstances> MeshInstances;
 	std::map<std::string,lrGL3MeshInstances *> ModelDictionary;
 	//
 public:
 	//
-	void DrawTextureList(liGLShader &shader)
+	void DrawTextureList(liGLShader &shader,liGLPbMatShader &mat_shader)
 	{
 		for(lrGL3MeshInstances &MeshInstances_Puszcsy : MeshInstances)
 		{
-			MeshInstances_Puszcsy.DrawInstances(shader);
+			MeshInstances_Puszcsy.DrawInstances(shader,mat_shader);
 		}
 	}
 	//
@@ -275,10 +239,26 @@ public:
 		return AlbedoMap;
 	}
 	//
-	void Construct(const std::string &albedo_map_name,lrGLTexture2DView albedo_map,unsigned int num_material_groups)
+	const std::string &GetEnvironmentMapName()
+	{
+		return EnvironmentMapName;
+	}
+	//
+	lrGLTextureCubemapView &GetEnvironmentMap()
+	{
+		return EnvironmentMap;
+	}
+	//
+	void Construct(const std::string &albedo_map_name,lrGLTexture2DView albedo_map,
+			const std::string &environment_map_name,lrGLTextureCubemapView environment_map,
+			unsigned int num_material_groups)
 	{
 		AlbedoMapName = albedo_map_name;
 		AlbedoMap = albedo_map;
+		//
+		EnvironmentMapName = environment_map_name;
+		EnvironmentMap = environment_map;
+		//
 		MeshInstances.resize(num_material_groups);
 	}
 	//
@@ -333,21 +313,17 @@ public:
 		}
 	}
 	//
-	void ApplyLight(liGLShader &shader,unsigned int light_id)
+	void ApplyLight(liGLPointLightShader &shader,unsigned int light_id)
 	{
 		if(light_id < Lights.size())
 		{
 			lrGLLightData &Light = Lights[light_id];
 			//
-			//glUniform3fv(shader.GetLightPositionLocation(),1,Light.Position);
-			//glUniform3fv(shader.GetLightColorLocation(),1,Light.Color);
-			//glUniform1f(shader.GetLightIntensityLocation(),Light.Intensity);
-			//
 			ApplyLight(shader,Light);
 		}
 	}
 	//
-	static void ApplyLight(liGLShader &shader,lrGLLightData &light)
+	static void ApplyLight(liGLPointLightShader &shader,lrGLLightData &light)
 	{
 		glUniform3fv(shader.GetLightPositionLocation(),1,light.Position);
 		glUniform3fv(shader.GetLightColorLocation(),1,light.Color);
@@ -355,7 +331,7 @@ public:
 	}
 };
 
-#include "lrGL3StaticMeshShader.h"
+#include "../../lrGL3StaticMeshShader.h"
 
 #include <vector>
 #include <map>
@@ -405,6 +381,8 @@ private:
 			//
 			TextureList.Construct(	texture_group.GetDiffuseMap(),
 									ResourceLoader.GetTexture(texture_group.GetDiffuseMap()),
+									"DUMMY",
+									ResourceLoader.GetCubemap("DUMMY"),
 									texture_group.NumStaticMeshes());
 			//
 			lAllocateMeshInstances AllocateMeshInstances(TextureList);
@@ -448,7 +426,7 @@ private:
 				//
 				lrGL3MeshInstances &MeshInstances = SceneCache.GetMeshInstances(TextureGroupName,MaterialGroupName);
 				//
-				MeshInstances.Construct(SceneCache.StaticMeshShader,MtlGroup);
+				MeshInstances.Construct(SceneCache.StaticMeshPointLightShader,MtlGroup);
 				MeshInstances.SetNextInstance(SceneCache.ProjectionMatrix,SceneCache.ViewMatrix,Material,mesh);
 			}
 		}
@@ -483,7 +461,12 @@ private:
 	//
 	lrGLLights Lights;
 	//
-	lrGL3StaticMeshShader &StaticMeshShader;
+	lrGL3StaticMeshShader &StaticMeshPointLightShader;
+	lrGL3StaticMeshShader &StaticMeshEnvironmentShader;
+	//
+	const GLuint ALBEDO_MAP_ACTIVE_TEXTURE = 0;
+	//
+	const GLuint ENVIRONMENT_MAP_ACTIVE_TEXTURE = 1;
 	//
 	std::map<std::string,lrGL3TextureList *> TextureDictionary;
 	std::vector<lrGL3TextureList> TextureLists;
@@ -506,30 +489,38 @@ private:
 		glClearColor(0.0,0.0,0.0,1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 	}
 	//
-	void SetProjectionMatrix()
+	void SetProjectionMatrix(liGLShader &shader)
 	{
-		glUniformMatrix4fv(StaticMeshShader.GetProjectionMatrixLocation(),1,GL_FALSE,ProjectionMatrix[0]);
+		glUniformMatrix4fv(shader.GetProjectionMatrixLocation(),1,GL_FALSE,ProjectionMatrix[0]);
 	}
 	//
-	void SetViewMatrix()
+	void SetViewMatrix(liGLShader &shader)
 	{
-		glUniformMatrix4fv(StaticMeshShader.GetViewMatrixLocation(),1,GL_FALSE,ViewMatrix[0]);
-		glUniform3fv(StaticMeshShader.GetCameraPositionLocation(),1,&CameraPosition[0]);
+		glUniformMatrix4fv(shader.GetViewMatrixLocation(),1,GL_FALSE,ViewMatrix[0]);
+		glUniform3fv(shader.GetCameraPositionLocation(),1,&CameraPosition[0]);
+	}
+	//
+	template<class lrGLTextureView_T>
+	void BindTexture(GLint texture_location,GLuint active_texture,lrGLTextureView_T &texture)
+	{
+		glActiveTexture(GL_TEXTURE0 + active_texture);
+		texture.Bind();
+
+		glUniform1i(texture_location,active_texture);
 	}
 	//
 	void DrawMeshes()
 	{
 		for(lrGL3TextureList &TextureList : TextureLists)
 		{
-			//lrGLTexture2DView AlbedoMap = TextureList.GetAlbedoMap();
-			//TODO
-			//AlbedoMap.Bind();
+			lrGLTexture2DView AlbedoMap = TextureList.GetAlbedoMap();
+			BindTexture(StaticMeshPointLightShader.GetAlbedoMapLocation(),ALBEDO_MAP_ACTIVE_TEXTURE,AlbedoMap);
 			//
-			TextureList.DrawTextureList(StaticMeshShader);
+			TextureList.DrawTextureList(StaticMeshPointLightShader,StaticMeshPointLightShader);
 			//
 			//TODO
 			//AlbedoMap.Unbind();
@@ -538,31 +529,73 @@ private:
 	//
 	void PrePass()
 	{
-		glEnable(GL_DEPTH_TEST);
+		/*
+		 * TODO: A shadert ki kell majd cserélni.
+		 */
+		SetProjectionMatrix(StaticMeshEnvironmentShader);
+		SetViewMatrix(StaticMeshEnvironmentShader);
+		//
 		glDepthFunc(GL_LESS);
 		//
 		glDepthMask(GL_TRUE);
 		glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 		//
-		DrawMeshes();
+		for(lrGL3TextureList &TextureList : TextureLists)
+		{
+			/*
+			 * TODO: A shadert ki kell majd cserélni.
+			 */
+			TextureList.DrawTextureList(StaticMeshEnvironmentShader,StaticMeshEnvironmentShader);
+		}
 	}
 	//
-	void Draw()
+	void DrawReflections()
 	{
+		SetProjectionMatrix(StaticMeshEnvironmentShader);
+		SetViewMatrix(StaticMeshEnvironmentShader);
+		//
 		glDepthFunc(GL_LEQUAL);
 		//
 		glDepthMask(GL_FALSE);
 		glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 		//
 		glDisable(GL_BLEND);
-		bool First = true;
+		//
+		for(lrGL3TextureList &TextureList : TextureLists)
+		{
+			lrGLTexture2DView AlbedoMap = TextureList.GetAlbedoMap();
+			BindTexture(StaticMeshEnvironmentShader.GetAlbedoMapLocation(),ALBEDO_MAP_ACTIVE_TEXTURE,AlbedoMap);
+			//
+			lrGLTextureCubemapView EnvironmentMap = TextureList.GetEnvironmentMap();
+			BindTexture(StaticMeshEnvironmentShader.GetEnvironmentMapLocation(),ENVIRONMENT_MAP_ACTIVE_TEXTURE,EnvironmentMap);
+			//
+			TextureList.DrawTextureList(StaticMeshEnvironmentShader,StaticMeshEnvironmentShader);
+		}
+	}
+	//
+	void Draw()
+	{
+		SetProjectionMatrix(StaticMeshPointLightShader);
+		SetViewMatrix(StaticMeshPointLightShader);
+		//
+		glDepthFunc(GL_LEQUAL);
+		//
+		glDepthMask(GL_FALSE);
+		glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+		//
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_ONE,GL_ONE);
+		//glDisable(GL_BLEND);
+		//bool First = true;
 		//
 		for(unsigned int i=0;i < Lights.NumLights();i++)
 		{
-			Lights.ApplyLight(StaticMeshShader,i);
+			Lights.ApplyLight(StaticMeshPointLightShader,i);
 			//
 			DrawMeshes();
 			//
+			/*
 			if(First)
 			{
 				First = false;
@@ -570,13 +603,8 @@ private:
 				glEnable(GL_BLEND);
 				glBlendEquation(GL_FUNC_ADD);
 				glBlendFunc(GL_ONE,GL_ONE);
-			}
+			}*/
 		}
-		//
-		/*
-		 * Ez kell, hogy a clear hatással legyen a depth bufferre.
-		 */
-		glDepthMask(GL_TRUE);
 	}
 	//
 public:
@@ -604,29 +632,30 @@ public:
 	//
 	void DrawScene()
 	{
-		StaticMeshShader.UseProgram();
+		glEnable(GL_DEPTH_TEST);
+		//
+		StaticMeshEnvironmentShader.UseProgram();
 		//
 		Prepare();
 		//
-		SetProjectionMatrix();
-		//
-		SetViewMatrix();
-		//
-		/*
-		 * Pre pass rendering
-		 */
 		PrePass();
 		//
-		/*
-		 * Lighting
-		 */
+		DrawReflections();
+		//
+		StaticMeshPointLightShader.UseProgram();
+		//
 		Draw();
 		//
-		StaticMeshShader.DisableProgram();
+		StaticMeshPointLightShader.DisableProgram();
+		//
+		/*
+		 * Ez kell, hogy a clear hatással legyen a depth bufferre.
+		 */
+		glDepthMask(GL_TRUE);
 	}
 	//
-	lrGL3SceneCache(const liFrustum &frustum,const li3DCamera &camera,const liSceneCacheStats &scene_cache_stats,lrGL3StaticMeshShader &static_mesh_shader,lrGLResourceLoader &resource_loader)
-		:SceneCacher(resource_loader,*this),ProjectionMatrix(lmMatrix4x4::IDENTITY),ViewMatrix(lmMatrix4x4::IDENTITY),StaticMeshShader(static_mesh_shader)
+	lrGL3SceneCache(const liFrustum &frustum,const li3DCamera &camera,const liSceneCacheStats &scene_cache_stats,lrGL3StaticMeshShader &static_mesh_point_light_shader,lrGL3StaticMeshShader &static_mesh_environment_shader,lrGLResourceLoader &resource_loader)
+		:SceneCacher(resource_loader,*this),ProjectionMatrix(lmMatrix4x4::IDENTITY),ViewMatrix(lmMatrix4x4::IDENTITY),StaticMeshPointLightShader(static_mesh_point_light_shader),StaticMeshEnvironmentShader(static_mesh_environment_shader)
 	{
 		lrUtils::GetProjectionMatrix(frustum,ProjectionMatrix);
 		lrUtils::GetViewMatrix(camera,ViewMatrix);

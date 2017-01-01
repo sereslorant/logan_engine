@@ -18,18 +18,49 @@ RendererTest *test;
 DummyRM *dummyRM;
 liRenderer *Renderer;
 
-void DisplayFunc()
-{
-	test->Draw();
+bool Up = false;
+bool Down = false;
+bool Left = false;
+bool Right = false;
 
-	glutSwapBuffers();
+void KeyboardFunc(unsigned char key,int x,int y)
+{
+	if(key == 'w')
+	{Up = true;}
+	if(key == 's')
+	{Down = true;}
+	if(key == 'a')
+	{Left = true;}
+	if(key == 'd')
+	{Right = true;}
+}
+
+void KeyboardUpFunc(unsigned char key,int x,int y)
+{
+	if(key == 'w')
+	{Up = false;}
+	if(key == 's')
+	{Down = false;}
+	if(key == 'a')
+	{Left = false;}
+	if(key == 'd')
+	{Right = false;}
 }
 
 void IdleFunc()
 {
+	test->Input(Up,Down,Left,Right);
+	//
 	test->Loop();
-
+	//
 	glutPostRedisplay();
+}
+
+void DisplayFunc()
+{
+	test->Draw();
+	//
+	glutSwapBuffers();
 }
 
 void AtExit()
@@ -58,10 +89,12 @@ int main(int argc, char *argv[])
 
 	dummyRM = new DummyRM;
 	Renderer = new lffGLRenderer(600,600,*dummyRM);
-	test = new RendererTest(Renderer);
+	test = new RendererFunctionalityTest(Renderer);
 
 	test->Initialize();
 
+	glutKeyboardFunc(KeyboardFunc);
+	glutKeyboardUpFunc(KeyboardUpFunc);
 	glutDisplayFunc(DisplayFunc);
 	glutIdleFunc(IdleFunc);
 

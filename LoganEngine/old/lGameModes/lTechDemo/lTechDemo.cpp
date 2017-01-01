@@ -27,7 +27,7 @@ public:
 		//liRigidBody *Body = SimulationWorld->AddSphere(false,Mass,State,Radius);
 		liRigidBody *Body = BodyFactory->AddParticle(false,Mass,State);
 
-		liStaticMesh    *BallMesh   = RM->LoadStaticMesh("IdiotaAlakzatParticle.obj");
+		liStaticMesh    *BallMesh   = RM->LoadStaticMesh("IdiotaAlakzatParticle.txt");
 		liMultiMaterial *BallMtl    = RM->LoadMtl("IdiotaAlakzatParticle.mtl");
 
 		//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -61,7 +61,7 @@ public:
 
 void lTechDemo::AddBall()
 {
-	liStaticMesh    *BallMesh   = RM->LoadStaticMesh("Suzanne2.obj");
+	liStaticMesh    *BallMesh   = RM->LoadStaticMesh("Suzanne2.txt");
 	liMultiMaterial *BallMtl    = RM->LoadMtl("Suzanne2.mtl");
 
 	lmScalar Radius = 1.25;
@@ -121,11 +121,11 @@ void lTechDemo::AddBall()
 
 void lTechDemo::AddMesh()
 {
-	//liStaticMesh    *Mesh   = RM->LoadStaticMesh("IdiotaAlakzat.obj");
-	//liMultiMaterial *Mtl    = RM->LoadMtl("IdiotaAlakzat.mtl");
+	liStaticMesh    *Mesh   = RM->LoadStaticMesh("IdiotaAlakzat.txt");
+	liMultiMaterial *Mtl    = RM->LoadMtl("IdiotaAlakzat.mtl");
 
-	liStaticMesh    *Mesh   = RM->LoadStaticMesh("barrel.obj");
-	liMultiMaterial *Mtl    = RM->LoadMtl("Barrel.mtl");
+	//liStaticMesh    *Mesh   = RM->LoadStaticMesh("barrel.txt");
+	//liMultiMaterial *Mtl    = RM->LoadMtl("Barrel.mtl");
 
 	liRigidBody::liState *MeshState = SimulationWorld->GetBodyFactory()->CreateState(Camera->GetPosition() + 2.0*Camera->GetDirection(),DefaultMass*5.0*Camera->GetDirection()/*5 m/s sebesség*/,{0.0,0.0,0.0},{0.0,0.0,0.0},true,true);
 	SimulationWorld->GetBodyFactory()->AddMesh(false,DefaultMass,MeshState,BodyMesh,true,false,ELEMENTS_SIZE);
@@ -382,11 +382,11 @@ lTechDemo::lTechDemo(liApiAdapter *api_adapter,std::string &next_map)
 
 	//A szimulációnkat vegye körül 1 doboz.
 	/*
-	lrStaticMesh    *FalMesh    = RM->LoadStaticMesh("untitled.obj");
+	lrStaticMesh    *FalMesh    = RM->LoadStaticMesh("untitled.txt");
 	lrMultiMaterial *FalMtl     = RM->LoadMtl("untitled.mtl");
 
 	lrmPhMesh *PhMesh;
-	lrmPhMesh::LoadWavefrontMesh("Content/Meshes/PhysMeshes/untitled.obj",&PhMesh);
+	lrmPhMesh::LoadWavefrontMesh("Content/Meshes/PhysMeshes/untitled.txt",&PhMesh);
 
 	lpRigidBody::lpState *FalState = new lpRigidBody::lpState(lmVector3D::NULL_VECTOR,lmVector3D::NULL_VECTOR,lmVector3D::NULL_VECTOR,lmVector3D::NULL_VECTOR);
 	//lpRigidBody::lpState *FalState = new lpRigidBody::lpState(lmVector3D(0.0,-1.5,0.0),lmVector3D::NULL_VECTOR,lmVector3D::NULL_VECTOR,lmVector3D::NULL_VECTOR);
@@ -438,7 +438,7 @@ lTechDemo::lTechDemo(liApiAdapter *api_adapter,std::string &next_map)
 	//liStaticMesh    *HeightmapMesh	= RM->LoadHeightmap("Heightmap.bmp");
 	liStaticMesh    *HeightmapMesh	= RM->LoadHeightmap("Untitled.bmp");
 	//TMP!!!!!!!!!!!!!!!!!!!!!!!
-	liStaticMesh    *FalMesh		= RM->LoadStaticMesh("untitled.obj");
+	liStaticMesh    *FalMesh		= RM->LoadStaticMesh("untitled.txt");
 	//TMP!!!!!!!!!!!!!!!!!!!!!!!
 	liMultiMaterial *HeightmapMtl	= RM->LoadMtl("untitled.mtl");
 	 /*
@@ -466,10 +466,10 @@ lTechDemo::lTechDemo(liApiAdapter *api_adapter,std::string &next_map)
 
 	delete PhMesh;
 
-	//BodyMesh = RM->LoadPhysMesh("Content/Meshes/PhysMeshes/IdiotaAlakzat.obj",false); //new lrmPhWavefrontMesh("Content/Meshes/PhysMeshes/IdiotaAlakzat.obj",false);
+	BodyMesh = RM->LoadPhysMesh("Content/Meshes/PhysMeshes/IdiotaAlakzat.txt",false); //new lrmPhWavefrontMesh("Content/Meshes/PhysMeshes/IdiotaAlakzat.txt",false);
 
 
-	BodyMesh = RM->LoadPhysMesh("Content/Meshes/PhysMeshes/barrel.obj",false); //new lrmPhWavefrontMesh("Content/Meshes/PhysMeshes/IdiotaAlakzat.obj",false);
+	//BodyMesh = RM->LoadPhysMesh("Content/Meshes/PhysMeshes/barrel.txt",false); //new lrmPhWavefrontMesh("Content/Meshes/PhysMeshes/IdiotaAlakzat.txt",false);
 
 	float particleAmbient[3] = {0.0,0.0,0.0};
     float particleDiffuse[3] = {0.6,1.0,0.2};

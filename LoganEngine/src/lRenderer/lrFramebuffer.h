@@ -3,7 +3,7 @@
 
 #include "../lInterfaces/lRenderer/liRenderer.h"
 
-class lrFramebuffer : public liFramebuffer
+class lrFramebuffer : public liFramebuffer2D
 {
 protected:
 	unsigned int Width;

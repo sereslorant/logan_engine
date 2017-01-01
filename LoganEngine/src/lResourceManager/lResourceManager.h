@@ -1,69 +1,7 @@
 #ifndef L_RESOURCE_MANAGER_H
 #define L_RESOURCE_MANAGER_H
 
-#include "../lMath/lMath.h"
-
-template<class lResource_T>
-class liResource
-{
-public:
-	virtual bool IsReady() = 0;
-	virtual bool ErrorHappened() = 0;
-
-	virtual lResource_T &GetResource() = 0;
-
-	liResource(){}
-	virtual ~liResource(){}
-};
-
-#include "lrmStaticMesh.h"
-
-/*
- * Bitképekhez kötkető interfész
- */
-
-#include <inttypes.h>
-
-class liBitmap
-{
-public:
-
-    class liSampler
-    {
-	public:
-
-		virtual float GetRed(int i,int j) = 0;
-		virtual float GetGreen(int i,int j) = 0;
-		virtual float GetBlue(int i,int j) = 0;
-		virtual float GetAlpha(int i,int j) = 0;
-
-		liSampler()
-		{}
-
-		virtual ~liSampler()
-		{}
-    };
-
-    virtual int32_t GetWidth() const = 0;
-    virtual int32_t GetHeight() const = 0;
-
-    virtual const char *GetPixelArray() const = 0;
-    //virtual liSampler &GetSampler() = 0;
-
-	liBitmap(){}
-	virtual ~liBitmap(){}
-};
-
-class liResourceManager
-{
-public:
-	//
-	virtual lrmStaticMesh *GetStaticMesh(const std::string &resource_identifier) = 0;
-	virtual liBitmap *GetBitmap(const std::string &resource_identifier) = 0;
-	//
-	liResourceManager(){}
-	virtual ~liResourceManager() {}
-};
+#include "liResourceManager.h"
 
 template<class lResource_T>
 class lrmResource : public liResource<lResource_T>
@@ -355,7 +293,12 @@ public:
 		}
 	}
 	//
-	virtual liBitmap *GetBitmap(const std::string &resource_identifier) override
+	virtual liBitmap2D *GetBitmap(const std::string &resource_identifier) override
+	{
+		return nullptr;
+	}
+	//
+	virtual liCubemap *GetCubemap(const std::string &resource_identifier) override
 	{
 		return nullptr;
 	}

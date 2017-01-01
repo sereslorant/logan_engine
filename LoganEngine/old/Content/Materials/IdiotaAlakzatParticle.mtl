@@ -9,6 +9,6 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd MechaFaszParticle.bmp
-map_bump MechaFaszNormal.bmp
-LOGAN_EMISSIVE MechaFaszEmissive.bmp
+map_Kd MechaParticle.bmp
+map_bump MechaNormal.bmp
+LOGAN_EMISSIVE MechaEmissive.bmp

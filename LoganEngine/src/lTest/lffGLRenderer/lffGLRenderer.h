@@ -68,7 +68,7 @@ private:
 	//
 public:
 	//
-	virtual liFramebuffer &GetMainFramebuffer() override
+	virtual liFramebuffer2D &GetMainFramebuffer() override
 	{
 		return MainFramebuffer;
 	}

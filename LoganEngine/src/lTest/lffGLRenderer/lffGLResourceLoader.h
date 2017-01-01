@@ -100,7 +100,8 @@ public:
 	}
 };
 
-#include "../../lRenderer/lGLRenderer/lGLResources/lrGLTextureResource.h"
+#include "../../lRenderer/lGLRenderer/lGLResources/lGLTextureResource/lrGLTextureResource.h"
+#include "../../lRenderer/lGLRenderer/lGLResources/lGLTextureResource/lrGLTexture2DView.h"
 
 /*
 class lffGLTexture
@@ -277,7 +278,7 @@ public:
 		auto I = Textures.find(resource_id);
 		if(I == Textures.end())
 		{
-			liBitmap *LoadedBitmap = ResourceManager.GetBitmap(resource_id);
+			liBitmap2D *LoadedBitmap = ResourceManager.GetBitmap(resource_id);
 			//
 			lrGLTextureResource	*TextureResource = &Textures[resource_id];
 			lrGLTexture2DView	Texture2DView(TextureResource);

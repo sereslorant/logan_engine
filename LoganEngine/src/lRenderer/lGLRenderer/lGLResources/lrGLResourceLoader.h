@@ -12,6 +12,8 @@ using namespace lGLExt;
  * TODO: A bound checkeket újra kéne gondolni.
  */
 
+#include "../../../lResourceManager/liResourceManager.h"
+
 struct lrGLVertexData
 {
 	unsigned int BufferLength = 0;	/**< A buffer objectek hossza */
@@ -137,6 +139,11 @@ public:
 	 * End of class
 	 */
 };
+
+#include <vector>
+
+
+#include "../../../lResourceManager/liResourceManager.h"
 
 struct lrGLStaticMeshResource
 {
@@ -299,7 +306,13 @@ public:
 	 */
 };
 
-#include "lrGLTextureResource.h"
+#include "../../../lResourceManager/liResourceManager.h"
+
+#include "lGLTextureResource/lrGLTextureResource.h"
+#include "lGLTextureResource/lrGLTexture2DView.h"
+#include "lGLTextureResource/lrGLTextureCubemapView.h"
+
+#include <map>
 
 class lrGLResourceLoader
 {
@@ -308,6 +321,12 @@ private:
 	//
 	std::map<std::string,lrGLStaticMeshResource> StaticMeshes;
 	std::map<std::string,lrGLTextureResource> Textures;
+	std::map<std::string,lrGLTextureResource> Cubemaps;
+	//
+	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//bool CubeMapLoaded = false;
+	//lrGLTextureResource CubeMap;
+	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//
 public:
 	//
@@ -335,7 +354,7 @@ public:
 		auto I = Textures.find(resource_id);
 		if(I == Textures.end())
 		{
-			liBitmap *LoadedBitmap = ResourceManager.GetBitmap(resource_id);
+			liBitmap2D *LoadedBitmap = ResourceManager.GetBitmap(resource_id);
 			//
 			lrGLTextureResource	*TextureResource = &Textures[resource_id];
 			lrGLTexture2DView	Texture2DView(TextureResource);
@@ -350,6 +369,37 @@ public:
 		}
 		//
 		return lrGLTexture2DView(&I->second);
+	}
+	//
+	lrGLTextureCubemapView GetCubemap(const std::string &resource_id)
+	{
+		auto I = Cubemaps.find(resource_id);
+		if(I == Cubemaps.end())
+		{
+			liCubemap *LoadedCubemap = ResourceManager.GetCubemap(resource_id);
+			//
+			lrGLTextureResource	*TextureResource = &Cubemaps[resource_id];
+			lrGLTextureCubemapView	CubemapView(TextureResource);
+			//
+			if(LoadedCubemap != nullptr)
+			{
+				const void *CubemapData[6] = {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
+				//
+				CubemapData[GL_TEXTURE_CUBE_MAP_POSITIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X] = (void *)LoadedCubemap->GetSide(liCubemap::LI_CUBEMAP_UP).GetPixelArray();
+				CubemapData[GL_TEXTURE_CUBE_MAP_NEGATIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X] = (void *)LoadedCubemap->GetSide(liCubemap::LI_CUBEMAP_DOWN).GetPixelArray();
+				CubemapData[GL_TEXTURE_CUBE_MAP_NEGATIVE_X - GL_TEXTURE_CUBE_MAP_POSITIVE_X] = (void *)LoadedCubemap->GetSide(liCubemap::LI_CUBEMAP_LEFT).GetPixelArray();
+				CubemapData[GL_TEXTURE_CUBE_MAP_POSITIVE_X - GL_TEXTURE_CUBE_MAP_POSITIVE_X] = (void *)LoadedCubemap->GetSide(liCubemap::LI_CUBEMAP_RIGHT).GetPixelArray();
+				CubemapData[GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X] = (void *)LoadedCubemap->GetSide(liCubemap::LI_CUBEMAP_FRONT).GetPixelArray();
+				CubemapData[GL_TEXTURE_CUBE_MAP_POSITIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X] = (void *)LoadedCubemap->GetSide(liCubemap::LI_CUBEMAP_BACK).GetPixelArray();
+				//
+				TextureResource->Initialize();
+				CubemapView.Fill(LoadedCubemap->GetSize(),CubemapData);
+			}
+			//
+			return CubemapView;
+		}
+		//
+		return lrGLTextureCubemapView(&I->second);
 	}
 	//
 	lrGLResourceLoader(liResourceManager &resource_manager)

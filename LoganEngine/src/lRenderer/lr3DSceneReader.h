@@ -2,8 +2,9 @@
 #define LR3D_SCENE_READER_H
 
 #include <string>
-
 #include <map>
+
+#include "../lInterfaces/lScene/l3DScene/li3DScene.h"
 
 class li3DSceneCache
 {

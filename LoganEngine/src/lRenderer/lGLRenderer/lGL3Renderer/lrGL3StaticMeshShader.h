@@ -15,10 +15,12 @@ using namespace lGLExt;
 #include <iostream>
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-class lrGL3StaticMeshShader : public liGLShader, public liGLStaticMeshShader
+class lrGL3StaticMeshShader : public liGLShader, public liGLPbMatShader, public liGLPointLightShader, public liGLStaticMeshShader
 {
 private:
 	GLuint VsId;    /**< A vertex shader azonosítója */
+	GLuint PbFsId;    /**< A physically based rendering egyenletek shader azonosítója */
+	GLuint FwdFsId;    /**< A physically based rendering egyenletek shader azonosítója */
 	GLuint FsId;    /**< A fragment shader azonosítója */
 	//
 	GLuint ProgramId;   /**< A shader program azonosítója */
@@ -65,7 +67,22 @@ public:
 		return glGetUniformLocation(ProgramId, "NormalMatrix");
 	}
 	//
-	virtual GLint GetMaterial0Location() override
+	virtual GLint GetMvpMatrixLocation() override
+	{
+		return glGetUniformLocation(ProgramId, "MvpMatrix");
+	}
+	//
+	virtual GLint GetAlbedoMapLocation() override
+	{
+		return glGetUniformLocation(ProgramId, "AlbedoMap");
+	}
+	//
+	virtual GLint GetEnvironmentMapLocation() override
+	{
+		return glGetUniformLocation(ProgramId, "EnvironmentMap");
+	}
+	//
+	virtual GLint GetMatAlbedoLocation() override
 	{
 		return glGetUniformLocation(ProgramId, "MatAlbedo");
 	}
@@ -128,17 +145,36 @@ public:
 		glUseProgram(0);
 	}
 	//
-	lrGL3StaticMeshShader(const char *vertex_shader,const char *fragment_shader)
+	lrGL3StaticMeshShader(const char *vertex_shader,const char *pb_equations_source,const char *fwd_fragment_shader_source,const char *fragment_shader)
 	{
 		VsId = LoadShader(vertex_shader,GL_VERTEX_SHADER);
+		PbFsId = LoadShader(pb_equations_source,GL_FRAGMENT_SHADER);
+		FwdFsId = LoadShader(fwd_fragment_shader_source,GL_FRAGMENT_SHADER);
 		FsId = LoadShader(fragment_shader,GL_FRAGMENT_SHADER);
 		//
 		ProgramId = glCreateProgram();
 		//
 		glAttachShader(ProgramId,VsId);
+		glAttachShader(ProgramId,PbFsId);
+		glAttachShader(ProgramId,FwdFsId);
 		glAttachShader(ProgramId,FsId);
 		//
 		glLinkProgram(ProgramId);
+	}
+	//
+	~lrGL3StaticMeshShader()
+	{
+		glDetachShader(ProgramId,VsId);
+		glDetachShader(ProgramId,PbFsId);
+		glDetachShader(ProgramId,FwdFsId);
+		glDetachShader(ProgramId,FsId);
+
+		glDeleteShader(VsId);
+		glDeleteShader(PbFsId);
+		glDeleteShader(FwdFsId);
+		glDeleteShader(FsId);
+
+		glDeleteProgram(ProgramId);
 	}
 	/*
 	 * End of class
@@ -146,6 +182,9 @@ public:
 };
 
 extern const char *VertexShaderSource;
+extern const char *PbEquationsSource;
+extern const char *FwdFragmentShaderSrc;
+extern const char *EnvMapShaderSource;
 extern const char *FragmentShaderSource;
 
 #endif // LR_GL3_STATIC_MESH_SHADER_H
