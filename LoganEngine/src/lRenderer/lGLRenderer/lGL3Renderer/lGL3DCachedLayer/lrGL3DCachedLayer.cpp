@@ -2,6 +2,8 @@
 #include "lrGL3DCachedLayer.h"
 
 #include "lrGL3SceneCache/lrGL3SceneCache.h"
+#include "lrGLModelCacher.h"
+
 #include "../../../lr3DSceneReader.h"
 
 void lrGL3DCachedLayer::DrawScene()

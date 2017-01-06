@@ -8,6 +8,8 @@
 using namespace lGLExt;
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#include "lrGL3ShaderLibrary.h"
+
 #include "../liGLShaderInterfaces.h"
 
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -15,16 +17,73 @@ using namespace lGLExt;
 #include <iostream>
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-class lrGL3StaticMeshShader : public liGLShader, public liGLPbMatShader, public liGLPointLightShader, public liGLStaticMeshShader
+class lrGL3Shader
 {
-private:
-	GLuint VsId;    /**< A vertex shader azonosítója */
-	GLuint PbFsId;    /**< A physically based rendering egyenletek shader azonosítója */
-	GLuint FwdFsId;    /**< A physically based rendering egyenletek shader azonosítója */
-	GLuint FsId;    /**< A fragment shader azonosítója */
+protected:
+	bool Initialized = false;
 	//
-	GLuint ProgramId;   /**< A shader program azonosítója */
+	unsigned int AttachedShaderCount = 0;
+	GLuint *AttachedShaders = nullptr;
 	//
+	GLuint ProgramId = 0;   /**< A shader program azonosítója */
+	//
+public:
+	//
+	void UseProgram()
+	{
+		glUseProgram(ProgramId);
+	}
+	//
+	void DisableProgram()
+	{
+		glUseProgram(0);
+	}
+	//
+	void Initialize(GLuint attached_shaders[],unsigned int attached_shader_count)
+	{
+		ProgramId = glCreateProgram();
+		//
+		AttachedShaderCount = attached_shader_count;
+		AttachedShaders = new GLuint[AttachedShaderCount];
+		//
+		for(unsigned int i=0;i < AttachedShaderCount;i++)
+		{
+			AttachedShaders[i] = attached_shaders[i];
+			glAttachShader(ProgramId,AttachedShaders[i]);
+		}
+		//
+		glLinkProgram(ProgramId);
+		//
+		Initialized = true;
+	}
+	//
+	lrGL3Shader()
+	{
+		//
+	}
+	//
+	virtual ~lrGL3Shader()
+	{
+		if(Initialized)
+		{
+			for(unsigned int i=0;i < AttachedShaderCount;i++)
+			{
+				glDetachShader(ProgramId,AttachedShaders[i]);
+			}
+			//
+			delete AttachedShaders;
+			//
+			glDeleteProgram(ProgramId);
+		}
+	}
+	//
+	/*
+	 * End of class
+	 */
+};
+
+class lrGL3StaticMeshShader : public lrGL3Shader, public liGLShader, public liGLPbMatShader, public liGLPointLightShader, public liGLStaticMeshShader
+{
 public:
 	//
 	virtual GLint GetLightPositionLocation() override
@@ -117,74 +176,19 @@ public:
 		return glGetAttribLocation(ProgramId, "TexCoord");
 	}
 	//
-	static GLuint LoadShader(const char *src,GLenum shader_type)
+	lrGL3StaticMeshShader()
 	{
-		GLuint Id;
-		Id = glCreateShader(shader_type);
 		//
-		glShaderSource(Id,1,&src,NULL);
-		glCompileShader(Id);
-		//
-		#ifdef PRINT_GL_SHADER_COMPILE_STATUS
-			char Error[1024];
-
-			glGetShaderInfoLog(Id,1024,NULL,Error);
-			std::cout << "Shader compile status:\n" << Error << std::endl;
-		#endif
-		//
-		return Id;
 	}
 	//
-	void UseProgram()
+	virtual ~lrGL3StaticMeshShader() override
 	{
-		glUseProgram(ProgramId);
+		//
 	}
 	//
-	void DisableProgram()
-	{
-		glUseProgram(0);
-	}
-	//
-	lrGL3StaticMeshShader(const char *vertex_shader,const char *pb_equations_source,const char *fwd_fragment_shader_source,const char *fragment_shader)
-	{
-		VsId = LoadShader(vertex_shader,GL_VERTEX_SHADER);
-		PbFsId = LoadShader(pb_equations_source,GL_FRAGMENT_SHADER);
-		FwdFsId = LoadShader(fwd_fragment_shader_source,GL_FRAGMENT_SHADER);
-		FsId = LoadShader(fragment_shader,GL_FRAGMENT_SHADER);
-		//
-		ProgramId = glCreateProgram();
-		//
-		glAttachShader(ProgramId,VsId);
-		glAttachShader(ProgramId,PbFsId);
-		glAttachShader(ProgramId,FwdFsId);
-		glAttachShader(ProgramId,FsId);
-		//
-		glLinkProgram(ProgramId);
-	}
-	//
-	~lrGL3StaticMeshShader()
-	{
-		glDetachShader(ProgramId,VsId);
-		glDetachShader(ProgramId,PbFsId);
-		glDetachShader(ProgramId,FwdFsId);
-		glDetachShader(ProgramId,FsId);
-
-		glDeleteShader(VsId);
-		glDeleteShader(PbFsId);
-		glDeleteShader(FwdFsId);
-		glDeleteShader(FsId);
-
-		glDeleteProgram(ProgramId);
-	}
 	/*
 	 * End of class
 	 */
 };
-
-extern const char *VertexShaderSource;
-extern const char *PbEquationsSource;
-extern const char *FwdFragmentShaderSrc;
-extern const char *EnvMapShaderSource;
-extern const char *FragmentShaderSource;
 
 #endif // LR_GL3_STATIC_MESH_SHADER_H

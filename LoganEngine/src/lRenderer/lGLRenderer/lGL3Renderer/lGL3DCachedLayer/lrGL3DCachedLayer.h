@@ -1,7 +1,6 @@
 #ifndef LR_GL3D_CACHED_LAYER_H
 #define LR_GL3D_CACHED_LAYER_H
 
-
 #include "../../../lrLayer.h"
 
 #include "../lrGL3StaticMeshShader.h"

@@ -1,5 +1,5 @@
 
-#include "lrGL3StaticMeshShader.h"
+#include "lrGL3ShaderLibrary.h"
 
 const char *VertexShaderSource = R"(
 	#version 330

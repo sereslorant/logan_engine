@@ -1,6 +1,8 @@
 #ifndef LFF_GL_UTILS_H
 #define LFF_GL_UTILS_H
 
+#include "../lInterfaces/lScene/l3DScene/li3DScene.h"
+
 class lrUtils
 {
 public:

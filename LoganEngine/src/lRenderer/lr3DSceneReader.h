@@ -111,7 +111,7 @@ public:
 class liTextureGroup
 {
 public:
-	virtual const std::string &GetDiffuseMap() const = 0;
+	virtual const std::string &GetAlbedoMap() const = 0;
 	virtual unsigned int NumStaticMeshes() const = 0;
 	virtual void ForEachMeshCount(liMeshCountOperation &operation) const = 0;
 	//
@@ -153,7 +153,7 @@ private:
 	{
 	private:
 		bool Initialized = false;
-		std::string DiffuseMap;
+		std::string AlbedoMap;
 		//
 		std::map<std::string,unsigned int> StaticMeshCount;
 		//
@@ -164,18 +164,18 @@ private:
 			return Initialized;
 		}
 		//
-		void Initialize(const std::string &diffuse_map)
+		void Initialize(const std::string &albedo_map)
 		{
 			if(!Initialized)
 			{
-				DiffuseMap = diffuse_map;
+				AlbedoMap = albedo_map;
 				Initialized = true;
 			}
 		}
 		//
-		virtual const std::string &GetDiffuseMap() const override
+		virtual const std::string &GetAlbedoMap() const override
 		{
-			return DiffuseMap;
+			return AlbedoMap;
 		}
 		//
 		virtual unsigned int NumStaticMeshes() const override
