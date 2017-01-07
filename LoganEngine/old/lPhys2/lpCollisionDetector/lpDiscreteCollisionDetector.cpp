@@ -339,9 +339,6 @@ int lpTriangleFindMaxPenetration(const lmVector3D &T1_Point,const lmVector3D &T1
 	return PMax;
 }
 
-#include <GL/glut.h>
-#include <unistd.h>
-
 bool lpMeshMeshCollision(lpMesh *Body_i,lpMesh *Body_j,liBoundingVolume *bounding_volume_i,liBoundingVolume *bounding_volume_j,liRigidBody::liState &State_i,liRigidBody::liState &State_j,liRigidBody::liDerivative &Derivative_i,liRigidBody::liDerivative &Derivative_j/*,bool FlipNormal*/,lpContactData &ContactData)
 {
     /*

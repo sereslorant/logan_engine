@@ -284,10 +284,10 @@ const char *EnvMapShaderSource = R"(
 		//
 		CameraDotNormal = max(1e-4,CameraDotNormal);
 		//
-		const int NumSamples = 25;
+		const uint NumSamples = 25;
 		vec3 SampleVectors[NumSamples];
 		//
-		for(int i=0;i < NumSamples;i++)
+		for(uint i=0;i < NumSamples;i++)
 		{
 			vec2 HammersleyPoint = Hammersley(i,NumSamples);
 			vec2 SampleParams = ImportanceSampleBeckmann(Roughness,HammersleyPoint);
