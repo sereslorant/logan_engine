@@ -284,10 +284,10 @@ const char *EnvMapShaderSource = R"(
 		//
 		CameraDotNormal = max(1e-4,CameraDotNormal);
 		//
-		const int NumSamples = 25;
+		const uint NumSamples = 25u;
 		vec3 SampleVectors[NumSamples];
 		//
-		for(int i=0;i < NumSamples;i++)
+		for(uint i=0u;i < NumSamples;i++)
 		{
 			vec2 HammersleyPoint = Hammersley(i,NumSamples);
 			vec2 SampleParams = ImportanceSampleBeckmann(Roughness,HammersleyPoint);
@@ -297,7 +297,7 @@ const char *EnvMapShaderSource = R"(
 		//
 		vec3 DiffuseSum = vec3(0);
 		vec3 SpecularSum = vec3(0);
-		for(int i=0;i < NumSamples;i++)
+		for(uint i=0u;i < NumSamples;i++)
 		{
 			//vec3 LightDirection = normalize(SampleVectors[i]);
 			//float LightDotNormal = max(1e-4,dot(LightDirection,Normal));
