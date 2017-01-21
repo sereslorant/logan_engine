@@ -95,6 +95,16 @@ void lmOrtho3x3(lmMatrix3x3 &Target,lmScalar Top,lmScalar Bottom,lmScalar Left,l
  */
 void lmTranslate3x3(lmMatrix3x3 &Target,lmScalar X,lmScalar Y);
 
+/** \brief Beszorozza a Target-ben paraméterül kapott mátrixot egy 2D-s eltolás mátrixszal jobbról.
+ *
+ * \param Target lmMatrix3x3&:  A beszorzandó mátrix
+ * \param X lmScalar:           Az elmozdulás X komponense
+ * \param Y lmScalar:           Az elmozdulás Y komponense
+ * \return lmMatrix3x3 - az eltolás mátrix.
+ *
+ */
+void lmTranslate3x3(lmMatrix3x3 &Target,const lmVector2D &V);
+
 /** \brief Beszorozza a Target-ben paraméterül kapott mátrixot egy 2D-s forgás mátrixszal jobbról.
  *
  * \param Target lmMatrix3x3&:  A beszorzandó mátrix

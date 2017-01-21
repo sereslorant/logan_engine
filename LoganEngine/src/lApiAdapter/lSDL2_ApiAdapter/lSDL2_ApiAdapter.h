@@ -178,6 +178,9 @@ public:
 		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		//
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     	//
     	int Flags = 0x0;
     	settings.SetFlags(&Flags);

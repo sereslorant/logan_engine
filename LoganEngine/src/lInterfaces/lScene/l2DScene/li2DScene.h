@@ -7,11 +7,11 @@
 class li2DCamera
 {
 public:
-	virtual const lmVector2D &GetPosition() = 0;
+	virtual const lmVector2D &GetPosition() const = 0;
 	virtual void SetPosition(const lmVector2D &position) = 0;
 
-	virtual float GetWidth() = 0;
-	virtual float GetHeight() = 0;
+	virtual float GetWidth() const = 0;
+	virtual float GetHeight() const = 0;
 
 	li2DCamera(){}
 	virtual ~li2DCamera(){}
@@ -20,9 +20,9 @@ public:
 class li2DRectangle
 {
 public:
-	virtual const lmVector2D &GetPosition() = 0;
-	virtual float GetWidth() = 0;
-	virtual float GetHeight() = 0;
+	virtual const lmVector2D &GetPosition() const = 0;
+	virtual float GetWidth() const = 0;
+	virtual float GetHeight() const = 0;
 
 	li2DRectangle(){}
 	virtual ~li2DRectangle(){}
@@ -32,7 +32,7 @@ class li2DSceneVisitor
 {
 public:
 	//
-	virtual void VisitRectangle(li2DRectangle &rectangle) = 0;
+	virtual void VisitRectangle(const li2DRectangle &rectangle) = 0;
 	//
 	li2DSceneVisitor(){}
 	virtual ~li2DSceneVisitor(){}
@@ -43,10 +43,12 @@ class li2DElement
 public:
 	virtual void SetPosition(const lmVector2D &position) = 0;
 	virtual void SetColor(const liColor &color) = 0;
-	virtual const liColor &GetColor() = 0;
+	virtual const liColor &GetColor() const = 0;
 	virtual void Show() = 0;
 	virtual void Hide() = 0;
-	virtual bool IsHidden() = 0;
+	virtual bool IsHidden() const = 0;
+	//
+	virtual void Accept(li2DSceneVisitor &visitor) const = 0;
 	//
 	virtual void Accept(li2DSceneVisitor &visitor) = 0;
 	//
@@ -57,7 +59,7 @@ public:
 class li2DSceneDrawer
 {
 public:
-	virtual void Draw(li2DElement &element) = 0;
+	virtual void Draw(const li2DElement &element) = 0;
 
 	li2DSceneDrawer(){}
 	virtual ~li2DSceneDrawer(){}

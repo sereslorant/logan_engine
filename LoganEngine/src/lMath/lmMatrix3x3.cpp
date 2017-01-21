@@ -58,6 +58,11 @@ void lmTranslate3x3(lmMatrix3x3 &Target,lmScalar X,lmScalar Y)
     Target *= A;
 }
 
+void lmTranslate3x3(lmMatrix3x3 &Target,const lmVector2D &V)
+{
+	lmTranslate3x3(Target,V[0],V[1]);
+}
+
 void lmRotate3x3(lmMatrix3x3 &Target,lmScalar Alpha)
 {
     lmMatrix3x3 A;
@@ -123,7 +128,7 @@ lmMatrix3x3 lmTranslate3x3(const lmVector2D &V)
 {
     lmMatrix3x3 A(lmMatrix3x3::IDENTITY);
 
-    lmTranslate3x3(A,V[0],V[1]);
+    lmTranslate3x3(A,V);
 
     return A;
 }

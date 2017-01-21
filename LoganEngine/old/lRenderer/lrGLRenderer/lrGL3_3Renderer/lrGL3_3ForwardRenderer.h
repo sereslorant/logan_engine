@@ -387,7 +387,7 @@ protected:
 			std::cout << BoneTransform[i][0][1] << ";" << BoneTransform[i][1][1] << ";" << BoneTransform[i][2][1] << ";" << BoneTransform[i][3][1] << std::endl;
 			std::cout << BoneTransform[i][0][2] << ";" << BoneTransform[i][1][2] << ";" << BoneTransform[i][2][2] << ";" << BoneTransform[i][3][2] << std::endl;
 			std::cout << BoneTransform[i][0][3] << ";" << BoneTransform[i][1][3] << ";" << BoneTransform[i][2][3] << ";" << BoneTransform[i][3][3] << std::endl;
-             */
+            // */
 		}
 
 		int BoneTransformLocation = Shader->GetBoneTransformLocation();

@@ -14,7 +14,7 @@ private:
 	float Height;
 
 public:
-	virtual const lmVector2D &GetPosition() override
+	virtual const lmVector2D &GetPosition() const override
 	{
 		return Position;
 	}
@@ -24,12 +24,12 @@ public:
 		Position = position;
 	}
 
-	virtual float GetWidth() override
+	virtual float GetWidth() const override
 	{
 		return Width;
 	}
 
-	virtual float GetHeight() override
+	virtual float GetHeight() const override
 	{
 		return Height;
 	}
@@ -83,7 +83,7 @@ public:
 		Color = color;
 	}
 
-	virtual const liColor &GetColor() override
+	virtual const liColor &GetColor() const override
 	{
 		return Color;
 	}
@@ -98,7 +98,7 @@ public:
 		Hidden = true;
 	}
 
-	virtual bool IsHidden() override
+	virtual bool IsHidden() const override
 	{
 		return Hidden;
 	}
@@ -129,19 +129,24 @@ public:
 		return Position[1];
 	}
 	*/
-	virtual const lmVector2D &GetPosition() override
+	virtual const lmVector2D &GetPosition() const override
 	{
 		return Position;
 	}
 
-	virtual float GetWidth() override
+	virtual float GetWidth() const override
 	{
 		return Width;
 	}
 
-	virtual float GetHeight() override
+	virtual float GetHeight() const override
 	{
 		return Height;
+	}
+
+	virtual void Accept(li2DSceneVisitor &visitor) const override
+	{
+		visitor.VisitRectangle(*this);
 	}
 
 	virtual void Accept(li2DSceneVisitor &visitor) override

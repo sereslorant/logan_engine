@@ -1,6 +1,36 @@
 
 #include "lrGL3ShaderLibrary.h"
 
+const char *VertexShaderSource2D = R"(
+#version 330
+
+uniform mat3 CameraMatrix;
+uniform mat3 TransformMatrix;
+
+in vec2 Vertex;
+
+void main()
+{
+	vec3 VertexPosition = CameraMatrix*TransformMatrix*vec3(Vertex,1.0);
+	//
+	gl_Position = vec4(VertexPosition.xy,0.0,1.0);
+}
+)";
+
+const char *FragmentShaderSource2D = R"(
+#version 330
+
+uniform vec4 Color;
+
+out vec4 FragColor;
+
+void main()
+{
+	//
+	FragColor = Color;
+}
+)";
+
 const char *VertexShaderSource = R"(
 	#version 330
 	//

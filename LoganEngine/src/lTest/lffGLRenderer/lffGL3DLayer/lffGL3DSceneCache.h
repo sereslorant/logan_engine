@@ -338,14 +338,14 @@ private:
 		{
 			lffGL3DTextureList &TextureList = SceneCache.TextureLists[TextureListId];
 			//
-			TextureList.Construct(	texture_group.GetDiffuseMap(),
-									ResourceLoader.GetTexture(texture_group.GetDiffuseMap()),
+			TextureList.Construct(	texture_group.GetAlbedoMap(),
+									ResourceLoader.GetTexture(texture_group.GetAlbedoMap()),
 									texture_group.NumStaticMeshes());
 			//
 			lAllocateMeshInstances AllocateMeshInstances(TextureList);
 			texture_group.ForEachMeshCount(AllocateMeshInstances);
 			//
-			SceneCache.TextureDictionary[texture_group.GetDiffuseMap()] = &TextureList;
+			SceneCache.TextureDictionary[texture_group.GetAlbedoMap()] = &TextureList;
 			TextureListId++;
 		}
 		//

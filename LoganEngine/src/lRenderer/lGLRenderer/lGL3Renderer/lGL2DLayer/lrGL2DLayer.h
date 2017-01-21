@@ -8,7 +8,7 @@
 #ifndef LR_GL2D_LAYER_H_
 #define LR_GL2D_LAYER_H_
 
-#include "lrGL3Shader.h"
+#include "../lrGL3Shader.h"
 
 #include "../../liGLShaderInterfaces.h"
 
@@ -17,8 +17,11 @@ class liGL2DShader
 public:
 	//
 	virtual GLint GetCameraLocation() = 0;
-	//
 	virtual GLint GetColorLocation() = 0;
+	//
+	virtual GLint GetTransformLocation() = 0;
+	//
+	virtual GLint GetVertexLocation() = 0;
 	//
 	liGL2DShader(){}
 	virtual ~liGL2DShader(){}
@@ -36,47 +39,70 @@ public:
 		return glGetUniformLocation(ProgramId,"CameraMatrix");
 	}
 	//
-	/*
-	virtual GLint GetTransformLocation() override
-	{
-		std::cout << "Transform location requested" << std::endl;
-		return -1;
-	}
-	*/
-	//
 	virtual GLint GetColorLocation() override
 	{
 		return glGetUniformLocation(ProgramId,"Color");
+	}
+	//
+	virtual GLint GetTransformLocation() override
+	{
+		return glGetUniformLocation(ProgramId,"TransformMatrix");
+	}
+	//
+	virtual GLint GetVertexLocation() override
+	{
+		return glGetAttribLocation(ProgramId,"Vertex");
 	}
 	//
 	lrGL2DShader(){}
 	virtual ~lrGL2DShader() override {}
 };
 
+#include "../../../lrUtils.h"
+
 class lrGL2DSceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
 {
 private:
 	liGL2DShader &Shader;
 	//
+	GLuint RectVBO;
+	GLuint RectEBO;
+	//
+	GLuint VAO;
+	//
 public:
 	//
-	virtual void VisitRectangle(li2DRectangle &rectangle) override
+	virtual void VisitRectangle(const li2DRectangle &rectangle) override
 	{
-		glBegin(GL_QUADS);
-
+		/*glBegin(GL_QUADS);
+		//
 		glVertex2f(rectangle.GetPosition()[0]							,rectangle.GetPosition()[1]);
 		glVertex2f(rectangle.GetPosition()[0] + rectangle.GetWidth()	,rectangle.GetPosition()[1]);
 		glVertex2f(rectangle.GetPosition()[0] + rectangle.GetWidth()	,rectangle.GetPosition()[1] + rectangle.GetHeight());
 		glVertex2f(rectangle.GetPosition()[0]							,rectangle.GetPosition()[1] + rectangle.GetHeight());
-
-		glEnd();
+		//
+		glEnd();*/
+		//
+		lmMatrix3x3 TransformMatrix(lmMatrix3x3::IDENTITY);
+		lrUtils::GetTransformMatrix(rectangle,TransformMatrix);
+		//
+		GLint TransformLocation = Shader.GetTransformLocation();
+		glUniformMatrix3fv(TransformLocation,1,GL_FALSE,TransformMatrix[0]);
+		//
+		glBindVertexArray(VAO);
+		//
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,RectEBO);
+		glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,nullptr);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+		//
+		glBindVertexArray(0);
 	}
 	//
-	virtual void Draw(li2DElement &element) override
+	virtual void Draw(const li2DElement &element) override
 	{
 		if(!element.IsHidden())
 		{
-			GLfloat Color[4] = {element.GetColor().GetRed(),element.GetColor().GetGreen(),element.GetColor().GetBlue(),element.GetColor().GetAlpha()}
+			GLfloat Color[4] = {element.GetColor().GetRed(),element.GetColor().GetGreen(),element.GetColor().GetBlue(),element.GetColor().GetAlpha()};
 			//glColor3f(element.GetColor().GetRed(),element.GetColor().GetGreen(),element.GetColor().GetBlue());
 			GLint ColorLocation = Shader.GetColorLocation();
 			glUniform4fv(ColorLocation,1,Color);
@@ -87,18 +113,44 @@ public:
 	//
 	lrGL2DSceneDrawer(liGL2DShader &shader)
 		:Shader(shader)
-	{}
+	{
+		glGenBuffers(1,&RectVBO);
+		glBindBuffer(GL_ARRAY_BUFFER,RectVBO);
+		//
+		lmVector2D Vertices[4] = {{0.0f,0.0f},{0.0f,1.0f},{1.0f,1.0f},{1.0f,0.0f}};
+		glBufferData(GL_ARRAY_BUFFER,sizeof(Vertices),&Vertices[0][0],GL_STATIC_DRAW);
+		//
+		glGenBuffers(1,&RectEBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,RectEBO);
+		//
+		GLuint IndexBuffer[6] = {0,1,2,0,2,3};
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(IndexBuffer),IndexBuffer,GL_STATIC_DRAW);
+		//
+		glGenVertexArrays(1,&VAO);
+		glBindVertexArray(VAO);
+		//
+		glEnableVertexAttribArray(Shader.GetVertexLocation());
+		glBindBuffer(GL_ARRAY_BUFFER,RectVBO);
+		glVertexAttribPointer(Shader.GetVertexLocation(),2,GL_FLOAT,GL_FALSE,0,nullptr);
+		//
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER,0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+	}
 	//
 	virtual ~lrGL2DSceneDrawer() override
-	{}
+	{
+		glDeleteVertexArrays(1,&VAO);
+		//
+		glDeleteBuffers(1,&RectVBO);
+		glDeleteBuffers(1,&RectEBO);
+	}
 	/*
 	 * End of class
 	 */
 };
 
 #include "../../../lrLayer.h"
-
-#include "../../../lrUtils.h"
 
 class lrGL2DLayer : public lr2DLayer
 {
@@ -111,6 +163,7 @@ private:
 		{return;}
 		//
 		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 		//
 		if(Scene->HasBackgroundColor())
 		{

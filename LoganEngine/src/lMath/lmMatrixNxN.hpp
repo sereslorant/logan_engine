@@ -39,9 +39,9 @@ public:
     {
     	if(Mode != NO_INIT)
 		{
-			for(int i=0;i < N;i++)
+			for(unsigned int i=0;i < N;i++)
 			{
-				for(int j=0;j < N;j++)
+				for(unsigned int j=0;j < N;j++)
 				{
 					if((Mode == IDENTITY) && (i==j))
 					{
@@ -63,9 +63,9 @@ public:
      */
     lmMatrixNxN(const lmMatrixNxN &A)
     {
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
-			for(int j=0;j < N;j++)
+			for(unsigned int j=0;j < N;j++)
 			{
 				M[i][j] = A[i][j];
 			}
@@ -88,19 +88,19 @@ public:
      */
     void Transpose(lmMatrixNxN &Target) const
     {
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
-			for(int j=0;j < N;j++)
+			for(unsigned int j=0;j < N;j++)
 			{
 				Target.M[i][j] = M[j][i];
 			}
 		}
 	}
 
-	void GetSubMatrix(lmMatrixNxN<T,N-1> &Target,int I,int J) const
+	void GetSubMatrix(lmMatrixNxN<T,N-1> &Target,unsigned int I,unsigned int J) const
 	{
 		bool I_Passed = false;
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
 			if(i == I)
 			{
@@ -110,7 +110,7 @@ public:
 			{
 				bool J_Passed = false;
 
-				for(int j=0;j < N;j++)
+				for(unsigned int j=0;j < N;j++)
 				{
 					if(J_Passed)
 					{
@@ -342,11 +342,11 @@ public:
     {
 		lmMatrixNxN B(NULLMAT);
 
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
-			for(int j=0;j < N;j++)
+			for(unsigned int j=0;j < N;j++)
 			{
-				for(int k=0;k < N;k++)
+				for(unsigned int k=0;k < N;k++)
 				{
 					B[i][j] += (*this)[k][j]*A[i][k];
 				}
@@ -364,9 +364,9 @@ public:
      */
     const lmMatrixNxN &operator=(const lmMatrixNxN &A)
     {
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
-			for(int j=0;j < N;j++)
+			for(unsigned int j=0;j < N;j++)
 			{
 				M[i][j] = A.M[i][j];
 			}
@@ -436,11 +436,11 @@ public:
     {
 		lmMatrixNxN Tmp(NULLMAT);
 
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
-			for(int j=0;j < N;j++)
+			for(unsigned int j=0;j < N;j++)
 			{
-				for(int k=0;k < N;k++)
+				for(unsigned int k=0;k < N;k++)
 				{
 					Tmp.M[i][j] += this->M[k][j]*A.M[i][k];
 				}

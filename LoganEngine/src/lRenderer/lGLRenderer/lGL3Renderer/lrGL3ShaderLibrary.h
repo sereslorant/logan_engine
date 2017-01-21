@@ -13,6 +13,8 @@ using namespace lGLExt;
 #include <iostream>
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+extern const char *VertexShaderSource2D;
+extern const char *FragmentShaderSource2D;
 extern const char *VertexShaderSource;
 extern const char *PbEquationsSource;
 extern const char *FwdFragmentShaderSrc;
@@ -98,6 +100,12 @@ public:
 	//
 	lrGL3ShaderLibrary()
 	{
+		lrGL3ShaderObject &VertexShader2D = ShaderObjects["VertexShader2D"];
+		VertexShader2D.Initialize(LoadShader(VertexShaderSource2D,GL_VERTEX_SHADER),GL_VERTEX_SHADER);
+		//
+		lrGL3ShaderObject &FragmentShader2D = ShaderObjects["FragmentShader2D"];
+		FragmentShader2D.Initialize(LoadShader(FragmentShaderSource2D,GL_FRAGMENT_SHADER),GL_FRAGMENT_SHADER);
+		//
 		lrGL3ShaderObject &StaticMeshVertexShader = ShaderObjects["StaticMeshVertexShader"];
 		StaticMeshVertexShader.Initialize(LoadShader(VertexShaderSource,GL_VERTEX_SHADER),GL_VERTEX_SHADER);
 		//

@@ -188,10 +188,10 @@ public:
 		//
 		GameScene = new lr2DScene;
 		GameScene->SetBackgroundColor(lrColor(1.0,1.0,1.0,1.0));
-		GameCamera = new lr2DCamera({0.0,0.0},Width,Height/2.0);
+		GameCamera = new lr2DCamera({0.0f,0.0f},Width,Height/2.0f);
 		//
 		GuiScene = new lr2DScene;
-		GuiCamera = new lr2DCamera({0.0,0.0},Width,Height/2.0);
+		GuiCamera = new lr2DCamera({0.0f,0.0f},Width,Height/2.0f);
 		//
 		luSet2DLayer SetGameLayer(GameScene,GameCamera);
 		luSet2DLayer SetGuiLayer(GuiScene,GuiCamera);

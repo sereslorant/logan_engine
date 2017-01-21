@@ -19,8 +19,8 @@ enum lPM_AI_Cell
 struct lPM_State
 {
 	std::vector<std::vector<lPM_AI_Cell> > MapState;
-	int PacManX;
-	int PacManY;
+	unsigned int PacManX;
+	unsigned int PacManY;
 
 	void Print()
 	{

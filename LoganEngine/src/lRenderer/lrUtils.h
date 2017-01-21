@@ -1,11 +1,23 @@
 #ifndef LFF_GL_UTILS_H
 #define LFF_GL_UTILS_H
 
+#include "../lInterfaces/lScene/l2DScene/li2DScene.h"
 #include "../lInterfaces/lScene/l3DScene/li3DScene.h"
 
 class lrUtils
 {
 public:
+	static void GetCameraMatrix(const li2DCamera &camera,lmMatrix3x3 &dest)
+	{
+		lmOrtho3x3(dest,camera.GetPosition()[1],camera.GetPosition()[1] + camera.GetHeight(),camera.GetPosition()[0],camera.GetPosition()[0] + camera.GetWidth());
+	}
+	//
+	static void GetTransformMatrix(const li2DRectangle &rectangle,lmMatrix3x3 &dest)
+	{
+		lmTranslate3x3(dest,rectangle.GetPosition());
+		lmScale3x3(dest,rectangle.GetWidth(),rectangle.GetHeight());
+	}
+	//
 	/*
 	 * TODO: Ideiglenesen van csak itt, majd később kikerül külső függvénybe.
 	 */

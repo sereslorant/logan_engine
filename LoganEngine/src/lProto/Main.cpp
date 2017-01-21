@@ -4,12 +4,12 @@
 
 #include "lP2_Program.h"
 
-#include "../lTest/lffGLRenderer/lffGLRenderer.h"
+//#include "../lTest/lffGLRenderer/lffGLRenderer.h"
+#include "../lRenderer/lGLRenderer/lGL3Renderer/lrGL3Renderer.h"
 
 #include "../lApiAdapter/lSDL2_ApiAdapter/lSDL2_ApiAdapter.h"
-//#include "../lTest/lGL/lGLExt.h"
 
-static const std::string DEF_TITLE = "A kurva anyadat";
+static const std::string DEF_TITLE = "LoganEngine";
 static const bool DEF_FULLSCREEN = false;
 static const unsigned int DEF_WIDTH = 800;
 static const unsigned int DEF_HEIGHT = 600;
@@ -47,17 +47,18 @@ int main(int argc, char *argv[])
 	Settings.RenderingApi = DEF_RENDERING_API;
 
 	lSDL2_ApiAdapter ApiAdapter(Settings);
-	//lSDL2_GLExtFunctionLoader GLExtFunctionLoader;
+	lSDL2_GLExtFunctionLoader GLExtFunctionLoader;
 
-	//liGLExtLoader &GLExtLoader = lGetGLExtLoader();
+	liGLExtLoader &GLExtLoader = lGetGLExtLoader();
 
-	//GLExtLoader.SetExtFunctionLoader(&GLExtFunctionLoader);
-	//GLExtLoader.LoadExtensions();
-	//GLExtLoader.PrintExtStatus(std::cout);
+	GLExtLoader.SetExtFunctionLoader(&GLExtFunctionLoader);
+	GLExtLoader.LoadExtensions();
+	GLExtLoader.PrintExtStatus(std::cout);
 
 	lrmResourceManager ResourceManager;
 
-	lffGLRenderer Renderer(800,600,ResourceManager);
+	//lffGLRenderer Renderer(800,600,ResourceManager);
+	lrGL3Renderer Renderer(800,600,ResourceManager);
 
 	lP2_GameInstantiator GameInstantiator;
 

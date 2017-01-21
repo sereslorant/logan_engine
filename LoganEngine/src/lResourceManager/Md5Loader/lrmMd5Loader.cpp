@@ -77,7 +77,7 @@ void lrmMd5Loader::Vector3D_YUp(const lmVector3D &v,lmVector3D &Target)
 
 void lrmMd5Loader::Quat_YUp(const lmQuaternion &p,lmQuaternion &Target)
 {
-    lmQuaternion q({1.0,0.0,0.0},-PI/2.0);
+    lmQuaternion q({1.0f,0.0f,0.0f},-PI/2.0f);
     lmQuaternion qinv = q.GetInverse();
 
     Target = q * p * qinv;
