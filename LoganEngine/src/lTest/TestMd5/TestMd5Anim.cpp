@@ -54,12 +54,12 @@ void DisplayFunc()
 	{
 		glBegin(GL_TRIANGLES);
 		//
-		for(unsigned int i=0;i < SkeletalMesh.BindPoseMesh.MtlGroups[0]->IndexBuffer.size()/3;i++)
+		for(unsigned int i=0;i < SkeletalMesh.BindPoseMesh.GetMaterialGroup(0).IndexBuffer.size()/3;i++)
 		{
 			unsigned int V[3];
-			V[0] = SkeletalMesh.BindPoseMesh.MtlGroups[0]->IndexBuffer[i*3];
-			V[1] = SkeletalMesh.BindPoseMesh.MtlGroups[0]->IndexBuffer[i*3 + 1];
-			V[2] = SkeletalMesh.BindPoseMesh.MtlGroups[0]->IndexBuffer[i*3 + 2];
+			V[0] = SkeletalMesh.BindPoseMesh.GetMaterialGroup(0).IndexBuffer[i*3];
+			V[1] = SkeletalMesh.BindPoseMesh.GetMaterialGroup(0).IndexBuffer[i*3 + 1];
+			V[2] = SkeletalMesh.BindPoseMesh.GetMaterialGroup(0).IndexBuffer[i*3 + 2];
 			//
 			for(unsigned int i = 0;i < 3;i++)
 			{

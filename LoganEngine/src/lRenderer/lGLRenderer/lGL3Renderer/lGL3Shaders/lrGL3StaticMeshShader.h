@@ -1,11 +1,9 @@
 #ifndef LR_GL3_STATIC_MESH_SHADER_H
 #define LR_GL3_STATIC_MESH_SHADER_H
 
-#include "lrGL3ShaderLibrary.h"
-
+#include "../../liGLShaderInterfaces.h"
 #include "lrGL3Shader.h"
-
-#include "../liGLShaderInterfaces.h"
+#include "lrGL3ShaderLibrary.h"
 
 class lrGL3StaticMeshShader : public lrGL3Shader, public liGLShader, public liGLPbMatShader, public liGLPointLightShader, public liGLStaticMeshShader
 {

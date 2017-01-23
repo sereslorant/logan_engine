@@ -456,9 +456,9 @@ public:
 	{
 		lmMatrixNxN<T,N> M(lmMatrixNxN<T,N>::NULLMAT);
 
-		for(int i=0;i < N;i++)
+		for(unsigned int i=0;i < N;i++)
 		{
-			for(int j=0;j < N;j++)
+			for(unsigned int j=0;j < N;j++)
 			{
 				M[i][j] = A[i][j] * l;
 			}

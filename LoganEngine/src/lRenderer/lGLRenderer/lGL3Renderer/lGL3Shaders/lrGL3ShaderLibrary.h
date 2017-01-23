@@ -1,8 +1,8 @@
 #ifndef LR_GL_SHADER_LIBRARY_H
 #define LR_GL_SHADER_LIBRARY_H
 
-#include "../lGLIncludes.h"
-#include "../lGLExt.h"
+#include "../../lGLIncludes.h"
+#include "../../lGLExt.h"
 
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 using namespace lGLExt;

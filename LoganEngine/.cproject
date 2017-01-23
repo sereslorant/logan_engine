@@ -253,7 +253,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lMath"/>
 						<entry excluding="lResourceManager.h|TreeGen/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lResourceManager"/>
-						<entry excluding="TestJSON.cpp|TestTreeGen.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lTest"/>
+						<entry excluding="TestJSON.cpp|TestTreeGen.cpp|lffGLRenderer/|TestKeyboard/|TestMd5/|TestRenderer/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lTest"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -313,7 +313,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lMath"/>
 						<entry excluding="lrmWfLoader.h|lResourceManager.h" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lResourceManager"/>
-						<entry excluding="TestWavefront.cpp|TestJSON.cpp|TestRenderer/|TestMd5/|lffGLRenderer/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lTest"/>
+						<entry excluding="TestWavefront.cpp|TestJSON.cpp|TestRenderer/|TestMd5/|lffGLRenderer/|TestKeyboard/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/lTest"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

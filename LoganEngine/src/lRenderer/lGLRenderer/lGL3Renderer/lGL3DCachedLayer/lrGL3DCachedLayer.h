@@ -3,8 +3,8 @@
 
 #include "../../../lrLayer.h"
 
-#include "../lrGL3StaticMeshShader.h"
 #include "../../lGLResources/lrGLResourceLoader.h"
+#include "../lGL3Shaders/lrGL3StaticMeshShader.h"
 
 class lrGL3DCachedLayer : public lr3DLayer
 {

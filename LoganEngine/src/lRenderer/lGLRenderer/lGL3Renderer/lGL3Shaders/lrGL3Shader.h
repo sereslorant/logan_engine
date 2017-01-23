@@ -8,8 +8,8 @@
 #ifndef LR_GL3_SHADER_H_
 #define LR_GL3_SHADER_H_
 
-#include "../lGLIncludes.h"
-#include "../lGLExt.h"
+#include "../../lGLIncludes.h"
+#include "../../lGLExt.h"
 
 //TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 using namespace lGLExt;

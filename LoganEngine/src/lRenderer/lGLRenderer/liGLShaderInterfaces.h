@@ -3,6 +3,43 @@
 
 #include "lGLIncludes.h"
 
+/*
+ * 2D shader interfaces
+ */
+
+class liGL2DShader
+{
+public:
+	//
+	virtual GLint GetCameraLocation() = 0;
+	virtual GLint GetTransformLocation() = 0;
+	//
+	virtual GLint GetVertexLocation() = 0;
+	//
+	liGL2DShader(){}
+	virtual ~liGL2DShader(){}
+	/*
+	 * End of class
+	 */
+};
+
+class liGL2DSolidColorShader
+{
+public:
+	//
+	virtual GLint GetColorLocation() = 0;
+	//
+	liGL2DSolidColorShader(){}
+	virtual ~liGL2DSolidColorShader(){}
+	/*
+	 * End of class
+	 */
+};
+
+/*
+ * 3D shader interfaces
+ */
+
 class liGLShader
 {
 public:

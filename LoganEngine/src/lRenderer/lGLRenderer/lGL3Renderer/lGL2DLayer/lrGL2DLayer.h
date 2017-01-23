@@ -8,62 +8,14 @@
 #ifndef LR_GL2D_LAYER_H_
 #define LR_GL2D_LAYER_H_
 
-#include "../lrGL3Shader.h"
-
-#include "../../liGLShaderInterfaces.h"
-
-class liGL2DShader
-{
-public:
-	//
-	virtual GLint GetCameraLocation() = 0;
-	virtual GLint GetColorLocation() = 0;
-	//
-	virtual GLint GetTransformLocation() = 0;
-	//
-	virtual GLint GetVertexLocation() = 0;
-	//
-	liGL2DShader(){}
-	virtual ~liGL2DShader(){}
-	/*
-	 * End of class
-	 */
-};
-
-class lrGL2DShader : public lrGL3Shader, public liGL2DShader
-{
-public:
-	//
-	virtual GLint GetCameraLocation() override
-	{
-		return glGetUniformLocation(ProgramId,"CameraMatrix");
-	}
-	//
-	virtual GLint GetColorLocation() override
-	{
-		return glGetUniformLocation(ProgramId,"Color");
-	}
-	//
-	virtual GLint GetTransformLocation() override
-	{
-		return glGetUniformLocation(ProgramId,"TransformMatrix");
-	}
-	//
-	virtual GLint GetVertexLocation() override
-	{
-		return glGetAttribLocation(ProgramId,"Vertex");
-	}
-	//
-	lrGL2DShader(){}
-	virtual ~lrGL2DShader() override {}
-};
+#include "../lGL3Shaders/lrGL2DShader.h"
 
 #include "../../../lrUtils.h"
 
 class lrGL2DSceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
 {
 private:
-	liGL2DShader &Shader;
+	lrGL2DShader &Shader;
 	//
 	GLuint RectVBO;
 	GLuint RectEBO;
@@ -74,15 +26,6 @@ public:
 	//
 	virtual void VisitRectangle(const li2DRectangle &rectangle) override
 	{
-		/*glBegin(GL_QUADS);
-		//
-		glVertex2f(rectangle.GetPosition()[0]							,rectangle.GetPosition()[1]);
-		glVertex2f(rectangle.GetPosition()[0] + rectangle.GetWidth()	,rectangle.GetPosition()[1]);
-		glVertex2f(rectangle.GetPosition()[0] + rectangle.GetWidth()	,rectangle.GetPosition()[1] + rectangle.GetHeight());
-		glVertex2f(rectangle.GetPosition()[0]							,rectangle.GetPosition()[1] + rectangle.GetHeight());
-		//
-		glEnd();*/
-		//
 		lmMatrix3x3 TransformMatrix(lmMatrix3x3::IDENTITY);
 		lrUtils::GetTransformMatrix(rectangle,TransformMatrix);
 		//
@@ -103,7 +46,7 @@ public:
 		if(!element.IsHidden())
 		{
 			GLfloat Color[4] = {element.GetColor().GetRed(),element.GetColor().GetGreen(),element.GetColor().GetBlue(),element.GetColor().GetAlpha()};
-			//glColor3f(element.GetColor().GetRed(),element.GetColor().GetGreen(),element.GetColor().GetBlue());
+			//
 			GLint ColorLocation = Shader.GetColorLocation();
 			glUniform4fv(ColorLocation,1,Color);
 			//
@@ -111,7 +54,7 @@ public:
 		}
 	}
 	//
-	lrGL2DSceneDrawer(liGL2DShader &shader)
+	lrGL2DSceneDrawer(lrGL2DShader &shader)
 		:Shader(shader)
 	{
 		glGenBuffers(1,&RectVBO);

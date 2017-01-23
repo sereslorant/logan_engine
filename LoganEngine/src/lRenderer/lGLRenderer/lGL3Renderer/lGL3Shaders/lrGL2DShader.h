@@ -5,11 +5,45 @@
  *      Author: sereslorant
  */
 
-#ifndef LGLRENDERER_LGL3RENDERER_LGL3SHADERS_LRGL2DSHADER_H_
-#define LGLRENDERER_LGL3RENDERER_LGL3SHADERS_LRGL2DSHADER_H_
+#ifndef LR_GL_2D_SHADER_H_
+#define LR_GL_2D_SHADER_H_
 
+#include "../../liGLShaderInterfaces.h"
 
+#include "lrGL3Shader.h"
 
+class lrGL2DShader : public lrGL3Shader, public liGL2DShader, public liGL2DSolidColorShader
+{
+public:
+	//
+	virtual GLint GetCameraLocation() override
+	{
+		return glGetUniformLocation(ProgramId,"CameraMatrix");
+	}
+	//
+	virtual GLint GetColorLocation() override
+	{
+		return glGetUniformLocation(ProgramId,"Color");
+	}
+	//
+	virtual GLint GetTransformLocation() override
+	{
+		return glGetUniformLocation(ProgramId,"TransformMatrix");
+	}
+	//
+	virtual GLint GetVertexLocation() override
+	{
+		return glGetAttribLocation(ProgramId,"Vertex");
+	}
+	//
+	lrGL2DShader()
+	{}
+	//
+	virtual ~lrGL2DShader() override
+	{}
+	/*
+	 * End of class
+	 */
+};
 
-
-#endif /* LGLRENDERER_LGL3RENDERER_LGL3SHADERS_LRGL2DSHADER_H_ */
+#endif /* LR_GL_2D_SHADER_H_ */

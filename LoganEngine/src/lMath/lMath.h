@@ -129,23 +129,6 @@ void lmGetFrenetFrame(const liCurve<Type_T,3> &curve,Type_T t,lmVectorND<Type_T,
 template<typename Type_T>
 static void lmGetExplicitUpFrame(const liCurve<Type_T,3> &curve,const lmVectorND<Type_T,3> &up,float t,/*float dt,*/lmVectorND<Type_T,3> *i,lmVectorND<Type_T,3> *j,lmVectorND<Type_T,3> *k,bool normalize = false)
 {
-	/*if(normalize)
-	{
-		*j = glm::normalize(curve.GetDerivative(t));
-		if(glm::length(*j) < 1e-2)
-		{
-			*j = glm::normalize(curve.GetSegment(t,dt));
-		}
-		*i = glm::normalize(glm::cross(up,*j));
-		*k = glm::normalize(glm::cross(*i,*j));
-	}
-	else
-	{
-		*j = curve.GetDerivative(t);
-		*i = glm::cross(up,*j);
-		*k = glm::cross(*i,*j);
-	}
-	*/
 	*j = curve.GetDerivative(t);
 	*i = lmCross<Type_T>(up,*j);
 	*k = lmCross<Type_T>(*i,*j);
@@ -388,6 +371,17 @@ int lmSgn(Type_T value,Type_T epsilon = 1e-4)
 			return 1;
 		}
 	}
+}
+
+template<class Type_T>
+void lmRotate2x2(lmMatrixNxN<Type_T,2> &Target,lmScalar Alpha)
+{
+	lmMatrixNxN<Type_T,2> A;
+
+    A[0][0] = cos(Alpha);A[1][0] = -sin(Alpha);
+    A[0][1] = sin(Alpha);A[1][1] =  cos(Alpha);
+
+    Target *= A;
 }
 
 #endif // L_MATH_H

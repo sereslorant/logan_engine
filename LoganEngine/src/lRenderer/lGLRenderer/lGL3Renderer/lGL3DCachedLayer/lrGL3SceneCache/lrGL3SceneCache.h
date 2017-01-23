@@ -10,7 +10,7 @@
 
 #include "../../../../lr3DSceneReader.h"
 
-#include "../../lrGL3StaticMeshShader.h"
+#include "../../lGL3Shaders/lrGL3StaticMeshShader.h"
 
 #include <vector>
 #include <map>

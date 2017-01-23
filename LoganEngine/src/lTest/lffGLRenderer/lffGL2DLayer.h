@@ -7,7 +7,7 @@ class lffGL2DSceneDrawer : public li2DSceneDrawer, public li2DSceneVisitor
 {
 public:
 	//
-	virtual void VisitRectangle(li2DRectangle &rectangle) override
+	virtual void VisitRectangle(const li2DRectangle &rectangle) override
 	{
 		glBegin(GL_QUADS);
 
@@ -19,7 +19,7 @@ public:
 		glEnd();
 	}
 	//
-	virtual void Draw(li2DElement &element) override
+	virtual void Draw(const li2DElement &element) override
 	{
 		if(!element.IsHidden())
 		{
