@@ -143,10 +143,10 @@ public:
 		}
 	}
 
-	void Invert(lmMatrixNxN &Target) const
+	/*void Invert(lmMatrixNxN &Target) const
 	{
 		Target = lmMatrixNxN(IDENTITY);
-	}
+	}*/
 
     /** \brief Transzponálja a mátrixot, és visszatér a mátrix transzponáltjával
      *
@@ -171,14 +171,14 @@ public:
 		return A;
 	}
 
-	lmMatrixNxN Invert() const
+	/*lmMatrixNxN Invert() const
 	{
 		lmMatrixNxN A(NULLMAT);
 
 		Invert(A);
 
 		return A;
-	}
+	}*/
 
 	T Trace() const
 	{
@@ -199,10 +199,10 @@ public:
      * \return T
      *
      */
-	T Determinant() const
+	/*T Determinant() const
     {
     	return 0.0;
-    }
+    }*/
 
     //Operátorok
 

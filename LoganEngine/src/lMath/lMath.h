@@ -10,12 +10,12 @@
 #include "lmVector3D.hpp"
 
 #include "lmMatrixNxN.hpp"
-#include "lmMatrix3x3.h"
-#include "lmMatrix4x4.h"
+#include "lmMatrix3x3.hpp"
+#include "lmMatrix4x4.hpp"
 
-#include "lmQuaternion.h"
+#include "lmQuaternion.hpp"
 
-#include "lmGeometry.h"
+#include "lmGeometry.hpp"
 
 #include "lmMindenszar.hpp"
 

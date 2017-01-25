@@ -555,20 +555,293 @@ LM_TRIANGLE_INTERSECTION lmTriangleTriangleCollision(const lmVectorND<T,TCD> &P0
 	return LM_NO_INTERSECTION;
 }
 
-LM_TRIANGLE_INTERSECTION lmTrianglePlaneIntersection(const lmVector3D &PlanePoint,const lmVector3D &PlaneNormal,const lmVector3D &Triangle_P0,const lmVector3D &Triangle_P1,const lmVector3D &Triangle_P2,const lmVector3D &TriangleNormal,int &Dot_P0_Sgn,int &Dot_P1_Sgn,int &Dot_P2_Sgn);
+#include "lmVector3D.hpp"
 
-#include "lmQuaternion.h"
+template<class T>
+LM_TRIANGLE_INTERSECTION lmTrianglePlaneIntersection(const lmVectorND<T,3> &PlanePoint,const lmVectorND<T,3> &PlaneNormal,
+								 	 	 	 	 	 const lmVectorND<T,3> &Triangle_P0,const lmVectorND<T,3> &Triangle_P1,const lmVectorND<T,3> &Triangle_P2,
+													 const lmVectorND<T,3> &TriangleNormal,int &Dot_P0_Sgn,int &Dot_P1_Sgn,int &Dot_P2_Sgn)
+{
+	T Dot = lmDot(PlaneNormal,TriangleNormal);
 
-void lmLooseAABB(/*const lmVector3D &position,*/const lmQuaternion &rotation,const lmVector3D &aabb_min,const lmVector3D &aabb_max,lmVector3D &dest_min,lmVector3D &dest_max);
+	if(std::abs(Dot) < 1e-4)
+	{
+		if(std::abs(lmDot(Triangle_P0 - PlanePoint,PlaneNormal)) < 1e-4)
+		{
+			return LM_TRIANGLE_PLANE;
+		}
 
-bool lmCohenSutherlandLineAABBCollision(const lmVector3D &line_p0,const lmVector3D &line_p1,const lmVector3D &aabb_min,const lmVector3D &aabb_max);
+		return LM_NO_INTERSECTION;
+	}
+	else
+	{
+		T Dot_P0 = lmDot(Triangle_P0 - PlanePoint,PlaneNormal);
+		T Dot_P1 = lmDot(Triangle_P1 - PlanePoint,PlaneNormal);
+		T Dot_P2 = lmDot(Triangle_P2 - PlanePoint,PlaneNormal);
+		/*
+		Dot_P0_Sgn = lmSgn(Dot_P0);
+		Dot_P1_Sgn = lmSgn(Dot_P1);
+		Dot_P2_Sgn = lmSgn(Dot_P2);
+		*/
+		Dot_P0_Sgn = sgn(Dot_P0);
+		Dot_P1_Sgn = sgn(Dot_P1);
+		Dot_P2_Sgn = sgn(Dot_P2);
 
-bool lmPointAABBCollision(const lmVector3D &point,const lmVector3D &aabb_min,const lmVector3D &aabb_max);
+		if((Dot_P0_Sgn == Dot_P1_Sgn) && (Dot_P0_Sgn == Dot_P2_Sgn))
+		{
+			return LM_NO_INTERSECTION;
+		}
+		else
+		{
+			return LM_TRIANGLE_VERTEX;
+		}
+	}
+}
 
-bool lmAABBAABBCollision(const lmVector3D &aabb_min0,const lmVector3D &aabb_max0,const lmVector3D &aabb_min1,const lmVector3D &aabb_max1);
+#include "lmQuaternion.hpp"
 
-void lmAABBClosestPoint(const lmVector3D &point,const lmVector3D &aabb_min,const lmVector3D &aabb_max,lmVector3D *destination = nullptr);
+template<class T>
+void lmLooseAABB(const lmQuaternionT<T> &rotation,const lmVectorND<T,3> &aabb_min,const lmVectorND<T,3> &aabb_max,lmVectorND<T,3> &dest_min,lmVectorND<T,3> &dest_max)
+{
+	lmVectorND<T,3> Center = (aabb_max + aabb_min) * (1.0/2.0);
 
-bool lmSphereAABBCollision(const lmVector3D &sphere_center,lmScalar sphere_radius,const lmVector3D &aabb_min,const lmVector3D &aabb_max,lmVector3D *intersection = nullptr);
+	lmVectorND<T,3> RotatedMin = lmQuaternionRotate((aabb_min - Center),rotation) + Center;
+	lmVectorND<T,3> RotatedMax = lmQuaternionRotate((aabb_max - Center),rotation) + Center;
+
+	dest_min[0] = std::min(RotatedMin[0],RotatedMax[0]);
+	dest_min[1] = std::min(RotatedMin[1],RotatedMax[1]);
+	dest_min[2] = std::min(RotatedMin[2],RotatedMax[2]);
+
+	dest_max[0] = std::max(RotatedMin[0],RotatedMax[0]);
+	dest_max[1] = std::max(RotatedMin[1],RotatedMax[1]);
+	dest_max[2] = std::max(RotatedMin[2],RotatedMax[2]);
+}
+
+constexpr unsigned int CS_ABOVE	 = 32;
+constexpr unsigned int CS_BELOW  = 16;
+constexpr unsigned int CS_LEFT	 = 8;
+constexpr unsigned int CS_RIGHT	 = 4;
+constexpr unsigned int CS_AHEAD	 = 2;
+constexpr unsigned int CS_BEHIND = 1;
+
+template<class T>
+void lmCohenSutherlandPointAABBPosition(const lmVectorND<T,3> &point,const lmVectorND<T,3> &aabb_min,const lmVectorND<T,3> &aabb_max,unsigned int *flags = nullptr)
+{
+	if(flags != nullptr)
+	{
+		unsigned int &Flags = *flags;
+		Flags = 0;
+
+		if(point[0] < aabb_min[0])
+			{Flags |= CS_LEFT;}
+		if(point[0] > aabb_max[0])
+			{Flags |= CS_RIGHT;}
+		if(point[1] < aabb_min[1])
+			{Flags |= CS_BELOW;}
+		if(point[1] > aabb_max[1])
+			{Flags |= CS_ABOVE;}
+		if(point[2] < aabb_min[2])
+			{Flags |= CS_AHEAD;}
+		if(point[2] > aabb_max[2])
+			{Flags |= CS_BEHIND;}
+	}
+}
+
+template<class T>
+bool lmCohenSutherlandLineAABBCollision(const lmVectorND<T,3> &line_p0,const lmVectorND<T,3> &line_p1,const lmVectorND<T,3> &aabb_min,const lmVectorND<T,3> &aabb_max)
+{
+	unsigned int P0Flags = 0x0;
+	unsigned int P1Flags = 0x0;
+
+	lmCohenSutherlandPointAABBPosition(line_p0,aabb_min,aabb_max,&P0Flags);
+	lmCohenSutherlandPointAABBPosition(line_p1,aabb_min,aabb_max,&P1Flags);
+
+	if(!(P0Flags | P1Flags))
+		{return true;}
+	else if(P0Flags & P1Flags)
+		{return false;}
+
+	lmVectorND<T,3> P0 = line_p0;
+	lmVectorND<T,3> P1 = line_p1;
+
+	while(true)
+	{
+		if(!(P0Flags | P1Flags))
+		{
+			return true;
+		}
+		else if(P0Flags & P1Flags)
+		{
+			return false;
+		}
+		else
+		{
+			/*
+			 * TODO: Le kell csekkolni, hogy unsigned inttel működik-e, mert a compiler picsálkodik miatta.
+			 */
+			int NewFlags = P0Flags ? P0Flags : P1Flags;
+
+
+			T x,y,z;
+
+			if (NewFlags & CS_ABOVE)
+			{
+				x = P0[0] + (P1[0] - P0[0]) * (aabb_max[1] - P0[1]) / (P1[1] - P0[1]);
+				y = aabb_max[1];
+				z = P0[2] + (P1[2] - P0[2]) * (aabb_max[1] - P0[1]) / (P1[1] - P0[1]);
+			}
+			else if (NewFlags & CS_BELOW)
+			{
+				x = P0[0] + (P1[0] - P0[0]) * (aabb_min[1] - P0[1]) / (P1[1] - P0[1]);
+				y = aabb_min[1];
+				z = P0[2] + (P1[2] - P0[2]) * (aabb_min[1] - P0[1]) / (P1[1] - P0[1]);
+			}
+			else if (NewFlags & CS_RIGHT)
+			{
+				x = aabb_max[0];
+				y = P0[1] + (P1[1] - P0[1]) * (aabb_max[0] - P0[0]) / (P1[0] - P0[0]);
+				z = P0[2] + (P1[2] - P0[2]) * (aabb_max[0] - P0[0]) / (P1[0] - P0[0]);
+			}
+			else if (NewFlags & CS_LEFT)
+			{
+				x = aabb_min[0];
+				y = P0[1] + (P1[1] - P0[1]) * (aabb_min[0] - P0[0]) / (P1[0] - P0[0]);
+				z = P0[2] + (P1[2] - P0[2]) * (aabb_min[0] - P0[0]) / (P1[0] - P0[0]);
+
+			}
+			else if (NewFlags & CS_AHEAD)
+			{
+				x = P0[0] + (P1[0] - P0[0]) * (aabb_min[2] - P0[2]) / (P1[2] - P0[2]);
+				y = P0[1] + (P1[1] - P0[1]) * (aabb_min[2] - P0[2]) / (P1[2] - P0[2]);
+				z = aabb_min[2];
+			}
+			else if (NewFlags & CS_BEHIND)
+			{
+				x = P0[0] + (P1[0] - P0[0]) * (aabb_max[2] - P0[2]) / (P1[2] - P0[2]);
+				y = P0[1] + (P1[1] - P0[1]) * (aabb_max[2] - P0[2]) / (P1[2] - P0[2]);
+				z = aabb_max[2];
+			}
+
+			if (NewFlags == P0Flags)
+			{
+				P0[0] = x;
+				P0[1] = y;
+				P0[2] = z;
+
+				lmCohenSutherlandPointAABBPosition(P0,aabb_min,aabb_max,&P0Flags);
+			}
+			else
+			{
+				P1[0] = x;
+				P1[1] = y;
+				P1[2] = z;
+
+				lmCohenSutherlandPointAABBPosition(P1,aabb_min,aabb_max,&P1Flags);
+			}
+		}
+	}
+}
+
+template<class T>
+bool lmPointAABBCollision(const lmVectorND<T,3> &point,const lmVectorND<T,3> &aabb_min,const lmVectorND<T,3> &aabb_max)
+{
+	if(point[0] < aabb_min[0])
+		{return false;}
+	if(point[0] > aabb_max[0])
+		{return false;}
+	if(point[1] < aabb_min[1])
+		{return false;}
+	if(point[1] > aabb_max[1])
+		{return false;}
+	if(point[2] < aabb_min[2])
+		{return false;}
+	if(point[2] > aabb_max[2])
+		{return false;}
+
+	return true;
+}
+
+template<class T>
+bool lmAABBAABBCollision(const lmVectorND<T,3> &aabb_min0,const lmVectorND<T,3> &aabb_max0,const lmVectorND<T,3> &aabb_min1,const lmVectorND<T,3> &aabb_max1)
+{
+	if(aabb_max0[0] < aabb_min1[0])
+		{return false;}
+	if(aabb_min0[0] > aabb_max1[0])
+		{return false;}
+	if(aabb_max0[1] < aabb_min1[1])
+		{return false;}
+	if(aabb_min0[1] > aabb_max1[1])
+		{return false;}
+	if(aabb_max0[2] < aabb_min1[2])
+		{return false;}
+	if(aabb_min0[2] > aabb_max1[2])
+		{return false;}
+
+	return true;
+}
+
+template<class T>
+void lmAABBClosestPoint(const lmVectorND<T,3> &point,const lmVectorND<T,3> &aabb_min,const lmVectorND<T,3> &aabb_max,lmVectorND<T,3> &destination)
+{
+	if(point[0] < aabb_min[0])
+	{destination[0] = aabb_min[0];}
+	else if(point[0] > aabb_max[0])
+	{destination[0] = aabb_max[0];}
+	else
+	{destination[0] = point[0];}
+
+	if(point[1] < aabb_min[1])
+	{destination[1] = aabb_min[1];}
+	else if(point[1] > aabb_max[1])
+	{destination[1] = aabb_max[1];}
+	else
+	{destination[1] = point[1];}
+
+	if(point[2] < aabb_min[2])
+	{destination[2] = aabb_min[2];}
+	else if(point[2] > aabb_max[2])
+	{destination[2] = aabb_max[2];}
+	else
+	{destination[2] = point[2];}
+}
+
+template<class T>
+bool lmSphereAABBCollision(const lmVectorND<T,3> &sphere_center,T sphere_radius,const lmVectorND<T,3> &aabb_min,const lmVectorND<T,3> &aabb_max,lmVectorND<T,3> *intersection)
+{
+	/*
+	 * TODO: A compiler double-ből float-tá konvertálás miatt rinyál. Le kell csekkolni, hogy érdemes-e javítani.
+	 */
+	lmVectorND<T,3> SphereMin = sphere_center;
+	SphereMin[0] -= sphere_radius/2.0;
+	SphereMin[1] -= sphere_radius/2.0;
+	SphereMin[2] -= sphere_radius/2.0;
+
+	lmVectorND<T,3> SphereMax = sphere_center;
+	SphereMax[0] += sphere_radius/2.0;
+	SphereMax[1] += sphere_radius/2.0;
+	SphereMax[2] += sphere_radius/2.0;
+
+	if(lmPointAABBCollision(sphere_center,aabb_min,aabb_max))
+	{
+		return true;
+	}
+	else
+	{
+		lmVectorND<T,3> Closest;
+		lmAABBClosestPoint(sphere_center,aabb_min,aabb_max,Closest);
+
+		if((Closest-sphere_center).LengthSquared() < (sphere_radius * sphere_radius))
+		{
+			if(intersection != nullptr)
+			{
+				*intersection = Closest;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+}
 
 #endif

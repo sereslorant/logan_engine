@@ -9,6 +9,24 @@ class lP2_TestGameMode : public lP2ProtoGameMode
 {
 protected:
 	//
+	struct lBodyState : public liState2D
+	{
+		lmVector2D Position;
+		lmVector2D Velocity;
+		//
+		virtual const lmVector2D &GetPosition() const override
+		{return Position;}
+		//
+		virtual const lmVector2D &GetVelocity() const override
+		{return Velocity;}
+		//
+		lBodyState(){}
+		virtual ~lBodyState(){}
+		/*
+		 * End of class
+		 */
+	};
+	//
 	liViewport *Viewport;
 	liViewport *Viewport3D;
 	//
@@ -32,7 +50,7 @@ protected:
 		//
 		bool Removable = false;
 		//
-		liBody2D *Body;
+		liBody2D &Body;
 		li2DElement *Element;
 		//
 	public:
@@ -49,17 +67,13 @@ protected:
 		//
 		virtual void Update(double dt) override
 		{
-			Element->SetPosition(Body->GetPosition() - lmVector2D({RADIUS,RADIUS}));
+			Element->SetPosition(Body.GetPosition() - lmVector2D({RADIUS,RADIUS}));
 		}
 		//
-		lAgent(liBody2D *body,li2DElement *element)
+		lAgent(liBody2D &body,li2DElement *element)
 			:Body(body),Element(element)
 		{
-			lGetCircle GetCircle;
-			Body->GetCollisionShape()->Accept(&GetCircle);
 			//
-			liCircle *Circle_I = GetCircle.GetCircle();
-			Circle_I->SetRadius(RADIUS);
 		}
 		//
 		virtual ~lAgent(){}
@@ -97,13 +111,17 @@ protected:
 				NewVelocity += {-Speed,0.0};
 			}
 			//
-			Body->SetVelocity(NewVelocity);
+			lBodyState State;
+			State.Position = Body.GetPosition();
+			State.Velocity = NewVelocity;
+			//
+			Body.SetState(State);
 
 			lAgent::Update(dt);
-			Camera->SetPosition(Body->GetPosition() - lmVector2D({Camera->GetWidth()/2.0f,Camera->GetHeight()/2.0f}));
+			Camera->SetPosition(Body.GetPosition() - lmVector2D({Camera->GetWidth()/2.0f,Camera->GetHeight()/2.0f}));
 		}
 		//
-		lPlayerAgent(liBody2D *body,li2DElement *element,liController *controller,li2DCamera *camera)
+		lPlayerAgent(liBody2D &body,li2DElement *element,liController *controller,li2DCamera *camera)
 			:lAgent(body,element),Controller(controller),Camera(camera)
 		{}
 		//
@@ -209,16 +227,34 @@ public:
 		{
 			Controller = Input.GetController(0);
 			//
-			lmVector2D Position = {0.0f,0.0f};
-			lmVector2D Velocity = {0.0f,0.0f};
-			Agents.push_back(new lPlayerAgent(World.CreateBody(Position,Velocity),GameScene->GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0),Controller,GameCamera));
+			lBodyState State;
+			State.Position = {0.0f,0.0f};
+			State.Velocity = {0.0f,0.0f};
+			//
+			auto &Body2DBuilder = World.GetBodyFactory().CreateBody();
+			Body2DBuilder.SetState(State);
+			auto &Circle2DBuilder = Body2DBuilder.CreateCircle();
+			Circle2DBuilder.SetRadius(RADIUS);
+			Circle2DBuilder.Construct();
+			//
+			liBody2D &Body = Body2DBuilder.Construct();
+			Agents.push_back(new lPlayerAgent(Body,GameScene->GetElementFactory().CreateRectangle(State.Position,RADIUS*2.0,RADIUS*2.0),Controller,GameCamera));
 		}
 		//
 		for(unsigned int i=0;i < 5;i++)
 		{
-			lmVector2D Position = {100.0f + i*80.0f,100.0f};
-			lmVector2D Velocity = {0.0f,0.0f};
-			Agents.push_back(new lAgent(World.CreateBody(Position,Velocity),GameScene->GetElementFactory().CreateRectangle(Position,RADIUS*2.0,RADIUS*2.0)));
+			lBodyState State;
+			State.Position = {100.0f + i*80.0f,100.0f};
+			State.Velocity = {0.0f,0.0f};
+			//
+			auto &Body2DBuilder = World.GetBodyFactory().CreateBody();
+			Body2DBuilder.SetState(State);
+			auto &Circle2DBuilder = Body2DBuilder.CreateCircle();
+			Circle2DBuilder.SetRadius(RADIUS);
+			Circle2DBuilder.Construct();
+			//
+			liBody2D &Body = Body2DBuilder.Construct();
+			Agents.push_back(new lAgent(Body,GameScene->GetElementFactory().CreateRectangle(State.Position,RADIUS*2.0,RADIUS*2.0)));
 		}
 	}
 	//

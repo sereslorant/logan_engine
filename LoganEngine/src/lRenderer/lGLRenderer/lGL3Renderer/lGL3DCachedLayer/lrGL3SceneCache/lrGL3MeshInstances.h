@@ -134,7 +134,9 @@ public:
 			//MvMatrices[instance_id] = view_matrix * ModelMatrices[instance_id];
 			//MvpMatrices[instance_id] = projection_matrix MvMatrices[instance_id];
 			MvpMatrices[instance_id] = projection_matrix * view_matrix * ModelMatrices[instance_id];
-			ModelMatrices[instance_id].GetSubMatrix(3,3).Invert().Transpose(NormalMatrices[instance_id]);
+			lmMatrix3x3 InvModelMatrix;
+			lmInverse(ModelMatrices[instance_id].GetSubMatrix(3,3),InvModelMatrix);
+			InvModelMatrix.Transpose(NormalMatrices[instance_id]);
 		}
 	}
 	//
