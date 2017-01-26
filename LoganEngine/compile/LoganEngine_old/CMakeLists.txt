@@ -180,14 +180,16 @@ set(lRenderer	${lrCharacterAnim}
 		)
 
 #Setting lResourceManager sources
-set(lResourceManager	"../../old/lResourceManager/BMP.cpp"
-			"../../old/lResourceManager/lResourceManager.cpp"
-			"../../old/lResourceManager/lrmHeightmapLoader.cpp"
-			"../../old/lResourceManager/lrmMd5Loader.cpp"
-			"../../old/lResourceManager/lrmResourceManager.cpp"
-			"../../old/lResourceManager/lrmSkeletalMesh.cpp"
-			"../../old/lResourceManager/lrmStaticMesh.cpp"
-			"../../old/lResourceManager/lrmWavefrontLoader.cpp"
+set(L_RESOURCE_MANAGER_DIR "${SRC_DIR}/lResourceManager")
+
+set(lResourceManager	"${L_RESOURCE_MANAGER_DIR}/BMP.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lResourceManager.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lrmHeightmapLoader.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lrmMd5Loader.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lrmResourceManager.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lrmSkeletalMesh.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lrmStaticMesh.cpp"
+			"${L_RESOURCE_MANAGER_DIR}/lrmWavefrontLoader.cpp"
 			)
 
 #Setting content directory
