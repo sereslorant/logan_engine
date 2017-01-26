@@ -1,8 +1,8 @@
 #ifndef LPM_AI_H
 #define LPM_AI_H
 
-#include "liPM_AgentController.h"
-#include "lPM_Model.h"
+#include "lPM_Controller/liPM_AgentController.h"
+#include "lPM_Model/lPM_Model.h"
 
 #include <iostream>
 #include <vector>

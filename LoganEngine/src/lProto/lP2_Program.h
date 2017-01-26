@@ -1,24 +1,9 @@
 #ifndef LP2_PROGRAM_H
 #define LP2_PROGRAM_H
 
+#include "liGameInstantiator.h"
+
 #include "../lGame/lConsole.h"
-
-#include "lGameModes/lPacMan/lPacMan.h"
-#include "lGameModes/lP2_TestGameMode.h"
-#include "lGame/lP2World2D.h"
-
-#include "../lInterfaces/lApiAdapter/liApiAdapter.h"
-#include "../lResourceManager/lResourceManager.h"
-#include "../lInterfaces/lRenderer/liRenderer.h"
-
-class liGameInstantiator
-{
-public:
-	virtual liGame *CreateGame(liApiAdapter &api_adapter,lrmResourceManager &resource_manager,liRenderer &renderer,liConsole &console) = 0;
-
-	liGameInstantiator(){}
-	virtual ~liGameInstantiator(){}
-};
 
 class lP2_Program
 {

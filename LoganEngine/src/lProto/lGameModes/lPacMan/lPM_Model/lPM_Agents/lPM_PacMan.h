@@ -3,7 +3,7 @@
 
 #include "lPM_Agent.h"
 
-#include "liPM_AgentController.h"
+#include "../../lPM_Controller/liPM_AgentController.h"
 
 class lPM_PacMan : public lPM_Agent, public liPM_PacMan
 {

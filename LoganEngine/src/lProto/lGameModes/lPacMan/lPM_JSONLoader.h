@@ -1,7 +1,7 @@
 #ifndef L_JSON_LOADER_H
 #define L_JSON_LOADER_H
 
-#include "lPM_Model.h"
+#include "lPM_Model/lPM_Model.h"
 
 #include "../../../lJSON/lJSON.h"
 

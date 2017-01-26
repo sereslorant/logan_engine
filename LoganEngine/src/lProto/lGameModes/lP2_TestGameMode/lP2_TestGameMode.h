@@ -1,9 +1,11 @@
 #ifndef LP2_TEST_GAME_MODE_H
 #define LP2_TEST_GAME_MODE_H
 
-#include "../lGame/lP2Game.h"
+#include "../../../lInterfaces/lApiAdapter/liInput.h"
 
-#include "../../lUtils/luSetLayer.h"
+#include "lGame/lP2Game.h"
+
+#include "../../../lUtils/luSetLayer.h"
 
 class lP2_TestGameMode : public lP2ProtoGameMode
 {

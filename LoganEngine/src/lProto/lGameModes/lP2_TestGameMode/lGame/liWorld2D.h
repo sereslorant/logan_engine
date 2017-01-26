@@ -1,7 +1,7 @@
 #ifndef LI_COLLISION_CALLBACK
 #define LI_COLLISION_CALLBACK
 
-#include "../../lMath/lMath.h"
+#include "../../../../lMath/lMath.h"
 
 class liBody2D;
 

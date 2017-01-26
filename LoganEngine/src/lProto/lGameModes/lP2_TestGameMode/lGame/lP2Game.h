@@ -1,13 +1,14 @@
 #ifndef LP2_GAME_H
 #define LP2_GAME_H
 
-#include "../../lGame/lGame.h"
 #include "liWorld2D.h"
 
 #include <list>
-#include "../../lInterfaces/lRenderer/liRenderer.h"
-#include "../../lScene/lr2DScene/lr2DScene.h"
-#include "../../lScene/lr3DScene/lr3DScene.h"
+#include "../../../../lInterfaces/lGame/liGame.h"
+#include "../../../../lInterfaces/lGame/liAgent.h"
+#include "../../../../lInterfaces/lRenderer/liRenderer.h"
+#include "../../../../lScene/lr2DScene/lr2DScene.h"
+#include "../../../../lScene/lr3DScene/lr3DScene.h"
 
 class lP2ProtoGameMode : public liGameMode
 {

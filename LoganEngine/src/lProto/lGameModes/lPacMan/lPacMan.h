@@ -130,11 +130,11 @@ public:
 };
 */
 
-#include "lPM_Model.h"
+#include "lPM_Model/lPM_Model.h"
 #include "lPM_JSONLoader.h"
 
-#include "lPM_PacManJoystickController.h"
-#include "lPM_GraphicalView.h"
+#include "lPM_Controller/lPM_PacManJoystickController.h"
+#include "lPM_View/lPM_GraphicalView.h"
 
 #include "lPM_AI.h"
 

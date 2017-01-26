@@ -1,9 +1,9 @@
 #ifndef LPM_MODEL_H
 #define LPM_MODEL_H
 
-#include "lPM_Agent.h"
-#include "lPM_PacMan.h"
-#include "lPM_Coin.h"
+#include "lPM_Agents/lPM_Agent.h"
+#include "lPM_Agents/lPM_PacMan.h"
+#include "lPM_Agents/lPM_Coin.h"
 
 class liPM_AgentFactory
 {
