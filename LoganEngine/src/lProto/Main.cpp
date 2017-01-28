@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	lrmResourceManager ResourceManager;
 	//
 	//lffGLRenderer Renderer(800,600,ResourceManager);
-	lrGL3Renderer Renderer(800,600,ResourceManager);
+	lrGL3Renderer Renderer(800,600);
 	//
 	//#ifdef PAC_MAN
 	//lPM_GameInstantiator GameInstantiator;

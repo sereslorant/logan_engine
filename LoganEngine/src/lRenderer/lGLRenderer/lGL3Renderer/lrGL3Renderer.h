@@ -87,6 +87,11 @@ private:
 	//
 public:
 	//
+	virtual void SetResourceManager(liResourceManager *resource_manager) override
+	{
+		ResourceLoader.SetResourceManager(resource_manager);
+	}
+	//
 	virtual liFramebuffer2D &GetMainFramebuffer() override
 	{
 		return MainFramebuffer;
@@ -97,10 +102,9 @@ public:
 		MainFramebuffer.Draw();
 	}
 	//
-	lrGL3Renderer(unsigned int width,unsigned int height,liResourceManager &resource_manager)
+	lrGL3Renderer(unsigned int width,unsigned int height)
 		://StaticMeshPointLightShader(VertexShaderSource,PbEquationsSource,FwdFragmentShaderSrc,FragmentShaderSource),
 		 //StaticMeshEnvironmentShader(VertexShaderSource,PbEquationsSource,FwdFragmentShaderSrc,EnvMapShaderSource),
-		 ResourceLoader(resource_manager),
 		 MainFramebuffer(width,height,Shader2D,StaticMeshPointLightShader,StaticMeshEnvironmentShader,ResourceLoader)
 	{
 		glEnable(GL_BLEND);

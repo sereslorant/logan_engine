@@ -4,6 +4,8 @@
 #include "../lScene/l2DScene/li2DScene.h"
 #include "../lScene/l3DScene/li3DScene.h"
 
+#include "../../lResourceManager/liResourceManager.h"
+
 class li2DLayer
 {
 public:
@@ -89,6 +91,7 @@ class liRenderer
 {
 public:
 	//
+	virtual void SetResourceManager(liResourceManager *resource_manager) = 0;
 	//
 	virtual liFramebuffer2D &GetMainFramebuffer() = 0;
 	virtual void Render() = 0;

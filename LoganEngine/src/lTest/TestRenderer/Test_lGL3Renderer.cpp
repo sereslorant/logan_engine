@@ -102,7 +102,8 @@ int main(int argc, char *argv[])
 
 	dummyRM = new DummyRM;
 	//Renderer = new lffGLRenderer(600,600,*dummyRM);
-	Renderer = new lrGL3Renderer(600,600,*dummyRM);
+	Renderer = new lrGL3Renderer(600,600);
+	Renderer->SetResourceManager(dummyRM);
 	test = new RendererFunctionalityTest(Renderer);
 
 	test->Initialize();

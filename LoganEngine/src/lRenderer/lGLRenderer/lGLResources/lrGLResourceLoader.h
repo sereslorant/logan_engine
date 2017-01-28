@@ -317,16 +317,47 @@ public:
 class lrGLResourceLoader
 {
 private:
-	liResourceManager &ResourceManager;
+	liResourceManager *ResourceManager = nullptr;
 	//
 	std::map<std::string,lrGLStaticMeshResource> StaticMeshes;
 	std::map<std::string,lrGLTextureResource> Textures;
 	std::map<std::string,lrGLTextureResource> Cubemaps;
 	//
-	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//bool CubeMapLoaded = false;
-	//lrGLTextureResource CubeMap;
-	//TMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	lrmStaticMesh *LoadStaticMesh(const std::string &resource_id)
+	{
+		if(ResourceManager != nullptr)
+		{
+			return ResourceManager->GetStaticMesh(resource_id);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+	//
+	liBitmap2D *LoadBitmap(const std::string &resource_id)
+	{
+		if(ResourceManager != nullptr)
+		{
+			return ResourceManager->GetBitmap(resource_id);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+	//
+	liCubemap *LoadCubemap(const std::string &resource_id)
+	{
+		if(ResourceManager != nullptr)
+		{
+			return ResourceManager->GetCubemap(resource_id);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
 	//
 public:
 	//
@@ -335,7 +366,7 @@ public:
 		auto I = StaticMeshes.find(resource_id);
 		if(I == StaticMeshes.end())
 		{
-			lrmStaticMesh *LoadedMesh = ResourceManager.GetStaticMesh(resource_id);
+			lrmStaticMesh *LoadedMesh = LoadStaticMesh(resource_id);
 			//
 			lrGLStaticMeshResource &StaticMeshResource = StaticMeshes[resource_id];
 			if(LoadedMesh != nullptr)
@@ -354,7 +385,7 @@ public:
 		auto I = Textures.find(resource_id);
 		if(I == Textures.end())
 		{
-			liBitmap2D *LoadedBitmap = ResourceManager.GetBitmap(resource_id);
+			liBitmap2D *LoadedBitmap = LoadBitmap(resource_id);
 			//
 			lrGLTextureResource	*TextureResource = &Textures[resource_id];
 			lrGLTexture2DView	Texture2DView(TextureResource);
@@ -376,7 +407,7 @@ public:
 		auto I = Cubemaps.find(resource_id);
 		if(I == Cubemaps.end())
 		{
-			liCubemap *LoadedCubemap = ResourceManager.GetCubemap(resource_id);
+			liCubemap *LoadedCubemap = LoadCubemap(resource_id);
 			//
 			lrGLTextureResource	*TextureResource = &Cubemaps[resource_id];
 			lrGLTextureCubemapView	CubemapView(TextureResource);
@@ -402,8 +433,12 @@ public:
 		return lrGLTextureCubemapView(&I->second);
 	}
 	//
-	lrGLResourceLoader(liResourceManager &resource_manager)
-		:ResourceManager(resource_manager)
+	void SetResourceManager(liResourceManager *resource_manager)
+	{
+		ResourceManager = resource_manager;
+	}
+	//
+	lrGLResourceLoader()
 	{
 		//
 	}

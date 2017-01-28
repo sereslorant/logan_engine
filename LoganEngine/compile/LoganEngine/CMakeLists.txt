@@ -29,6 +29,14 @@ set(L_SDL2_API_ADAPTER_SRC	${L_SDL2_THREAD_SRC}
 add_library(lSDL2_ApiAdapter ${L_SDL2_API_ADAPTER_SRC})
 target_link_libraries(lSDL2_ApiAdapter ${SDL2_LIBRARIES})
 
+#Setting up l3DScene directories.
+set(L_3D_SCENE_SRC_DIR	"${L_SRC_DIR}/lScene/lr3DScene")
+
+#Setting up l3DScene src-s.
+set(L_3D_SCENE_SRC	"${L_3D_SCENE_SRC_DIR}/lrMaterialLibrary.cpp")
+
+#Compiling l3DScene
+add_library(l3DScene ${L_3D_SCENE_SRC})
 
 #Setting up lGL3Renderer directories.
 set(L_GL_RENDERER_SRC_DIR	"${L_SRC_DIR}/lRenderer/lGLRenderer")
@@ -66,13 +74,25 @@ add_library(lP2_TestGameMode ${LP2_TEST_GAME_MODE_SRC})
 
 
 #Setting up lPM_GameMode directories.
-set(LPM_GAME_MODE_SRC_DIR "${L_SRC_DIR}/lGame/lTimer.cpp" "${L_SRC_DIR}/lGame/lEvent.cpp" "${L_SRC_DIR}/lProto/lGameModes/lPacMan")
+set(LPM_GAME_MODE_SRC_DIR "${L_SRC_DIR}/lProto/lGameModes/lPacMan")
 
 #Setting up lPM_GameMode src-s.
-set(LPM_GAME_MODE_SRC "${LPM_GAME_MODE_SRC_DIR}/lPM_GameInstantiator.cpp")
+set(LPM_GAME_MODE_SRC "${LPM_GAME_MODE_SRC_DIR}/lPM_GameInstantiator.cpp" "${L_SRC_DIR}/lGame/lTimer.cpp" "${L_SRC_DIR}/lGame/lEvent.cpp")
 
 #Compiling lPM_GameMode
 add_library(lPM_GameMode ${LPM_GAME_MODE_SRC})
+
+
+#Setting up lGL3_GameMode directories.
+set(L_TEST_GL3_MAIN_SRC "${L_SRC_DIR}/lTest/TestRenderer")
+set(LGL3_GAME_MODE_SRC_DIR "${L_SRC_DIR}/lProto/lGameModes/lGL3_RendererTest")
+
+#Setting up lGL3_GameMode src-s.
+set(LGL3_GAME_MODE_SRC "${LGL3_GAME_MODE_SRC_DIR}/lGL3_RendererTestInstantiator.cpp" "${L_TEST_GL3_MAIN_SRC}/RendererTest.cpp")
+
+#Compiling lGL3_GameMode
+add_library(lGL3_GameMode ${LGL3_GAME_MODE_SRC})
+target_link_libraries(lGL3_GameMode l3DScene)
 
 
 #Setting up lProto directories.
@@ -86,6 +106,19 @@ add_executable(lProtoFramework ${L_PROTO_MAIN_SRC})
 target_link_libraries(lProtoFramework lP2_TestGameMode lSDL2_ApiAdapter lGL3Renderer)
 
 #Compiling lPacMan
-
 add_executable(lPacMan ${L_PROTO_MAIN_SRC})
 target_link_libraries(lPacMan lPM_GameMode lSDL2_ApiAdapter lGL3Renderer)
+
+#Compiling lGL3TestGame
+add_executable(lGL3TestGame ${L_PROTO_MAIN_SRC})
+target_link_libraries(lGL3TestGame lGL3_GameMode lSDL2_ApiAdapter lGL3Renderer)
+
+
+pkg_search_module(GLFW REQUIRED glfw3)
+include_directories(${GLFW_INCLUDE_DIRS})
+
+set(L_TEST_GL3_MAIN_SRC "${L_SRC_DIR}/lTest/TestRenderer")
+set(L_TEST_GL3_MAIN_SRC "${L_TEST_GL3_MAIN_SRC}/RendererTest.cpp" "${L_TEST_GL3_MAIN_SRC}/Test_lGL3Renderer.cpp")
+
+add_executable(Test_GL3Renderer ${L_TEST_GL3_MAIN_SRC})
+target_link_libraries(Test_GL3Renderer l3DScene ${GLFW_LIBRARIES} X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor lGL3Renderer)
