@@ -6,7 +6,7 @@
 class lrGLTextureResource
 {
 private:
-	GLuint TextureId;
+	GLuint TextureId = 0;
 	//
 public:
 	//
@@ -21,7 +21,6 @@ public:
 	}
 	//
 	lrGLTextureResource()
-		:TextureId(0)
 	{
 		//Empty
 	}

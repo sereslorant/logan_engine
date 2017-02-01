@@ -15,8 +15,7 @@ class lrGL3Viewport : public lrGLViewport
 private:
 	lrGL2DShader &Shader2D;
 	//
-	lrGL3StaticMeshShader &StaticMeshPointLightShader;
-	lrGL3StaticMeshShader &StaticMeshEnvironmentShader;
+	lrGL3RenderState3D &RenderState3D;
 	//
 	lrGLResourceLoader &ResourceLoader;
 	//
@@ -27,13 +26,13 @@ private:
 	//
 	virtual lrLayer *CreateGL3DLayer() override
 	{
-		return new lrGL3DCachedLayer(StaticMeshPointLightShader,StaticMeshEnvironmentShader,ResourceLoader);
+		return new lrGL3DCachedLayer(RenderState3D,ResourceLoader);
 	}
 	//
 public:
 	//
-	lrGL3Viewport(int x,int y,int width,int height,lrGL2DShader &shader2d,lrGL3StaticMeshShader &static_mesh_point_light_shader,lrGL3StaticMeshShader &static_mesh_environment_shader,lrGLResourceLoader &resource_loader)
-		:lrGLViewport(x,y,width,height),Shader2D(shader2d),StaticMeshPointLightShader(static_mesh_point_light_shader),StaticMeshEnvironmentShader(static_mesh_environment_shader),ResourceLoader(resource_loader)
+	lrGL3Viewport(int x,int y,int width,int height,lrGL2DShader &shader2d,lrGL3RenderState3D &render_state_3D,lrGLResourceLoader &resource_loader)
+		:lrGLViewport(x,y,width,height),Shader2D(shader2d),RenderState3D(render_state_3D),ResourceLoader(resource_loader)
 	{}
 	//
 	virtual ~lrGL3Viewport() override
@@ -49,19 +48,20 @@ class lrGL3Framebuffer : public lrGLFramebuffer
 {
 private:
 	lrGL2DShader &Shader2D;
-	lrGL3StaticMeshShader &StaticMeshPointLightShader;
-	lrGL3StaticMeshShader &StaticMeshEnvironmentShader;
+	//
+	lrGL3RenderState3D &RenderState3D;
+	//
 	lrGLResourceLoader &ResourceLoader;
 	//
 	virtual lrGLViewport *CreateGLViewport(int x,int y,int width,int height) override
 	{
-		return new lrGL3Viewport(x,y,width,height,Shader2D,StaticMeshPointLightShader,StaticMeshEnvironmentShader,ResourceLoader);
+		return new lrGL3Viewport(x,y,width,height,Shader2D,RenderState3D,ResourceLoader);
 	}
 	//
 public:
 	//
-	lrGL3Framebuffer(int width,int height,lrGL2DShader &shader2d,lrGL3StaticMeshShader &static_mesh_point_light_shader,lrGL3StaticMeshShader &static_mesh_environment_shader,lrGLResourceLoader &resource_loader)
-		:lrGLFramebuffer(width,height),Shader2D(shader2d),StaticMeshPointLightShader(static_mesh_point_light_shader),StaticMeshEnvironmentShader(static_mesh_environment_shader),ResourceLoader(resource_loader)
+	lrGL3Framebuffer(int width,int height,lrGL2DShader &shader2d,lrGL3RenderState3D &render_state_3D,lrGLResourceLoader &resource_loader)
+		:lrGLFramebuffer(width,height),Shader2D(shader2d),RenderState3D(render_state_3D),ResourceLoader(resource_loader)
 	{}
 	//
 	virtual ~lrGL3Framebuffer() override
@@ -81,6 +81,8 @@ private:
 	//
 	lrGL3StaticMeshShader StaticMeshPointLightShader;
 	lrGL3StaticMeshShader StaticMeshEnvironmentShader;
+	//
+	lrGL3RenderState3D RenderState3D;
 	lrGLResourceLoader ResourceLoader;
 	//
 	lrGL3Framebuffer MainFramebuffer;
@@ -105,7 +107,8 @@ public:
 	lrGL3Renderer(unsigned int width,unsigned int height)
 		://StaticMeshPointLightShader(VertexShaderSource,PbEquationsSource,FwdFragmentShaderSrc,FragmentShaderSource),
 		 //StaticMeshEnvironmentShader(VertexShaderSource,PbEquationsSource,FwdFragmentShaderSrc,EnvMapShaderSource),
-		 MainFramebuffer(width,height,Shader2D,StaticMeshPointLightShader,StaticMeshEnvironmentShader,ResourceLoader)
+		 RenderState3D(StaticMeshPointLightShader,StaticMeshEnvironmentShader),
+		 MainFramebuffer(width,height,Shader2D,RenderState3D,ResourceLoader)
 	{
 		glEnable(GL_BLEND);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);

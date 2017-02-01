@@ -11,6 +11,11 @@ protected:
 	//
 public:
 	//
+	GLuint GetTextureId()
+	{
+		return TextureResource->GetTextureId();
+	}
+	//
 	void Bind()
 	{
 		if(TextureResource != nullptr)

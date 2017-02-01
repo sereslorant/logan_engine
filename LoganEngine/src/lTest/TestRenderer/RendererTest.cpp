@@ -130,7 +130,7 @@ void RendererTest::Draw()
 		std::chrono::nanoseconds Difference = After - Before;
 		//std::chrono::seconds Difference_sec = After - Before;
 		//
-		//std::cout << "Frame time = " << Difference.count() / 1000000.0 << "ms" << std::endl;
+		std::cout << "Frame time = " << Difference.count() / 1000000.0 << "ms" << std::endl;
 		//std::cout << "FPS = " << 1.0/(Difference.count() / 1000000000.0) << std::endl;
 	}
 	else

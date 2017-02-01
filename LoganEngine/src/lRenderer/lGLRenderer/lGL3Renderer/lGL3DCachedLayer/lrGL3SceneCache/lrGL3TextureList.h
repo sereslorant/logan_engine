@@ -15,16 +15,16 @@ private:
 	std::string EnvironmentMapName;
 	lrGLTextureCubemapView EnvironmentMap;
 	//
-	std::vector<lrGL3MeshInstances> MeshInstances;
-	std::map<std::string,lrGL3MeshInstances *> ModelDictionary;
+	std::vector<lrGL3InstanceSet> InstanceSets;
+	std::map<std::string,lrGL3InstanceSet *> ModelDictionary;
 	//
 public:
 	//
 	void DrawTextureList(liGLShader &shader,liGLPbMatShader &mat_shader)
 	{
-		for(lrGL3MeshInstances &MeshInstances_Puszcsy : MeshInstances)
+		for(lrGL3InstanceSet &InstanceSet : InstanceSets)
 		{
-			MeshInstances_Puszcsy.DrawInstances(shader,mat_shader);
+			InstanceSet.DrawInstances(shader,mat_shader);
 		}
 	}
 	//
@@ -72,17 +72,17 @@ public:
 		EnvironmentMapName = environment_map_name;
 		EnvironmentMap = environment_map;
 		//
-		MeshInstances.resize(num_material_groups);
+		InstanceSets.resize(num_material_groups);
 	}
 	//
-	lrGL3MeshInstances &GetMeshInstances(const std::string &material_group_key)
+	lrGL3InstanceSet &GetInstanceSet(const std::string &material_group_key)
 	{
 		return *ModelDictionary[material_group_key];
 	}
 	//
 	void InitializeMeshInstances(unsigned int mat_group_id,const std::string &material_group_name,unsigned int num_instances)
 	{
-		lrGL3MeshInstances &MatGroupInstances = MeshInstances[mat_group_id];
+		lrGL3InstanceSet &MatGroupInstances = InstanceSets[mat_group_id];
 		//
 		MatGroupInstances.Resize(num_instances);
 		ModelDictionary[material_group_name] = &MatGroupInstances;

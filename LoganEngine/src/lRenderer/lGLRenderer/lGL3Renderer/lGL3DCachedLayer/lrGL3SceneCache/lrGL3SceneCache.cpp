@@ -44,10 +44,10 @@ public:
 		lrGL3TextureList &TextureList = TextureLists[TextureListId];
 		//
 		TextureList.Construct(	texture_group.GetAlbedoMap(),
-								ResourceLoader.GetTexture(texture_group.GetAlbedoMap()),
-								"DUMMY",
-								ResourceLoader.GetCubemap("DUMMY"),
-								texture_group.NumStaticMeshes());
+					ResourceLoader.GetTexture(texture_group.GetAlbedoMap()),
+					"DUMMY",
+					ResourceLoader.GetCubemap("DUMMY"),
+					texture_group.NumStaticMeshes());
 		//
 		lAllocateMeshInstances AllocateMeshInstances(TextureList);
 		texture_group.ForEachMeshCount(AllocateMeshInstances);
@@ -68,8 +68,8 @@ public:
 	 */
 };
 
-lrGL3SceneCache::lrGL3SceneCache(const liFrustum &frustum,const li3DCamera &camera,const liSceneCacheStats &scene_cache_stats,lrGL3StaticMeshShader &static_mesh_point_light_shader,lrGL3StaticMeshShader &static_mesh_environment_shader,lrGLResourceLoader &resource_loader)
-	:SceneCacher(resource_loader,*this),ProjectionMatrix(lmMatrix4x4::IDENTITY),ViewMatrix(lmMatrix4x4::IDENTITY),StaticMeshPointLightShader(static_mesh_point_light_shader),StaticMeshEnvironmentShader(static_mesh_environment_shader)
+lrGL3SceneCache::lrGL3SceneCache(const liFrustum &frustum,const li3DCamera &camera,const liSceneCacheStats &scene_cache_stats,lrGL3StaticMeshShader &static_mesh_point_light_shader,/*lrGL3StaticMeshShader &static_mesh_environment_shader,*/lrGLResourceLoader &resource_loader)
+	:SceneCacher(resource_loader,static_mesh_point_light_shader,*this),ProjectionMatrix(lmMatrix4x4::IDENTITY),ViewMatrix(lmMatrix4x4::IDENTITY)//,StaticMeshPointLightShader(static_mesh_point_light_shader),StaticMeshEnvironmentShader(static_mesh_environment_shader)
 {
 	lrUtils::GetProjectionMatrix(frustum,ProjectionMatrix);
 	lrUtils::GetViewMatrix(camera,ViewMatrix);

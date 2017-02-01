@@ -101,9 +101,9 @@ public:
 		//
 		glGenBuffers(1,&IndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IndexBuffer);
-    	glBufferData(GL_ELEMENT_ARRAY_BUFFER,BufferLength * sizeof(GLuint),nullptr,GL_STATIC_DRAW);
-    	//glBufferData(GL_ELEMENT_ARRAY_BUFFER,BufferLength * sizeof(GLushort),nullptr,GL_STATIC_DRAW);
-    	//
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,BufferLength * sizeof(GLuint),nullptr,GL_STATIC_DRAW);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER,BufferLength * sizeof(GLushort),nullptr,GL_STATIC_DRAW);
+		//
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 	}
 	//
@@ -223,11 +223,19 @@ public:
 		}
 	}
 	//
-	void Draw()
+	void BindIndexBuffer()
 	{
 		if(VertexData != nullptr && MaterialGroup != nullptr)
 		{
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,MaterialGroup->IndexBuffer);
+		}
+	}
+	//
+	void Draw()
+	{
+		if(VertexData != nullptr && MaterialGroup != nullptr)
+		{
+			//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,MaterialGroup->IndexBuffer);
 			glDrawElements(GL_TRIANGLES,MaterialGroup->BufferLength,GL_UNSIGNED_INT,nullptr);
 			//glDrawElements(GL_TRIANGLES,MaterialGroup->BufferLength,GL_UNSIGNED_SHORT,nullptr);
 		}

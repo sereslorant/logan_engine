@@ -7,17 +7,112 @@
 #include "../../../liGLShaderInterfaces.h"
 #include "lrGLData/lrGLMaterialData.h"
 
-class lrGL3MeshInstances
+class liGL3InstanceSet
+{
+public:
+	//
+	virtual void SetInstance(const lmMatrix4x4 &projection_matrix,const lmMatrix4x4 &view_matrix,const liMaterial &material,const li3DMesh &mesh,unsigned int instance_id) = 0;
+	//
+	virtual void DrawInstances(liGLShader &shader,liGLPbMatShader &mat_shader) = 0;
+	//
+	liGL3InstanceSet(){}
+	//
+	virtual ~liGL3InstanceSet(){}
+	/*
+	 * End of class
+	 */
+};
+
+class lrGL3InstanceCacher
 {
 private:
+	liGL3InstanceSet *InstanceSet= nullptr;
+	unsigned int Next;
 	//
+public:
+	//
+	bool Initialized()
+	{
+		return InstanceSet != nullptr;
+	}
+	//
+	void Initialize(liGL3InstanceSet *instance_set)
+	{
+		InstanceSet = instance_set;
+		Next = 0;
+	}
+	//
+	void SetNextInstance(const lmMatrix4x4 &projection_matrix,const lmMatrix4x4 &view_matrix,const liMaterial &material,const li3DMesh &mesh)
+	{
+		if(Initialized())
+		{
+			InstanceSet->SetInstance(projection_matrix,view_matrix,material,mesh,Next);
+			Next++;
+		}
+	}
+	//
+	lrGL3InstanceCacher()
+	{}
+	//
+	~lrGL3InstanceCacher()
+	{}
+	/*
+	 * End of class
+	 */
+};
+
+class lrGL3InstanceSetBase
+{
+protected:
 	bool MeshInitialized = false;
 	lrGLMaterialGroupView MaterialGroup;
 	GLuint VertexArrayObject = 0;
+	//
+	virtual void BindInstanceData()
+	{
+		//
+	}
+	//
+public:
+	//
+	void Construct(liGLStaticMeshShader &static_mesh_shader,lrGLMaterialGroupView &material_group)
+	{
+		if(!MeshInitialized)
+		{
+			glGenVertexArrays(1,&VertexArrayObject);
+			glBindVertexArray(VertexArrayObject);
+			//
+			MaterialGroup = material_group;
+			//
+			MaterialGroup.BindAttributes(static_mesh_shader);
+			MaterialGroup.BindIndexBuffer();
+			//
+			BindInstanceData();
+			//
+			glBindVertexArray(0);
+			//
+			MeshInitialized = true;
+		}
+	}
+	//
+	lrGL3InstanceSetBase()
+	{}
+	//
+	virtual ~lrGL3InstanceSetBase()
+	{
+		glDeleteVertexArrays(1,&VertexArrayObject);
+	}
+	/*
+	 * End of class
+	 */
+};
+
+class lrGL3InstanceSet : public lrGL3InstanceSetBase, public liGL3InstanceSet
+{
+private:
 	/*
 	 * Instance-ökhöz tartozó adatok.
 	 */
-	unsigned int Next = 0;
 	std::vector<lrGLMaterialData> Materials;
 	std::vector<lmMatrix4x4> ModelMatrices;
 	//std::vector<lmMatrix4x4> MvMatrices;
@@ -39,40 +134,102 @@ private:
 		glUniform4fv(shader.GetMaterial1Location(),1,Material.Material[1]);
 	}
 	//
+	/*void DrawRange(liGLShader &shader,liGLPbMatShader &mat_shader,unsigned int begin,unsigned int end)
+	{
+		glBindVertexArray(VertexArrayObject);
+		for(unsigned int i=begin;i < std::min(NumInstances(),end);i++)
+		{
+			ApplyMatrix(shader,i);
+			ApplyMaterial(mat_shader,i);
+			//
+			MaterialGroup.Draw();
+		}
+		glBindVertexArray(0);
+	}*/
+	//
 public:
 	//
-	void Construct(liGLStaticMeshShader &static_mesh_shader,lrGLMaterialGroupView &material_group)
+	/*
+	class lrGL3InstanceSubset : public liGL3InstanceSet
 	{
-		if(!MeshInitialized)
+	private:
+		lrGL3InstanceSet &InstanceSet;
+		unsigned int Begin;
+		unsigned int End;
+		//
+	public:
+		//
+		virtual void SetInstance(const lmMatrix4x4 &projection_matrix,const lmMatrix4x4 &view_matrix,const liMaterial &material,const li3DMesh &mesh,unsigned int instance_id) override
 		{
-			glGenVertexArrays(1,&VertexArrayObject);
-			glBindVertexArray(VertexArrayObject);
+			InstanceSet.SetInstance(projection_matrix,view_matrix,material,mesh,Begin + instance_id);
+		}
+		//
+		virtual void DrawInstances(liGLShader &shader,liGLPbMatShader &mat_shader) override
+		{
+			InstanceSet.DrawRange(shader,mat_shader,Begin,End);
+		}
+		//
+		lrGL3InstanceSubset(lrGL3InstanceSet &instance_set,unsigned int begin,unsigned int end)
+			:InstanceSet(instance_set),Begin(begin),End(end)
+		{}
+		//
+		virtual ~lrGL3InstanceSubset() override
+		{}
+		/*
+		 * End of class
+		 * /
+	};
+	//
+	lrGL3InstanceSubset GetSubset(unsigned int begin,unsigned int end)
+	{
+		return lrGL3InstanceSubset(*this,begin,end);
+	}
+	*/
+	//
+	unsigned int NumInstances()
+	{
+		return (unsigned int)ModelMatrices.size();
+	}
+	//
+	void Resize(unsigned int size)
+	{
+		Materials.resize(size);
+		ModelMatrices.resize(size);
+		//MvMatrices.resize(size);
+		MvpMatrices.resize(size);
+		NormalMatrices.resize(size);
+	}
+	//
+	virtual void SetInstance(const lmMatrix4x4 &projection_matrix,const lmMatrix4x4 &view_matrix,const liMaterial &material,const li3DMesh &mesh,unsigned int instance_id) override
+	{
+		if(instance_id < NumInstances())
+		{
+			Materials[instance_id].SetMaterial(material);
+			ModelMatrices[instance_id] = lmMatrix4x4(lmMatrix4x4::IDENTITY);
+			lrUtils::GetModelMatrix(mesh,ModelMatrices[instance_id]);
 			//
-			MaterialGroup = material_group;
-			MaterialGroup.BindAttributes(static_mesh_shader);
-			//
-			glBindVertexArray(0);
-			//
-			MeshInitialized = true;
+			//MvMatrices[instance_id] = view_matrix * ModelMatrices[instance_id];
+			//MvpMatrices[instance_id] = projection_matrix MvMatrices[instance_id];
+			MvpMatrices[instance_id] = projection_matrix * view_matrix * ModelMatrices[instance_id];
+			lmMatrix3x3 InvModelMatrix;
+			lmInverse(ModelMatrices[instance_id].GetSubMatrix(3,3),InvModelMatrix);
+			InvModelMatrix.Transpose(NormalMatrices[instance_id]);
 		}
 	}
 	//
-	void DrawInstances(liGLShader &shader,liGLPbMatShader &mat_shader)
+	virtual void DrawInstances(liGLShader &shader,liGLPbMatShader &mat_shader) override
 	{
+		//DrawRange(shader,mat_shader,0,NumInstances());
+		glBindVertexArray(VertexArrayObject);
 		for(unsigned int i=0;i < NumInstances();i++)
 		{
 			ApplyMatrix(shader,i);
 			ApplyMaterial(mat_shader,i);
 			//
-			glBindVertexArray(VertexArrayObject);
 			MaterialGroup.Draw();
-			glBindVertexArray(0);
 		}
+		glBindVertexArray(0);
 	}
-	//
-	/*
-	 * Minden más!
-	 */
 	//
 	#ifdef L_DEBUG_PRINT_SCENE_CACHE
 	//
@@ -99,54 +256,14 @@ public:
 	//
 	#endif
 	//
-	unsigned int NumInstances()
-	{
-		return (unsigned int)ModelMatrices.size();
-	}
-	//
-	void Resize(unsigned int size)
-	{
-		Materials.resize(size);
-		ModelMatrices.resize(size);
-		//MvMatrices.resize(size);
-		MvpMatrices.resize(size);
-		NormalMatrices.resize(size);
-		Next = 0;
-	}
-	//
-	void SetNextInstance(lmMatrix4x4 &projection_matrix,lmMatrix4x4 &view_matrix,const liMaterial &material,const li3DMesh &mesh)
-	{
-		if(Next < NumInstances())
-		{
-			SetInstance(projection_matrix,view_matrix,material,mesh,Next);
-			Next++;
-		}
-	}
-	//
-	void SetInstance(lmMatrix4x4 &projection_matrix,lmMatrix4x4 &view_matrix,const liMaterial &material,const li3DMesh &mesh,unsigned int instance_id)
-	{
-		if(instance_id < NumInstances())
-		{
-			Materials[instance_id].SetMaterial(material);
-			ModelMatrices[instance_id] = lmMatrix4x4(lmMatrix4x4::IDENTITY);
-			lrUtils::GetModelMatrix(mesh,ModelMatrices[instance_id]);
-			//
-			//MvMatrices[instance_id] = view_matrix * ModelMatrices[instance_id];
-			//MvpMatrices[instance_id] = projection_matrix MvMatrices[instance_id];
-			MvpMatrices[instance_id] = projection_matrix * view_matrix * ModelMatrices[instance_id];
-			lmMatrix3x3 InvModelMatrix;
-			lmInverse(ModelMatrices[instance_id].GetSubMatrix(3,3),InvModelMatrix);
-			InvModelMatrix.Transpose(NormalMatrices[instance_id]);
-		}
-	}
-	//
-	lrGL3MeshInstances()
+	lrGL3InstanceSet()
 	{}
 	//
-	~lrGL3MeshInstances()
-	{
-		glDeleteVertexArrays(1,&VertexArrayObject);
-	}
+	virtual ~lrGL3InstanceSet() override
+	{}
+	/*
+	 * End of class
+	 */
 };
 
 #endif // LR_GL_MESH_INSTANCES_H

@@ -1,7 +1,6 @@
 
 #include "lrGL3DCachedLayer.h"
 
-#include "lrGL3SceneCache/lrGL3SceneCache.h"
 #include "lrGLModelCacher.h"
 
 #include "../../../lr3DSceneReader.h"
@@ -16,15 +15,14 @@ void lrGL3DCachedLayer::DrawScene()
 	lr3DSceneReader SceneReader(SceneCacheStats);
 	Scene->Draw(SceneReader);
 	//
-	lrGL3SceneCache SceneCache(*Frustum,*Camera,SceneCacheStats,StaticMeshPointLightShader,StaticMeshEnvironmentShader,ResourceLoader);
+	lrGL3SceneCache SceneCache(*Frustum,*Camera,SceneCacheStats,RenderState3D.GetStaticMeshPointLightShader(),/*StaticMeshEnvironmentShader,*/ResourceLoader);
 	//
 	lr3DSceneReader SceneCacher(SceneCache.GetSceneCacher());
-	//
 	Scene->Draw(SceneCacher);
 	//
 	#ifdef L_DEBUG_PRINT_SCENE_CACHE
 		SceneCache.Print();
 	#endif
 	//
-	SceneCache.DrawScene();
+	RenderState3D.DrawScene(SceneCache);
 }
