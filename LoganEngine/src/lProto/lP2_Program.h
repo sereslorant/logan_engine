@@ -50,7 +50,7 @@ public:
 		//ConsoleThread->Kill();
 	}
 	//
-    lP2_Program(liApiAdapter &api_adapter,lrmResourceManager &resource_manager,liRenderer &renderer,liGameInstantiator &game_instantiator,bool has_console = false)
+    lP2_Program(liApiAdapter &api_adapter,liThreadFactory &thread_factory,lrmResourceManager &resource_manager,liRenderer &renderer,liGameInstantiator &game_instantiator,bool has_console = false)
 		:ApiAdapter(api_adapter),ResourceManager(resource_manager),Renderer(renderer),GameInstantiator(game_instantiator)
     {
 		if(has_console)
@@ -58,7 +58,7 @@ public:
 			lConsole *RunnableConsole = new lConsole(std::cin,std::cout,std::cerr);
 			Console = RunnableConsole;
 			//
-			ConsoleThread = ApiAdapter.GetThreadFactory().NewThread();
+			ConsoleThread = thread_factory.NewThread();
 			ConsoleThread->SetRunnable(RunnableConsole);
 		}
 		else

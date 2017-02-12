@@ -60,13 +60,253 @@ public:
 
 #include "ObjLoader/lrmWfLoader.h"
 
+#include <fstream>
+
 #include <string>
 #include <map>
+
+/*
+ * TODO: A Wavefront loaderben és az md5 loaderben kurvasok a kódduplikálás,
+ * érdemes összevonni.
+ */
+
+class lrmWfObjLoaderModule
+{
+private:
+	std::map<std::string,lrmStaticMesh *> LoadedMeshes;
+	//
+	static void CalculateTBVectors(lrmStaticMesh &static_mesh)
+	{
+		for(unsigned int i=0;i < static_mesh.Normals.size();i++)
+		{
+			//static_mesh.Normals[i] *= -1.0;
+			//
+			lmVector3D Tangent = lmCross(lmCross(static_mesh.Normals[i],static_mesh.Vertices[i]*(-1)),static_mesh.Normals[i]);
+			Tangent.Normalize();
+			//
+			static_mesh.Tangents.push_back(Tangent);
+			//
+			lmVector3D Bitangent = lmCross(Tangent,static_mesh.Normals[i]);
+			Bitangent.Normalize();
+			//
+			static_mesh.Bitangents.push_back(Bitangent);
+		}
+	}
+	//
+	static void Extract(lrmWfObj &loaded_obj,lrmStaticMesh *&static_mesh)
+	{
+		static_mesh = new lrmStaticMesh;
+
+		std::vector<int> iVertices;
+		std::vector<int> iNormals;
+		std::vector<int> iTexCoords;
+
+		for(auto i = loaded_obj.MatGroups.begin();i != loaded_obj.MatGroups.end();i++)
+		{
+			for(auto k = (*i)->Triangles.begin();k != (*i)->Triangles.end();k++)
+			{
+				bool Found;
+
+				Found = false;
+				for(unsigned int j = 0;j < iVertices.size();j++)
+				{
+					if((iVertices[j] == k->V1) && (iTexCoords[j] == k->Tx1))
+					{
+						Found = true;
+						break;
+					}
+				}
+
+				if(!Found)
+				{
+					iVertices.push_back(k->V1);
+					iNormals.push_back(k->V1);
+					iTexCoords.push_back(k->Tx1);
+				}
+
+				Found = false;
+				for(unsigned int j = 0;j < iVertices.size();j++)
+				{
+					if((iVertices[j] == k->V2) && (iTexCoords[j] == k->Tx2))
+					{
+						Found = true;
+						break;
+					}
+				}
+
+				if(!Found)
+				{
+					iVertices.push_back(k->V2);
+					iNormals.push_back(k->V2);
+					iTexCoords.push_back(k->Tx2);
+				}
+
+				Found = false;
+				for(unsigned int j = 0;j < iVertices.size();j++)
+				{
+					if((iVertices[j] == k->V3) && (iTexCoords[j] == k->Tx3))
+					{
+						Found = true;
+						break;
+					}
+				}
+				//
+				if(!Found)
+				{
+					iVertices.push_back(k->V3);
+					iNormals.push_back(k->V3);
+					iTexCoords.push_back(k->Tx3);
+				}
+			}
+		}
+		//
+		for(unsigned int j = 0;j < iVertices.size();j++)
+		{
+			static_mesh->Vertices.push_back(loaded_obj.Vertices[iVertices[j]]);
+			static_mesh->Normals.push_back(loaded_obj.SmoothNormals[iNormals[j]]);
+			static_mesh->TexCoords.push_back(loaded_obj.TexCoords[iTexCoords[j]]);
+		}
+		//
+		for(auto i = loaded_obj.MatGroups.begin();i != loaded_obj.MatGroups.end();i++)
+		{
+			lrmStaticMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMesh::lrmMtlGroup;
+			newMtlGroup->Material = (*i)->Material;
+			//
+			for(auto k = (*i)->Triangles.begin();k != (*i)->Triangles.end();k++)
+			{
+				for(unsigned int j=0;j < static_mesh->Vertices.size();j++)
+				{
+					if((iVertices[j] == k->V1) && (iTexCoords[j] == k->Tx1))
+					{
+						newMtlGroup->IndexBuffer.push_back(j);
+						break;
+					}
+				}
+				//
+				for(unsigned int j=0;j < static_mesh->Vertices.size();j++)
+				{
+					if((iVertices[j] == k->V2) && (iTexCoords[j] == k->Tx2))
+					{
+						newMtlGroup->IndexBuffer.push_back(j);
+						break;
+					}
+				}
+				//
+				for(unsigned int j=0;j < static_mesh->Vertices.size();j++)
+				{
+					if((iVertices[j] == k->V3) && (iTexCoords[j] == k->Tx3))
+					{
+						newMtlGroup->IndexBuffer.push_back(j);
+						break;
+					}
+				}
+			}
+			//
+			static_mesh->AddMaterialGroup(newMtlGroup);
+		}
+		//
+		CalculateTBVectors(*static_mesh);
+	}
+	//
+public:
+	//
+	bool LoadStaticMesh(const std::string &resource_identifier,lrmStaticMesh *&static_mesh)
+	{
+		auto I = LoadedMeshes.find(resource_identifier);
+		if(I == LoadedMeshes.end())
+		{
+			std::fstream file(resource_identifier);
+			if(!file.is_open())
+			{
+				return false;
+			}
+			//
+			lrmWfObj LoadedObj;
+			lrmWfLoader ObjLoader(LoadedObj,file,true);
+			if(ObjLoader.GetError())
+			{
+				return false;
+			}
+			//
+			Extract(LoadedObj,static_mesh);
+			LoadedMeshes[resource_identifier] = static_mesh;
+			return true;
+		}
+		else
+		{
+			static_mesh = I->second;
+			return true;
+		}
+	}
+	//
+	lrmWfObjLoaderModule(){}
+	//
+	~lrmWfObjLoaderModule()
+	{
+		//
+	}
+	/*
+	 * End of class
+	 */
+};
+
+#include "Md5Loader/md5Utility.h"
+#include "Md5Loader/lrmMd5Loader.h"
+
+class lrmMd5LoaderModule
+{
+private:
+	std::map<std::string,lrmSkeletalMesh *> LoadedMeshes;
+	//
+public:
+	//
+	bool LoadSkeletalMesh(const std::string &resource_identifier,lrmSkeletalMesh *&skeletal_mesh)
+	{
+		auto I = LoadedMeshes.find(resource_identifier);
+		if(I == LoadedMeshes.end())
+		{
+			std::fstream file(resource_identifier);
+			if(!file.is_open())
+			{
+				return false;
+			}
+			//
+			md5File File;
+			if(!md5LoadFile(file,File))
+			{
+				return false;
+			}
+			//
+			if(File.Meshes.size() < 1)
+			{
+				return false;
+			}
+			//
+			skeletal_mesh = new lrmSkeletalMesh;
+			md5ExtractSkeletalMesh(File,true,0,*skeletal_mesh);
+			LoadedMeshes[resource_identifier] = skeletal_mesh;
+			return true;
+		}
+		else
+		{
+			skeletal_mesh = I->second;
+			return true;
+		}
+	}
+	//
+	lrmMd5LoaderModule(){}
+	//
+	~lrmMd5LoaderModule(){}
+	/*
+	 * End of class
+	 */
+};
 
 class lrmResourceManager : public liResourceManager
 {
 private:
 	std::map<std::string,lrmStaticMesh *> StaticMeshes;
+	std::map<std::string,lrmSkeletalMesh *> SkeletalMeshes;
 
 public:
 	//
@@ -286,6 +526,20 @@ public:
 			StaticMeshes[resource_identifier] = StaticMesh;
 			//
 			return StaticMesh;
+		}
+		else
+		{
+			return I->second;
+		}
+	}
+	//
+	virtual lrmSkeletalMesh *GetSkeletalMesh(const std::string &resource_identifier) override
+	{
+		auto I = SkeletalMeshes.find(resource_identifier);
+		//
+		if(I == SkeletalMeshes.end())
+		{
+			return nullptr;
 		}
 		else
 		{

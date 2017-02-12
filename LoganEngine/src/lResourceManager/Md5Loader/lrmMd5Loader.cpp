@@ -545,7 +545,7 @@ lrmMd5Loader::~lrmMd5Loader()
 }
 
 
-void md5ExtractBindPoseMesh(md5File &file,bool y_up,bool smooth_normals,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh)
+void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh)
 {
     bind_pose_mesh.Vertices.resize(file.Meshes[mesh_index].Vertices.size());
     bind_pose_mesh.TexCoords.resize(file.Meshes[mesh_index].Vertices.size());
@@ -641,9 +641,9 @@ void md5ExtractBindPoseMesh(md5File &file,bool y_up,bool smooth_normals,unsigned
         //
         newMtlGroup->IndexBuffer[k] = Triangle.V1;
         k++;
-        newMtlGroup->IndexBuffer[k] = Triangle.V2;
-        k++;
         newMtlGroup->IndexBuffer[k] = Triangle.V3;
+        k++;
+        newMtlGroup->IndexBuffer[k] = Triangle.V2;
         k++;
     }
     //
@@ -682,9 +682,9 @@ bool md5CmpWeight(const md5File::md5Mesh::md5Weight &A,const md5File::md5Mesh::m
     return false;
 }
 
-void md5ExtractSkeletalMesh(md5File &file,bool y_up,bool smooth_normals,unsigned int mesh_index,lrmSkeletalMesh &skeletal_mesh)
+void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmSkeletalMesh &skeletal_mesh)
 {
-	md5ExtractBindPoseMesh(file,y_up,smooth_normals,mesh_index,skeletal_mesh.BindPoseMesh);
+	md5ExtractBindPoseMesh(file,y_up,mesh_index,skeletal_mesh.BindPoseMesh);
 	//
 	unsigned int NumVertices = file.Meshes[mesh_index].Vertices.size();
     //

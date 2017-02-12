@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../../lInterfaces/lApiAdapter/liFrameLimiter.h"
+#include <lApiAdapter/liFrameLimiter.h>
 
 class lSDL2_FrameLimiter : public liFrameLimiter
 {

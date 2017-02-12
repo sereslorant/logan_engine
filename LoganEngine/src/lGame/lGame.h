@@ -1,9 +1,9 @@
 #ifndef L_GAME_H
 #define L_GAME_H
 
-#include "../lInterfaces/lGame/liConsole.h"
-#include "../lInterfaces/lGame/liGame.h"
-#include "../lInterfaces/lRenderer/liRenderer.h"
+#include <lGame/liConsole.h>
+#include <lGame/liGame.h>
+#include <lRenderer/liRenderer.h>
 
 class lGame : public liGame
 {

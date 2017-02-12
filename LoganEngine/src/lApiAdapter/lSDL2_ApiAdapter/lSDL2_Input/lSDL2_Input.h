@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../../lInterfaces/lApiAdapter/liInput.h"
+#include <lApiAdapter/liInput.h>
 
 class lSDL2Controller : public liController
 {
@@ -305,10 +305,10 @@ public:
 			return nullptr;
 		}
     }
-
-    lSDL2_Input()
-    {
-    	int NumJoysticks = SDL_NumJoysticks();
+    
+    void Initialize()
+	{
+		int NumJoysticks = SDL_NumJoysticks();
     	Controllers.resize(NumJoysticks);
 
     	for(int i=0;i < NumJoysticks;i++)
@@ -320,14 +320,24 @@ public:
 				Controllers[i] = new lSDL2Controller(Joystick);
 			}
 		}
+	}
+	
+	void Destroy()
+	{
+		for(auto Controller : Controllers)
+		{
+			delete Controller;
+		}
+	}
+
+    lSDL2_Input()
+    {
+    	//
     }
 
     virtual ~lSDL2_Input() override
     {
-    	for(auto Controller : Controllers)
-		{
-			delete Controller;
-		}
+    	//
     }
 };
 

@@ -1,8 +1,7 @@
 #ifndef LU_GET_MOD_MESH_H
 #define LU_GET_MOD_MESH_H
 
-#include "../lInterfaces/lScene/l3DScene/lModScene/li3DModScene.h"
-
+#include <lScene/l3DScene/lModScene/li3DModScene.h>
 
 class luGetModLight : public li3DModElementVisitor
 {

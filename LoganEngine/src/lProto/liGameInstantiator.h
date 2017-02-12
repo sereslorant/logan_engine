@@ -1,12 +1,12 @@
 #ifndef LI_GAME_INSTANTIATOR_H
 #define LI_GAME_INSTANTIATOR_H
 
-#include "../lInterfaces/lGame/liGame.h"
+#include <lGame/liGame.h>
+#include <lGame/liConsole.h>
 
-#include "../lInterfaces/lApiAdapter/liApiAdapter.h"
-#include "../lResourceManager/lResourceManager.h"
-#include "../lInterfaces/lRenderer/liRenderer.h"
-#include "../lInterfaces/lGame/liConsole.h"
+#include <lApiAdapter/liApiAdapter.h>
+#include <lResourceManager/lResourceManager.h>
+#include <lRenderer/liRenderer.h>
 
 class liGameInstantiator
 {

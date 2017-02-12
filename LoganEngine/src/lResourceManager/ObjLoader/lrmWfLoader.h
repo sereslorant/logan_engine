@@ -57,21 +57,21 @@ public:
 			else if(Tmp[0] == 'v' && Tmp[1] == 'n')
 			{
 				float n1,n2,n3;
-				sscanf(Tmp.c_str(),"vn %f %f %f",&n1,&n2,&n3);
+				std::sscanf(Tmp.c_str(),"vn %f %f %f",&n1,&n2,&n3);
 				//Obj.Normals.push_back({n1,n2,n3});
 				Obj.Normals.push_back(lmVector3D({n1,n2,n3})); //A fogyatékos Eclipse és a false pozitívjai. -.-
 			}
 			else if(Tmp[0] == 'v')
 			{
 				float v1,v2,v3;
-				sscanf(Tmp.c_str(),"v %f %f %f",&v1,&v2,&v3);
+				std::sscanf(Tmp.c_str(),"v %f %f %f",&v1,&v2,&v3);
 				//Obj.Vertices.push_back({v1,v2,v3});
 				Obj.Vertices.push_back(lmVector3D({v1,v2,v3})); //A fogyatékos Eclipse és a false pozitívjai. -.-
 			}
 			else if(Tmp[0] == 'u' && Tmp[1] == 's' && Tmp[2] == 'e' && Tmp[3] == 'm' && Tmp[4] == 't' && Tmp[5] == 'l')
 			{
 				char TmpArray[50];
-				sscanf(Tmp.c_str(),"usemtl %s",TmpArray);
+				std::sscanf(Tmp.c_str(),"usemtl %s",TmpArray);
 				//
 				Obj.MatGroups.push_back(new lrmWfObj::lrmWfMatGroup);
 				CurrentMtlGroup++;
@@ -82,7 +82,7 @@ public:
 			{
 				lrmWfObj::lrmWfTriangle Triangle;
 				int Normal;
-				sscanf(Tmp.c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",&Triangle.V1,&Triangle.Tx1,&Normal,&Triangle.V2,&Triangle.Tx2,&Normal,&Triangle.V3,&Triangle.Tx3,&Normal);
+				std::sscanf(Tmp.c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",&Triangle.V1,&Triangle.Tx1,&Normal,&Triangle.V2,&Triangle.Tx2,&Normal,&Triangle.V3,&Triangle.Tx3,&Normal);
 				//
 				Triangle.V1 -= 1;Triangle.V2 -= 1;Triangle.V3 -= 1;
 				Triangle.Tx1 -= 1;Triangle.Tx2 -= 1;Triangle.Tx3 -= 1;

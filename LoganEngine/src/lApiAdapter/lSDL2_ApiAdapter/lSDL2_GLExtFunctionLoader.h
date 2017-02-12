@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../../lInterfaces/liGLExtLoader.h"
+#include <lRenderer/liGLExtLoader.h>
 
 class lSDL2_GLExtFunctionLoader : public liGLExtLoader::liExtFunctionLoader
 {

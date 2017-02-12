@@ -3,11 +3,11 @@
 
 #include "../lPM_Model/lPM_Model.h"
 
-#include "../../../../lInterfaces/lRenderer/liRenderer.h"
+#include <lRenderer/liRenderer.h>
 
-#include "../../../../lMath/lMath.h"
-#include "../../../../lScene/lr2DScene/lr2DScene.h"
-#include "../../../../lScene/lrColor.h"
+#include <lMath/lMath.h>
+#include <lScene/lrScene/lr2DScene/lr2DScene.h>
+#include <lScene/lrScene/lrColor.h>
 
 class lPM_GraphicalView : public liPM_ModelObserver
 {

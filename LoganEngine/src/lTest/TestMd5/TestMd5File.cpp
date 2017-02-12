@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 	SkeletalMeshes.resize(File.Meshes.size());
 	for(unsigned int i=0;i < SkeletalMeshes.size();i++)
 	{
-		md5ExtractBindPoseMesh(File,true,SmoothNormals,i,SkeletalMeshes[i].BindPoseMesh);
+		md5ExtractBindPoseMesh(File,true,i,SkeletalMeshes[i].BindPoseMesh);
 	}
 
 	glutMainLoop();

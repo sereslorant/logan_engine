@@ -3,7 +3,7 @@
 
 #include "liPM_AgentController.h"
 
-#include "../../../../lInterfaces/lApiAdapter/liInput.h"
+#include <lApiAdapter/liInput.h>
 
 struct lPM_PacManJoystickController : public liPM_AgentController
 {

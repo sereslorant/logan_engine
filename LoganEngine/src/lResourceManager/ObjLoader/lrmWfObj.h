@@ -12,9 +12,8 @@
 #include <string>
 #include <vector>
 
-class lrmWfObj
+struct lrmWfObj
 {
-public:
 	struct lrmWfTriangle
 	{
 		int V1,V2,V3;

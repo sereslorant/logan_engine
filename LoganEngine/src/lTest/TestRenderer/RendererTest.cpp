@@ -5,7 +5,7 @@
 
 #include "RendererTest.h"
 
-#include "../../lScene/lr3DScene/lr3DScene.h"
+#include "../../lScene/lrScene/lr3DScene/lr3DScene.h"
 
 #include "../../lUtils/luSetLayer.h"
 #include "../../lUtils/luGetModMesh.h"
@@ -178,6 +178,29 @@ void RendererFunctionalityTest::SetScene()
 	MaterialLibrary5.AddMaterial("Default",CreateMaterial(GoldFresnel(),0.05,1.0,"Empty"));
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({6.0f,1.0f,-8.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({0.6f,0.6f,0.6f}),MaterialLibrary5,"Sphere");
 	//
+	lrMaterialLibrary MaterialLibrarySk;
+	MaterialLibrarySk.AddMaterial("Default",CreateMaterial(SilverFresnel(),0.5,1.0,"Empty"));
+	MaterialLibrarySk.AddMaterial("bob_body",CreateMaterial(SilverFresnel(),0.5,1.0,"Empty"));
+	//
+	Scene3D->GetElementFactory().CreateSkeletalMesh(lmVector3D({0.0f,-3.0f,4.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrarySk,"BobWithLamp");
+	//
+	std::string Textures[6] = {"Empty","Puszcsy","Szercsy","Arcsy","Faszcsy","Cukcsy"};
+	std::string Models[4] = {"Sphere","Cone","Box","LoadedMesh"};
+	lmVector3D Pos = {-6.0f,-4.0f,20.0f};
+	for(int i=0;i < 20;i++)
+	{
+		for(int j=0;j < 20;j++)
+		{
+			//for(int k=0;k < 20;k++)
+			for(int k=0;k < 1;k++)
+			{
+				lrMaterialLibrary MaterialLibrary5;
+				MaterialLibrary5.AddMaterial("Default",CreateMaterial(GoldFresnel(),0.05,1.0,Textures[(i + j + k)%6]));
+				MaterialLibrary5.AddMaterial("Material.001",CreateMaterial(SilverFresnel(),0.05,1.0,Textures[(i + j + k)%6]));
+				Scene3D->GetElementFactory().CreateStaticMesh(Pos + lmVector3D({i * 0.5f,k * 0.5f,j * 0.5f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({0.25f,0.25f,0.25f}),MaterialLibrary5,Models[(i + j + 2*k)%4]);
+			}
+		}
+	}
 	//
 	luGetModMesh Getter;
 	ModElement->Accept(Getter);

@@ -1,9 +1,9 @@
 #ifndef LU_SET_LAYER_H
 #define LU_SET_LAYER_H
 
-#include "../lInterfaces/lRenderer/liRenderer.h"
+#include <lRenderer/liRenderer.h>
 
-#include "../lInterfaces/lScene/l2DScene/li2DScene.h"
+#include <lScene/l2DScene/li2DScene.h>
 
 class luSet2DLayer : public liLayerVisitor
 {
@@ -32,8 +32,8 @@ public:
 	{}
 };
 
-#include "../lInterfaces/lScene/l3DScene/li3DScene.h"
-#include "../lInterfaces/lScene/l3DScene/li3DCamera.h"
+#include <lScene/l3DScene/li3DScene.h>
+#include <lScene/l3DScene/li3DCamera.h>
 
 class luSet3DLayer : public liLayerVisitor
 {

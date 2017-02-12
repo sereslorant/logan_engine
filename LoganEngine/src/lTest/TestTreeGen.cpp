@@ -16,8 +16,8 @@ public:
 	virtual void Draw() = 0;
 };
 
-#include "../TreeGen/Turtles/TurtleInterpreter.hpp"
-#include "../TreeGen/Turtles/Turtle2D.hpp"
+#include "../lResourceManager/TreeGen/Turtles/TurtleInterpreter.hpp"
+#include "../lResourceManager/TreeGen/Turtles/Turtle2D.hpp"
 
 
 template<typename Type_T,unsigned int Dim_T>

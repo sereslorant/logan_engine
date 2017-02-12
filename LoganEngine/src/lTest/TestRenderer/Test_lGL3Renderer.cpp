@@ -57,7 +57,7 @@ void AtExit()
 	delete dummyRM;
 }
 
-#include "../../lRenderer/lGLRenderer/lGLExt.h"
+#include <lRenderer/lrRenderer/lGLRenderer/lGLExt.h>
 
 class lGLFW3ExtensionLoader : public liGLExtLoader::liExtFunctionLoader
 {
@@ -78,7 +78,7 @@ public:
 };
 
 //#include "../../lTest/lffGLRenderer/lffGLRenderer.h"
-#include "../../lRenderer/lGLRenderer/lGL3Renderer/lrGL3Renderer.h"
+#include <lRenderer/lrRenderer/lGLRenderer/lGL3Renderer/lrGL3Renderer.h>
 
 int main(int argc, char *argv[])
 {

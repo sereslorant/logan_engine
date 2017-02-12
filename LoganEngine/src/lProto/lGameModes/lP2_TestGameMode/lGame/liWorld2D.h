@@ -1,24 +1,7 @@
 #ifndef LI_COLLISION_CALLBACK
 #define LI_COLLISION_CALLBACK
 
-#include "../../../../lMath/lMath.h"
-
-class liBody2D;
-
-class liCollisionCallback2D
-{
-public:
-	//
-	virtual void MarkRemovable() = 0;
-	//
-	virtual void Callback(liBody2D *body) = 0;
-	//
-	liCollisionCallback2D()
-		{}
-	//
-	virtual ~liCollisionCallback2D()
-		{}
-};
+#include <lMath/lMath.h>
 
 class liCircle
 {
@@ -111,6 +94,21 @@ public:
 		IMMOVABLE,
 		MOVABLE,
 		GHOST,
+	};
+	//
+	class liCollisionCallback2D
+	{
+	public:
+		//
+		virtual void MarkRemovable() = 0;
+		//
+		virtual void Callback(liBody2D *body) = 0;
+		//
+		liCollisionCallback2D()
+			{}
+		//
+		virtual ~liCollisionCallback2D()
+			{}
 	};
 	//
 	virtual void SetCollisionResponse(COLLISION_RESPONSE collision_response) = 0;

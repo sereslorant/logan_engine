@@ -20,6 +20,7 @@ public:
 };
 
 #include "lrmStaticMesh.h"
+#include "lrmSkeletalMesh.h"
 
 /*
  * Bitképekhez kötkető interfész
@@ -90,6 +91,7 @@ class liResourceManager
 public:
 	//
 	virtual lrmStaticMesh *GetStaticMesh(const std::string &resource_identifier) = 0;
+	virtual lrmSkeletalMesh *GetSkeletalMesh(const std::string &resource_identifier) = 0;
 	virtual liBitmap2D *GetBitmap(const std::string &resource_identifier) = 0;
 	virtual liCubemap *GetCubemap(const std::string &resource_identifier) = 0;
 	//

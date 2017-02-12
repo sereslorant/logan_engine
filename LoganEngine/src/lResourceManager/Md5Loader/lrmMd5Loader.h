@@ -168,7 +168,7 @@ private:
 
     static void Vector3D_YUp(const lmVector3D &v,lmVector3D &Target);
     static void Quat_YUp(const lmQuaternion &p,lmQuaternion &Target);
-/*
+	/*
     static const lmVector3D &Vector3D_YUp(const lmVector3D &v)
     {
     	return lmVector3D(v.X,v.Z,-v.Y);
@@ -180,7 +180,7 @@ private:
 
 		return q * p * q.GetInverse();
     }
-*/
+	*/
     //void ExtractBpMesh(lrmStaticMesh **Target,const std::string &Key,unsigned int MeshIndex);
 
     std::string Path;
@@ -215,9 +215,9 @@ public:
     ~lrmMd5Loader();
 };
 
-void md5ExtractBindPoseMesh(md5File &file,bool y_up,bool smooth_normals,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh);
+void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh);
 
-void md5ExtractSkeletalMesh(md5File &file,bool y_up,bool smooth_normals,unsigned int mesh_index,lrmSkeletalMesh &skeletal_mesh);
+void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmSkeletalMesh &skeletal_mesh);
 
 void md5ExtractAnimFrame(md5Anim &anim,bool y_up,unsigned int frame_index,md5SkeletonExtrinsic &anim_frame);
 

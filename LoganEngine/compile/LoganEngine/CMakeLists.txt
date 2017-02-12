@@ -13,6 +13,8 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 
 set(L_SRC_DIR "../../src")
 
+include_directories(${L_SRC_DIR})
+
 #Setting up lSDL2_ApiAdapter directories.
 set(L_SDL2_API_ADAPTER_SRC_DIR	"${L_SRC_DIR}/lApiAdapter/lSDL2_ApiAdapter")
 set(L_SDL2_THREAD_SRC_DIR	"${L_SDL2_API_ADAPTER_SRC_DIR}/lSDL2_Thread")
@@ -30,7 +32,7 @@ add_library(lSDL2_ApiAdapter ${L_SDL2_API_ADAPTER_SRC})
 target_link_libraries(lSDL2_ApiAdapter ${SDL2_LIBRARIES})
 
 #Setting up l3DScene directories.
-set(L_3D_SCENE_SRC_DIR	"${L_SRC_DIR}/lScene/lr3DScene")
+set(L_3D_SCENE_SRC_DIR	"${L_SRC_DIR}/lScene/lrScene/lr3DScene")
 
 #Setting up l3DScene src-s.
 set(L_3D_SCENE_SRC	"${L_3D_SCENE_SRC_DIR}/lrMaterialLibrary.cpp")
@@ -38,8 +40,20 @@ set(L_3D_SCENE_SRC	"${L_3D_SCENE_SRC_DIR}/lrMaterialLibrary.cpp")
 #Compiling l3DScene
 add_library(l3DScene ${L_3D_SCENE_SRC})
 
+#Setting up Md5Loader directories.
+set(L_MD5_LOADER_SRC_DIR	"${L_SRC_DIR}/lResourceManager/Md5Loader")
+
+#Setting up Md5Loader src-s.
+set(L_MD5_LOADER_SRC	"${L_MD5_LOADER_SRC_DIR}/lrmMd5Loader.cpp"
+						"${L_MD5_LOADER_SRC_DIR}/md5Anim.cpp"
+						"${L_MD5_LOADER_SRC_DIR}/md5File.cpp"
+						)
+
+#Compiling Md5Loader
+add_library(Md5Loader ${L_MD5_LOADER_SRC})
+
 #Setting up lGL3Renderer directories.
-set(L_GL_RENDERER_SRC_DIR	"${L_SRC_DIR}/lRenderer/lGLRenderer")
+set(L_GL_RENDERER_SRC_DIR	"${L_SRC_DIR}/lRenderer/lrRenderer/lGLRenderer")
 set(L_GL3_SHADERS_SRC_DIR	"${L_GL_RENDERER_SRC_DIR}/lGL3Renderer/lGL3Shaders")
 set(L_GL3_CACHED_LAYER_SRC_DIR	"${L_GL_RENDERER_SRC_DIR}/lGL3Renderer/lGL3DCachedLayer")
 set(L_GL3_SCENE_CACHE_SRC_DIR	"${L_GL3_CACHED_LAYER_SRC_DIR}/lrGL3SceneCache")
@@ -54,9 +68,9 @@ set(L_GL3_CACHED_LAYER_SRC	${L_GL3_SCENE_CACHE_SRC}
 set(L_GL3_SHADERS_SRC		"${L_GL3_SHADERS_SRC_DIR}/lrGL3ShaderLibrary.cpp")
 
 set(L_GL_RENDERER_SRC		${L_GL3_CACHED_LAYER_SRC}
-				${L_GL3_SHADERS_SRC}
-				"${L_GL_RENDERER_SRC_DIR}/lGLExt.cpp"
-				)
+							${L_GL3_SHADERS_SRC}
+							"${L_GL_RENDERER_SRC_DIR}/lGLExt.cpp"
+							)
 
 #Compiling lGL3Renderer
 add_library(lGL3Renderer ${L_GL_RENDERER_SRC})
@@ -77,7 +91,7 @@ add_library(lP2_TestGameMode ${LP2_TEST_GAME_MODE_SRC})
 set(LPM_GAME_MODE_SRC_DIR "${L_SRC_DIR}/lProto/lGameModes/lPacMan")
 
 #Setting up lPM_GameMode src-s.
-set(LPM_GAME_MODE_SRC "${LPM_GAME_MODE_SRC_DIR}/lPM_GameInstantiator.cpp" "${L_SRC_DIR}/lGame/lTimer.cpp" "${L_SRC_DIR}/lGame/lEvent.cpp")
+set(LPM_GAME_MODE_SRC "${LPM_GAME_MODE_SRC_DIR}/lPM_GameInstantiator.cpp")
 
 #Compiling lPM_GameMode
 add_library(lPM_GameMode ${LPM_GAME_MODE_SRC})
@@ -92,14 +106,14 @@ set(LGL3_GAME_MODE_SRC "${LGL3_GAME_MODE_SRC_DIR}/lGL3_RendererTestInstantiator.
 
 #Compiling lGL3_GameMode
 add_library(lGL3_GameMode ${LGL3_GAME_MODE_SRC})
-target_link_libraries(lGL3_GameMode l3DScene)
+target_link_libraries(lGL3_GameMode l3DScene Md5Loader)
 
 
 #Setting up lProto directories.
 set(L_PROTO_SRC_DIR "${L_SRC_DIR}/lProto")
 
 #Setting up lProto src-s.
-set(L_PROTO_MAIN_SRC "${L_PROTO_SRC_DIR}/Main.cpp")
+set(L_PROTO_MAIN_SRC "${L_PROTO_SRC_DIR}/lP2_Main.cpp")
 
 #Compiling lProtoFramework
 add_executable(lProtoFramework ${L_PROTO_MAIN_SRC})
@@ -121,4 +135,4 @@ set(L_TEST_GL3_MAIN_SRC "${L_SRC_DIR}/lTest/TestRenderer")
 set(L_TEST_GL3_MAIN_SRC "${L_TEST_GL3_MAIN_SRC}/RendererTest.cpp" "${L_TEST_GL3_MAIN_SRC}/Test_lGL3Renderer.cpp")
 
 add_executable(Test_GL3Renderer ${L_TEST_GL3_MAIN_SRC})
-target_link_libraries(Test_GL3Renderer l3DScene ${GLFW_LIBRARIES} X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor lGL3Renderer)
+target_link_libraries(Test_GL3Renderer l3DScene ${GLFW_LIBRARIES} X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor lGL3Renderer Md5Loader)

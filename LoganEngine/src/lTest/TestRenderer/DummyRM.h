@@ -126,7 +126,10 @@ public:
 class DummyRM : public liResourceManager
 {
 private:
+	lrmWfObjLoaderModule	ObjLoaderModule;
+	lrmMd5LoaderModule		Md5LoaderModule;
 	std::map<std::string,lrmStaticMesh *> StaticMeshes;
+	std::map<std::string,lrmSkeletalMesh *> SkeletalMeshes;
 	//
 	DummyImage *Image = new DummyImage(0);
 	DummyImage *Image2 = new DummyImage(1);
@@ -149,40 +152,73 @@ public:
 		//
 		if(I == StaticMeshes.end())
 		{
-			lrmStaticMesh *StaticMesh = new lrmStaticMesh;
+			lrmStaticMesh *StaticMesh = nullptr;
 			if(mesh_name == "Sphere")
 			{
 				//lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
 				//lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
+				StaticMesh = new lrmStaticMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,64,32);
 			}
 			else if(mesh_name == "Cone")
 			{
 				//std::cout << "Cone loaded" << std::endl;
+				StaticMesh = new lrmStaticMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,3,3);
 			}
 			else if(mesh_name == "Box")
 			{
+				StaticMesh = new lrmStaticMesh;
 				lrmResourceManager::GenerateCube(*StaticMesh,false);
 			}
 			else if(mesh_name == "Box_InsideOut")
 			{
+				StaticMesh = new lrmStaticMesh;
 				lrmResourceManager::GenerateCube(*StaticMesh,true);
+			}
+			else if(mesh_name == "LoadedMesh")
+			{
+				if(!ObjLoaderModule.LoadStaticMesh("IdiotaAlakzat.txt",StaticMesh))
+				{
+					StaticMesh = new lrmStaticMesh;
+					lrmResourceManager::GenerateCube(*StaticMesh,false);
+				}
 			}
 			else if(mesh_name == "Anything")
 			{
 				//lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
+				StaticMesh = new lrmStaticMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,64,32);
 			}
 			else
 			{
 				//lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
+				StaticMesh = new lrmStaticMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,64,32);
 			}
 			//
 			StaticMeshes[mesh_name] = StaticMesh;
 			//
 			return StaticMesh;
+		}
+		else
+		{
+			return I->second;
+		}
+	}
+	//
+	virtual lrmSkeletalMesh *GetSkeletalMesh(const std::string &resource_identifier) override
+	{
+		auto I = SkeletalMeshes.find(resource_identifier);
+		//
+		if(I == SkeletalMeshes.end())
+		{
+			lrmSkeletalMesh *SkeletalMesh;
+			if(!Md5LoaderModule.LoadSkeletalMesh("bob_lamp_update_export.md5mesh",SkeletalMesh))
+			{
+				return nullptr;
+			}
+			return SkeletalMesh;
 		}
 		else
 		{

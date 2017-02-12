@@ -3,7 +3,7 @@
 
 #include "lPM_Model/lPM_Model.h"
 
-#include "../../../lJSON/lJSON.h"
+#include <lResourceManager/liJSON.h>
 
 class lPM_JSONLoader : public liJSON_Visitor
 {

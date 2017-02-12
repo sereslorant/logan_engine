@@ -12,7 +12,7 @@
 #include <fstream>
 #include <string>
 
-#include "../../lInterfaces/lApiAdapter/liApiAdapter.h"
+#include <lApiAdapter/liApiAdapter.h>
 
 struct lSDL2_Settings
 {
@@ -64,9 +64,8 @@ public:
     };
 	//
 private:
-    lSDL2_Input			*Input = nullptr;			/**< Az inputkezelő példányára mutató pointer */
-    lSDL2_FrameLimiter	FrameLimiter;	/**< A frame limiter példányára mutató pointer */
-	lSDL2_ThreadFactory ThreadFactory;
+    lSDL2_Input			Input;			/**< Az inputkezelő */
+    lSDL2_FrameLimiter	FrameLimiter;	/**< A frame limiter */
     //
     int Error; //Integer, amelynek az egyes bitjeit 1-esbe állítjuk, ha valami hiba van.
 	//
@@ -74,7 +73,7 @@ private:
     SDL_GLContext GLContext;
 	//
 public:
-
+	//
     /** \brief Getter függvény, visszaadja az inputkezelőre mutató pointert.
      *
      * \return lInput *: Az inputkezelőre mutató pointer
@@ -82,9 +81,10 @@ public:
      */
     virtual liInput &GetInput() override
 	{
-		return *Input;
+		//return *Input;
+		return Input;
 	}
-
+	//
     /** \brief Getter függvény, visszaadja a frame limiterre mutató pointert.
      *
      * \return liFrameLimiter *: A frame limiterre mutató pointer
@@ -94,7 +94,7 @@ public:
     {
 		return FrameLimiter;
 	}
-
+	//
     /** \brief Getter függvény, visszaadja a rendererre mutató pointert.
      *
      * \return lRenderer *: A rendererre mutató pointer
@@ -125,16 +125,17 @@ public:
 	//
     //int GetError();
     //
-    virtual liThreadFactory &GetThreadFactory() override
-    {
-    	return ThreadFactory;
-    }
-
+    //virtual liThreadFactory &GetThreadFactory() override
+    //{
+    //	return ThreadFactory;
+    //}
+	//
 	virtual void PollInput() override
 	{
-		Input->PollInput();
+		//Input->PollInput();
+		Input.PollInput();
 	}
-
+	//
     virtual void SwapBuffers() override
     {
 		SDL_GL_SwapWindow(Window);
@@ -164,8 +165,7 @@ public:
 		*/
 		out << std::endl;
 	}
-
-
+	//
     lSDL2_ApiAdapter(const lSDL2_Settings &settings)
 		:Error(0x0)
     {
@@ -201,13 +201,14 @@ public:
 		//
 		SDL_ShowWindow(Window);
 		//
-		Input = new lSDL2_Input;
+		//Input = new lSDL2_Input;
+		Input.Initialize();
     }
-
+	//
     virtual ~lSDL2_ApiAdapter() override
     {
-    	delete Input;
-    	//
+		Input.Destroy();
+		//
 		SDL_GL_DeleteContext(GLContext);
 		SDL_DestroyWindow(Window);
 		//

@@ -4,11 +4,24 @@
 #include "liWorld2D.h"
 
 #include <list>
-#include "../../../../lInterfaces/lGame/liGame.h"
-#include "../../../../lInterfaces/lGame/liAgent.h"
-#include "../../../../lInterfaces/lRenderer/liRenderer.h"
-#include "../../../../lScene/lr2DScene/lr2DScene.h"
-#include "../../../../lScene/lr3DScene/lr3DScene.h"
+
+#include <lGame/liGame.h>
+
+#include <lApiAdapter/liInput.h>
+#include <lRenderer/liRenderer.h>
+
+class liAgent
+{
+public:
+	virtual void MarkRemovable() = 0;
+	virtual bool IsRemovable() = 0;
+
+	virtual void Update(double dt) = 0;
+
+	liAgent(){}
+
+	virtual ~liAgent() {}
+};
 
 class lP2ProtoGameMode : public liGameMode
 {

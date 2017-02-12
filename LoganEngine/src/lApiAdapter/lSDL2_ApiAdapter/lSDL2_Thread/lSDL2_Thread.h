@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL_thread.h>
 
-#include "../../../lInterfaces/lApiAdapter/liThread.h"
+#include <lApiAdapter/liThread.h>
 
 class lSDL2_Semaphore : public liSemaphore
 {

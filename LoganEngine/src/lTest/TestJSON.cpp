@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include "../lJSON/lJSON.h"
+#include "../lResourceManager/lJSON/lJSON.h"
 
 int main(int argc, char *argv[])
 {

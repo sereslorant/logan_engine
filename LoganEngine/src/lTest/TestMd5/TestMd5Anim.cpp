@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 	SkeletalMeshes.resize(File.Meshes.size());
 	for(unsigned int i=0;i < SkeletalMeshes.size();i++)
 	{
-		md5ExtractSkeletalMesh(File,Y_Up,SmoothNormals,i,SkeletalMeshes[i]);
+		md5ExtractSkeletalMesh(File,Y_Up,i,SkeletalMeshes[i]);
 	}
 	//
 	md5LoadAnim(std::cin,Anim);
