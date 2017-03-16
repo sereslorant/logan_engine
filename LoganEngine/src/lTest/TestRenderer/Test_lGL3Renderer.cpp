@@ -1,9 +1,9 @@
 
 /*
- * GLFW include-ok
+ * SDL include-ok
  */
-#define GLFW_INCLUDE_GLEXT
-#include <GLFW/glfw3.h>
+
+#include <SDL2/SDL.h>
 
 /*
  * STL include-ok
@@ -22,31 +22,45 @@ bool Down = false;
 bool Left = false;
 bool Right = false;
 
-void GetInput(GLFWwindow *window)
+void GetInput(bool &is_running)
 {
-	int state = glfwGetKey(window,GLFW_KEY_UP);
-	if(state == GLFW_PRESS)
-	{Up = true;}
-	else
-	{Up = false;}
-	//
-	state = glfwGetKey(window,GLFW_KEY_DOWN);
-	if(state == GLFW_PRESS)
-	{Down = true;}
-	else
-	{Down = false;}
-	//
-	state = glfwGetKey(window,GLFW_KEY_LEFT);
-	if(state == GLFW_PRESS)
-	{Left = true;}
-	else
-	{Left = false;}
-	//
-	state = glfwGetKey(window,GLFW_KEY_RIGHT);
-	if(state == GLFW_PRESS)
-	{Right = true;}
-	else
-	{Right = false;}
+	SDL_Event Event;
+	while(SDL_PollEvent(&Event))
+	{
+		if(Event.type == SDL_QUIT)
+		{
+			is_running = false;
+		}
+
+		if(Event.type == SDL_KEYDOWN)
+		{
+			if(Event.key.keysym.sym == SDLK_UP)
+			{Up = true;}
+			//
+			if(Event.key.keysym.sym == SDLK_DOWN)
+			{Down = true;}
+			//
+			if(Event.key.keysym.sym == SDLK_LEFT)
+			{Left = true;}
+			//
+			if(Event.key.keysym.sym == SDLK_RIGHT)
+			{Right = true;}
+		}
+		else if(Event.type == SDL_KEYUP)
+		{
+			if(Event.key.keysym.sym == SDLK_UP)
+			{Up = false;}
+			//
+			if(Event.key.keysym.sym == SDLK_DOWN)
+			{Down = false;}
+			//
+			if(Event.key.keysym.sym == SDLK_LEFT)
+			{Left = false;}
+			//
+			if(Event.key.keysym.sym == SDLK_RIGHT)
+			{Right = false;}
+		}
+	}
 }
 
 void AtExit()
@@ -67,7 +81,7 @@ public:
 
 	virtual void *LoadFunction(const std::string &function_name) override
 	{
-		return (void *)glfwGetProcAddress(function_name.c_str());
+		return (void *)SDL_GL_GetProcAddress(function_name.c_str());
 	}
 
 	lGLFW3ExtensionLoader()
@@ -82,13 +96,23 @@ public:
 
 int main(int argc, char *argv[])
 {
-	glfwInit();
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
-	GLFWwindow *Window = glfwCreateWindow(600,600,"Renderer test",nullptr,nullptr);
-	glfwMakeContextCurrent(Window);
+	SDL_Init(SDL_INIT_EVERYTHING);
+	//
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	//
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	//
+	SDL_Window *Window = SDL_CreateWindow("Renderer test",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,600,600,SDL_WINDOW_OPENGL);
+	SDL_GLContext GLContext = SDL_GL_CreateContext(Window);
+	//
+	SDL_ShowWindow(Window);
 
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 
@@ -110,19 +134,20 @@ int main(int argc, char *argv[])
 
 	atexit(AtExit);
 
-	while(!glfwWindowShouldClose(Window))
+	bool IsRunning = true;
+	while(IsRunning)
 	{
-		glfwPollEvents();
-		GetInput(Window);
+		GetInput(IsRunning);
 		//
 		test->Input(Up,Down,Left,Right);
 		test->Loop();
 		test->Draw();
 		//
-		glfwSwapBuffers(Window);
+		SDL_GL_SwapWindow(Window);
 	}
 
-	glfwDestroyWindow(Window);
-	glfwTerminate();
+	SDL_GL_DeleteContext(GLContext);
+	SDL_DestroyWindow(Window);
+	SDL_Quit();
 	return 0;
 }

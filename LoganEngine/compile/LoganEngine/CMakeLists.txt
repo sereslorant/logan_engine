@@ -3,7 +3,6 @@ project(LoganEngine)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(OPENGL REQUIRED gl)
@@ -132,11 +131,8 @@ set(L_TEST_RESOURCE_MANAGER_MAIN_SRC "${L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR}/Te
 
 add_executable(Test_ResourceManager ${L_TEST_RESOURCE_MANAGER_MAIN_SRC})
 
-pkg_search_module(GLFW REQUIRED glfw3)
-include_directories(${GLFW_INCLUDE_DIRS})
-
 set(L_TEST_GL3_MAIN_SRC_DIR "${L_SRC_DIR}/lTest/TestRenderer")
 set(L_TEST_GL3_MAIN_SRC "${L_TEST_GL3_MAIN_SRC_DIR}/RendererTest.cpp" "${L_TEST_GL3_MAIN_SRC_DIR}/Test_lGL3Renderer.cpp")
 
 add_executable(Test_GL3Renderer ${L_TEST_GL3_MAIN_SRC})
-target_link_libraries(Test_GL3Renderer l3DScene ${GLFW_LIBRARIES} X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor lGL3Renderer Md5Loader)
+target_link_libraries(Test_GL3Renderer l3DScene ${SDL2_LIBRARIES} lGL3Renderer Md5Loader)
