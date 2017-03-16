@@ -1,7 +1,7 @@
 #ifndef DUMMY_RM_H
 #define DUMMY_RM_H
 
-#include "../../lResourceManager/lResourceManager.h"
+#include "../../lResourceManager/lLegacyResourceManager/lResourceManager.h"
 
 struct Color
 {
@@ -128,7 +128,7 @@ class DummyRM : public liResourceManager
 private:
 	lrmWfObjLoaderModule	ObjLoaderModule;
 	lrmMd5LoaderModule		Md5LoaderModule;
-	std::map<std::string,lrmStaticMesh *> StaticMeshes;
+	std::map<std::string,lrmStaticMultiMesh *> StaticMeshes;
 	std::map<std::string,lrmSkeletalMesh *> SkeletalMeshes;
 	//
 	DummyImage *Image = new DummyImage(0);
@@ -146,54 +146,54 @@ private:
 	//
 public:
 	//
-	virtual lrmStaticMesh *GetStaticMesh(const std::string &mesh_name) override
+	virtual lrmStaticMultiMesh *GetStaticMesh(const std::string &mesh_name) override
 	{
 		auto I = StaticMeshes.find(mesh_name);
 		//
 		if(I == StaticMeshes.end())
 		{
-			lrmStaticMesh *StaticMesh = nullptr;
+			lrmStaticMultiMesh *StaticMesh = nullptr;
 			if(mesh_name == "Sphere")
 			{
 				//lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
 				//lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
-				StaticMesh = new lrmStaticMesh;
+				StaticMesh = new lrmStaticMultiMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,64,32);
 			}
 			else if(mesh_name == "Cone")
 			{
 				//std::cout << "Cone loaded" << std::endl;
-				StaticMesh = new lrmStaticMesh;
+				StaticMesh = new lrmStaticMultiMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,3,3);
 			}
 			else if(mesh_name == "Box")
 			{
-				StaticMesh = new lrmStaticMesh;
+				StaticMesh = new lrmStaticMultiMesh;
 				lrmResourceManager::GenerateCube(*StaticMesh,false);
 			}
 			else if(mesh_name == "Box_InsideOut")
 			{
-				StaticMesh = new lrmStaticMesh;
+				StaticMesh = new lrmStaticMultiMesh;
 				lrmResourceManager::GenerateCube(*StaticMesh,true);
 			}
 			else if(mesh_name == "LoadedMesh")
 			{
 				if(!ObjLoaderModule.LoadStaticMesh("IdiotaAlakzat.txt",StaticMesh))
 				{
-					StaticMesh = new lrmStaticMesh;
+					StaticMesh = new lrmStaticMultiMesh;
 					lrmResourceManager::GenerateCube(*StaticMesh,false);
 				}
 			}
 			else if(mesh_name == "Anything")
 			{
 				//lrmResourceManager::GenerateSphere(*StaticMesh,32,16);
-				StaticMesh = new lrmStaticMesh;
+				StaticMesh = new lrmStaticMultiMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,64,32);
 			}
 			else
 			{
 				//lrmResourceManager::GenerateSphere(*StaticMesh,16,8);
-				StaticMesh = new lrmStaticMesh;
+				StaticMesh = new lrmStaticMultiMesh;
 				lrmResourceManager::GenerateSphere(*StaticMesh,64,32);
 			}
 			//

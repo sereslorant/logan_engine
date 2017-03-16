@@ -127,12 +127,16 @@ target_link_libraries(lPacMan lPM_GameMode lSDL2_ApiAdapter lGL3Renderer)
 add_executable(lGL3TestGame ${L_PROTO_MAIN_SRC})
 target_link_libraries(lGL3TestGame lGL3_GameMode lSDL2_ApiAdapter lGL3Renderer)
 
+set(L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR "${L_SRC_DIR}/lTest/TestResourceManager")
+set(L_TEST_RESOURCE_MANAGER_MAIN_SRC "${L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR}/TestResourceManager.cpp")
+
+add_executable(Test_ResourceManager ${L_TEST_RESOURCE_MANAGER_MAIN_SRC})
 
 pkg_search_module(GLFW REQUIRED glfw3)
 include_directories(${GLFW_INCLUDE_DIRS})
 
-set(L_TEST_GL3_MAIN_SRC "${L_SRC_DIR}/lTest/TestRenderer")
-set(L_TEST_GL3_MAIN_SRC "${L_TEST_GL3_MAIN_SRC}/RendererTest.cpp" "${L_TEST_GL3_MAIN_SRC}/Test_lGL3Renderer.cpp")
+set(L_TEST_GL3_MAIN_SRC_DIR "${L_SRC_DIR}/lTest/TestRenderer")
+set(L_TEST_GL3_MAIN_SRC "${L_TEST_GL3_MAIN_SRC_DIR}/RendererTest.cpp" "${L_TEST_GL3_MAIN_SRC_DIR}/Test_lGL3Renderer.cpp")
 
 add_executable(Test_GL3Renderer ${L_TEST_GL3_MAIN_SRC})
 target_link_libraries(Test_GL3Renderer l3DScene ${GLFW_LIBRARIES} X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor lGL3Renderer Md5Loader)

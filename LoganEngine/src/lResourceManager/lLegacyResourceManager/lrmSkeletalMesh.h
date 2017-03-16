@@ -98,7 +98,7 @@ struct lrmSkeletalMesh
         }
     };
 
-    lrmStaticMesh BindPoseMesh;
+    lrmStaticMultiMesh BindPoseMesh;
 
     std::vector<lrmBoneId>     BoneId;     /**< A bone id-ket tartalmazó tömb */
     std::vector<lrmWeight>     Weights;    /**< A súlyokat tartalmazó tömb */

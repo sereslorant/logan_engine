@@ -1,8 +1,8 @@
 #ifndef L_RESOURCE_MANAGER_H
 #define L_RESOURCE_MANAGER_H
 
-#include "liResourceManager.h"
-
+#include "../liResourceManager.h"
+/*
 template<class lResource_T>
 class lrmResource : public liResource<lResource_T>
 {
@@ -55,15 +55,17 @@ public:
 	}
 	/*
 	 * End of class
-	 */
+	 * /
 };
-
-#include "ObjLoader/lrmWfLoader.h"
+*/
+#include "../ObjLoader/lrmWfLoader.h"
 
 #include <fstream>
 
 #include <string>
 #include <map>
+
+#include <list>
 
 /*
  * TODO: A Wavefront loaderben és az md5 loaderben kurvasok a kódduplikálás,
@@ -73,9 +75,9 @@ public:
 class lrmWfObjLoaderModule
 {
 private:
-	std::map<std::string,lrmStaticMesh *> LoadedMeshes;
+	std::map<std::string,lrmStaticMultiMesh *> LoadedMeshes;
 	//
-	static void CalculateTBVectors(lrmStaticMesh &static_mesh)
+	static void CalculateTBVectors(lrmStaticMultiMesh &static_mesh)
 	{
 		for(unsigned int i=0;i < static_mesh.Normals.size();i++)
 		{
@@ -93,124 +95,145 @@ private:
 		}
 	}
 	//
-	static void Extract(lrmWfObj &loaded_obj,lrmStaticMesh *&static_mesh)
+	class WfVertexDataIndices
 	{
-		static_mesh = new lrmStaticMesh;
-
-		std::vector<int> iVertices;
-		std::vector<int> iNormals;
-		std::vector<int> iTexCoords;
-
-		for(auto i = loaded_obj.MatGroups.begin();i != loaded_obj.MatGroups.end();i++)
+	private:
+		struct IndexStructure
 		{
-			for(auto k = (*i)->Triangles.begin();k != (*i)->Triangles.end();k++)
+			int VertexId;
+			int TexCoordId;
+		};
+		//
+		std::list<IndexStructure> IndexData;
+		//
+	public:
+		//
+		int FindVertexData(int vertex_id,int tex_coord_id)
+		{
+			int CurrentIndex = 0;
+			bool Found = false;
+			//
+			for(IndexStructure &Data : IndexData)
 			{
-				bool Found;
-
-				Found = false;
-				for(unsigned int j = 0;j < iVertices.size();j++)
+				if((Data.VertexId == vertex_id) && (Data.TexCoordId == tex_coord_id))
 				{
-					if((iVertices[j] == k->V1) && (iTexCoords[j] == k->Tx1))
-					{
-						Found = true;
-						break;
-					}
-				}
-
-				if(!Found)
-				{
-					iVertices.push_back(k->V1);
-					iNormals.push_back(k->V1);
-					iTexCoords.push_back(k->Tx1);
-				}
-
-				Found = false;
-				for(unsigned int j = 0;j < iVertices.size();j++)
-				{
-					if((iVertices[j] == k->V2) && (iTexCoords[j] == k->Tx2))
-					{
-						Found = true;
-						break;
-					}
-				}
-
-				if(!Found)
-				{
-					iVertices.push_back(k->V2);
-					iNormals.push_back(k->V2);
-					iTexCoords.push_back(k->Tx2);
-				}
-
-				Found = false;
-				for(unsigned int j = 0;j < iVertices.size();j++)
-				{
-					if((iVertices[j] == k->V3) && (iTexCoords[j] == k->Tx3))
-					{
-						Found = true;
-						break;
-					}
+					Found = true;
+					break;
 				}
 				//
-				if(!Found)
-				{
-					iVertices.push_back(k->V3);
-					iNormals.push_back(k->V3);
-					iTexCoords.push_back(k->Tx3);
-				}
+				CurrentIndex++;
+			}
+			//
+			if(!Found)
+			{
+				CurrentIndex = -1;
+			}
+			//
+			return CurrentIndex;
+		}
+		//
+		void AddVertexData(int vertex_id,int tex_coord_id)
+		{
+			IndexData.push_back({vertex_id,tex_coord_id});
+		}
+		//
+		int AddVertexDataIfNotPresent(int vertex_id,int tex_coord_id)
+		{
+			int VertexId = FindVertexData(vertex_id,tex_coord_id);
+			//
+			if(VertexId == -1)
+			{
+				VertexId = IndexData.size();
+				AddVertexData(vertex_id,tex_coord_id);
+			}
+			//
+			return VertexId;
+		}
+		//
+		void FillVertexBuffer(const lrmWfObj &loaded_obj,std::vector<lmVector3D> &vertices,std::vector<lmVector3D> &normals,std::vector<lmVector2D> &tex_coords)
+		{
+			for(IndexStructure &Data : IndexData)
+			{
+				vertices.push_back(
+					loaded_obj.Vertices[Data.VertexId]
+				);
+				//
+				normals.push_back(
+					loaded_obj.SmoothNormals[Data.VertexId]
+				);
+				//
+				tex_coords.push_back(
+					loaded_obj.TexCoords[Data.TexCoordId]
+				);
 			}
 		}
+		/*
+		 * End of class
+		 */
+	};
+	//
+	class WfIndexBufferCreator
+	{
+	private:
+		WfVertexDataIndices &VertexDataIndices;
+		std::vector<unsigned int> &IndexBuffer;
 		//
-		for(unsigned int j = 0;j < iVertices.size();j++)
+	public:
+		//
+		void AddTriangle(const lrmWfObj::lrmWfTriangle &triangle)
 		{
-			static_mesh->Vertices.push_back(loaded_obj.Vertices[iVertices[j]]);
-			static_mesh->Normals.push_back(loaded_obj.SmoothNormals[iNormals[j]]);
-			static_mesh->TexCoords.push_back(loaded_obj.TexCoords[iTexCoords[j]]);
+			int VertexId;
+			//
+			VertexId = VertexDataIndices.AddVertexDataIfNotPresent(triangle.V1,triangle.Tx1);
+			IndexBuffer.push_back(VertexId);
+			//
+			VertexId = VertexDataIndices.AddVertexDataIfNotPresent(triangle.V2,triangle.Tx2);
+			IndexBuffer.push_back(VertexId);
+			//
+			VertexId = VertexDataIndices.AddVertexDataIfNotPresent(triangle.V3,triangle.Tx3);
+			IndexBuffer.push_back(VertexId);
 		}
 		//
-		for(auto i = loaded_obj.MatGroups.begin();i != loaded_obj.MatGroups.end();i++)
+		WfIndexBufferCreator(WfVertexDataIndices &vertex_data_indices,std::vector<unsigned int> &index_buffer)
+			:VertexDataIndices(vertex_data_indices),IndexBuffer(index_buffer)
+		{}
+		//
+		~WfIndexBufferCreator()
+		{}
+		/*
+		 * End of class
+		 */
+	};
+	//
+	static void Extract(const lrmWfObj &loaded_obj,lrmStaticMultiMesh *&static_mesh)
+	{
+		static_mesh = new lrmStaticMultiMesh;
+		//
+		WfVertexDataIndices VertexDataIndices;
+		//
+		for(lrmWfObj::lrmWfMatGroup *MaterialGroup : loaded_obj.MatGroups)
 		{
-			lrmStaticMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMesh::lrmMtlGroup;
-			newMtlGroup->Material = (*i)->Material;
+			lrmStaticMultiMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
+			newMtlGroup->Material = MaterialGroup->Material;
 			//
-			for(auto k = (*i)->Triangles.begin();k != (*i)->Triangles.end();k++)
+			WfIndexBufferCreator IndexBufferCreator(VertexDataIndices,newMtlGroup->IndexBuffer);
+			//
+			for(auto k = MaterialGroup->Triangles.begin();k != MaterialGroup->Triangles.end();k++)
 			{
-				for(unsigned int j=0;j < static_mesh->Vertices.size();j++)
-				{
-					if((iVertices[j] == k->V1) && (iTexCoords[j] == k->Tx1))
-					{
-						newMtlGroup->IndexBuffer.push_back(j);
-						break;
-					}
-				}
-				//
-				for(unsigned int j=0;j < static_mesh->Vertices.size();j++)
-				{
-					if((iVertices[j] == k->V2) && (iTexCoords[j] == k->Tx2))
-					{
-						newMtlGroup->IndexBuffer.push_back(j);
-						break;
-					}
-				}
-				//
-				for(unsigned int j=0;j < static_mesh->Vertices.size();j++)
-				{
-					if((iVertices[j] == k->V3) && (iTexCoords[j] == k->Tx3))
-					{
-						newMtlGroup->IndexBuffer.push_back(j);
-						break;
-					}
-				}
+				IndexBufferCreator.AddTriangle(*k);
 			}
 			//
 			static_mesh->AddMaterialGroup(newMtlGroup);
 		}
+		//
+		VertexDataIndices.FillVertexBuffer(loaded_obj,static_mesh->Vertices,static_mesh->Normals,static_mesh->TexCoords);
 		//
 		CalculateTBVectors(*static_mesh);
 	}
 	//
 public:
 	//
-	bool LoadStaticMesh(const std::string &resource_identifier,lrmStaticMesh *&static_mesh)
+	bool LoadStaticMesh(const std::string &resource_identifier,lrmStaticMultiMesh *&static_mesh)
 	{
 		auto I = LoadedMeshes.find(resource_identifier);
 		if(I == LoadedMeshes.end())
@@ -250,8 +273,8 @@ public:
 	 */
 };
 
-#include "Md5Loader/md5Utility.h"
-#include "Md5Loader/lrmMd5Loader.h"
+#include "../Md5Loader/md5Utility.h"
+#include "../Md5Loader/lrmMd5Loader.h"
 
 class lrmMd5LoaderModule
 {
@@ -305,12 +328,12 @@ public:
 class lrmResourceManager : public liResourceManager
 {
 private:
-	std::map<std::string,lrmStaticMesh *> StaticMeshes;
+	std::map<std::string,lrmStaticMultiMesh *> StaticMeshes;
 	std::map<std::string,lrmSkeletalMesh *> SkeletalMeshes;
 
 public:
 	//
-	static void GenerateCube(lrmStaticMesh &static_mesh,bool inside_out)
+	static void GenerateCube(lrmStaticMultiMesh &static_mesh,bool inside_out)
 	{
 		constexpr unsigned int NUM_VERTICES = 16;
 		//
@@ -371,7 +394,7 @@ public:
 		static_mesh.TexCoords[14] = {0.0f,1.0f};
 		static_mesh.TexCoords[15] = {1.0f,1.0f};
 		//
-		lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
+		lrmStaticMultiMesh::lrmMtlGroup *MtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
 		static_mesh.AddMaterialGroup(MtlGroup);
 		//
 		constexpr unsigned int NUM_TRIANGLES = 12;
@@ -408,7 +431,7 @@ public:
 		}
 	}
 	//
-	static void GenerateSphere(lrmStaticMesh &static_mesh,unsigned int resolution_xz,unsigned int resolution_xy)
+	static void GenerateSphere(lrmStaticMultiMesh &static_mesh,unsigned int resolution_xz,unsigned int resolution_xy)
 	{
 		unsigned int NumVertices = resolution_xz*resolution_xy + 2;
 		static_mesh.Vertices.resize(NumVertices);
@@ -453,7 +476,7 @@ public:
 			}
 		}
 		//
-		lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
+		lrmStaticMultiMesh::lrmMtlGroup *MtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
 		static_mesh.AddMaterialGroup(MtlGroup);
 		//
 		unsigned int NumTrianglesInFan = resolution_xz - 1;
@@ -502,13 +525,13 @@ public:
 		}
 	}
 	//
-	virtual lrmStaticMesh *GetStaticMesh(const std::string &resource_identifier) override
+	virtual lrmStaticMultiMesh *GetStaticMesh(const std::string &resource_identifier) override
 	{
 		auto I = StaticMeshes.find(resource_identifier);
 		//
 		if(I == StaticMeshes.end())
 		{
-			lrmStaticMesh *StaticMesh = new lrmStaticMesh;
+			lrmStaticMultiMesh *StaticMesh = new lrmStaticMultiMesh;
 			GenerateSphere(*StaticMesh,8,16);
 			/*
 			StaticMesh->Vertices.push_back(lmVector3D({0.0f,0.4f,-3.0f}));

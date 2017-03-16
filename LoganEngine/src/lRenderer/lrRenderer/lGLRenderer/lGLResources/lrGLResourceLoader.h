@@ -52,7 +52,7 @@ struct lrGLVertexData
 		glBindBuffer(GL_ARRAY_BUFFER,0);
 	}
 	//
-	void Fill(lrmStaticMesh &static_mesh)
+	void Fill(lrmStaticMultiMesh &static_mesh)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER,VertexBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER,0,BufferLength*sizeof(lmVector3D),&static_mesh.Vertices[0]);
@@ -107,7 +107,7 @@ public:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 	}
 	//
-	void Fill(lrmStaticMesh::lrmMtlGroup &mtl_group)
+	void Fill(lrmStaticMultiMesh::lrmMtlGroup &mtl_group)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IndexBuffer);
 		//glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,0,BufferLength*sizeof(GLuint),&mtl_group.IndexBuffer[0]);
@@ -149,7 +149,7 @@ struct lrGLStaticMeshResource
 	lrGLVertexData VertexData;
 	std::vector<lrGLMaterialGroup> MaterialGroups;
 	//
-	void Initialize(lrmStaticMesh &static_mesh)
+	void Initialize(lrmStaticMultiMesh &static_mesh)
 	{
 		VertexData.Initialize(static_mesh.Vertices.size());
 		VertexData.Fill(static_mesh);
@@ -331,7 +331,7 @@ private:
 	std::map<std::string,lrGLTextureResource> Textures;
 	std::map<std::string,lrGLTextureResource> Cubemaps;
 	//
-	lrmStaticMesh *LoadStaticMesh(const std::string &resource_id)
+	lrmStaticMultiMesh *LoadStaticMesh(const std::string &resource_id)
 	{
 		if(ResourceManager != nullptr)
 		{
@@ -343,7 +343,7 @@ private:
 		}
 	}
 	//
-	lrmStaticMesh *LoadSkeletalMesh(const std::string &resource_id)
+	lrmStaticMultiMesh *LoadSkeletalMesh(const std::string &resource_id)
 	{
 		if(ResourceManager != nullptr)
 		{
@@ -394,7 +394,7 @@ public:
 		auto I = StaticMeshes.find(resource_id);
 		if(I == StaticMeshes.end())
 		{
-			lrmStaticMesh *LoadedMesh = LoadStaticMesh(resource_id);
+			lrmStaticMultiMesh *LoadedMesh = LoadStaticMesh(resource_id);
 			//
 			lrGLStaticMeshResource &StaticMeshResource = StaticMeshes[resource_id];
 			if(LoadedMesh != nullptr)
@@ -413,7 +413,7 @@ public:
 		auto I = SkeletalMeshes.find(resource_id);
 		if(I == SkeletalMeshes.end())
 		{
-			lrmStaticMesh *LoadedMesh = LoadSkeletalMesh(resource_id);
+			lrmStaticMultiMesh *LoadedMesh = LoadSkeletalMesh(resource_id);
 			//
 			lrGLStaticMeshResource &StaticMeshResource = SkeletalMeshes[resource_id];
 			if(LoadedMesh != nullptr)

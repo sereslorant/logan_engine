@@ -184,6 +184,10 @@ void RendererFunctionalityTest::SetScene()
 	//
 	Scene3D->GetElementFactory().CreateSkeletalMesh(lmVector3D({0.0f,-3.0f,4.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrarySk,"BobWithLamp");
 	//
+	lrMaterialLibrary MaterialLibrary6;
+	MaterialLibrary6.AddMaterial("Material.001",CreateMaterial(SilverFresnel(),0.05,1.0,"Szercsy"));
+	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({0.0f,0.0f,8.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary6,"LoadedMesh");
+	//
 	std::string Textures[6] = {"Empty","Puszcsy","Szercsy","Arcsy","Faszcsy","Cukcsy"};
 	std::string Models[4] = {"Sphere","Cone","Box","LoadedMesh"};
 	lmVector3D Pos = {-6.0f,-4.0f,20.0f};

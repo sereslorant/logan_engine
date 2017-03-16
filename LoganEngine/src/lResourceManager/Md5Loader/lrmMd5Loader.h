@@ -14,7 +14,7 @@
 
 #include "../../lMath/lMath.h"
 
-#include "../lrmSkeletalMesh.h"
+#include "../lLegacyResourceManager/lrmSkeletalMesh.h"
 
 class lrmMd5SkeletonAdapter
 {
@@ -215,7 +215,7 @@ public:
     ~lrmMd5Loader();
 };
 
-void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh);
+void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMultiMesh &bind_pose_mesh);
 
 void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmSkeletalMesh &skeletal_mesh);
 

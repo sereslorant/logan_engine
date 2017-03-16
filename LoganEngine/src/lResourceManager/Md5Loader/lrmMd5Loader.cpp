@@ -545,7 +545,7 @@ lrmMd5Loader::~lrmMd5Loader()
 }
 
 
-void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh)
+void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMultiMesh &bind_pose_mesh)
 {
     bind_pose_mesh.Vertices.resize(file.Meshes[mesh_index].Vertices.size());
     bind_pose_mesh.TexCoords.resize(file.Meshes[mesh_index].Vertices.size());
@@ -619,7 +619,7 @@ void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
     //
     bind_pose_mesh.Normals.resize(file.Meshes[mesh_index].Vertices.size());
     //
-    lrmStaticMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMesh::lrmMtlGroup;
+    lrmStaticMultiMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
     //bind_pose_mesh.MtlGroups.push_back(newMtlGroup);
     bind_pose_mesh.AddMaterialGroup(newMtlGroup);
     //

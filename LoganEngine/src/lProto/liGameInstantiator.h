@@ -5,7 +5,7 @@
 #include <lGame/liConsole.h>
 
 #include <lApiAdapter/liApiAdapter.h>
-#include <lResourceManager/lResourceManager.h>
+#include <lResourceManager/lLegacyResourceManager/lResourceManager.h>
 #include <lRenderer/liRenderer.h>
 
 class liGameInstantiator
