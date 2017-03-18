@@ -1,7 +1,7 @@
 #ifndef DUMMY_RM_H
 #define DUMMY_RM_H
 
-#include "../../lResourceManager/lLegacyResourceManager/lResourceManager.h"
+#include <lResourceManager/lLegacyResourceManager/lResourceManager.h>
 
 struct Color
 {

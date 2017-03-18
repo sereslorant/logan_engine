@@ -1,5 +1,5 @@
 
-#include <lResourceManager/lrmResourceManager/lrmResourceManager.h>
+#include <lCore/lResourceManager/lrmResourceManager/lrmResourceManager.h>
 
 struct DummyResource
 {

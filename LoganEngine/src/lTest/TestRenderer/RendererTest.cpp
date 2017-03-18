@@ -5,7 +5,7 @@
 
 #include "RendererTest.h"
 
-#include "../../lScene/lrScene/lr3DScene/lr3DScene.h"
+#include <lScene/lrScene/lr3DScene/lr3DScene.h>
 
 #include "../../lUtils/luSetLayer.h"
 #include "../../lUtils/luGetModMesh.h"

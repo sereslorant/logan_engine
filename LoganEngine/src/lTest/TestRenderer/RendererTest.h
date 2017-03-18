@@ -1,10 +1,10 @@
 #ifndef RENDERER_TEST_H
 #define RENDERER_TEST_H
 
-#include <lRenderer/liRenderer.h>
+#include <lCore/lRenderer/liRenderer.h>
 
-#include <lScene/l3DScene/lModScene/li3DModCamera.h>
-#include <lScene/l3DScene/lModScene/li3DModScene.h>
+#include <lCore/lScene/l3DScene/lModScene/li3DModCamera.h>
+#include <lCore/lScene/l3DScene/lModScene/li3DModScene.h>
 
 class RendererTest
 {
