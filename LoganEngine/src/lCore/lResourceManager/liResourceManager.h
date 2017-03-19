@@ -1,8 +1,9 @@
 #ifndef LI_RESOURCE_MANAGER_H
 #define LI_RESOURCE_MANAGER_H
-/*
-#include "../lMath/lMath.h"
 
+/*
+ * Egyelőre még nincs használatban.
+ */
 template<class lResource_T>
 class liResource
 {
@@ -16,9 +17,9 @@ public:
 	virtual ~liResource(){}
 	/*
 	 * End of class
-	 * /
+	 */
 };
-*/
+
 
 #include "liBitmap2D.h"
 #include "liCubemap.h"

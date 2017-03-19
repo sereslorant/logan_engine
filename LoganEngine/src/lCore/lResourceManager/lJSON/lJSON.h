@@ -331,13 +331,13 @@ private:
 		PrintJSON *Printer;
 
 	public:
-		virtual void PerformAction(const std::string &key,liJSON_Value *value)
+		virtual void PerformAction(const std::string &key,liJSON_Value *value) override
 		{
 			std::cout << key << ":";
 			value->Accept(*Printer);
 		}
 
-		virtual void PerformAction(const std::string &key,const liJSON_Value *value)
+		virtual void PerformAction(const std::string &key,const liJSON_Value *value) override
 		{
 			std::cout << key << ":";
 			value->Accept(*Printer);

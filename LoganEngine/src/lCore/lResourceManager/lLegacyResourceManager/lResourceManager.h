@@ -3,6 +3,8 @@
 
 #include "../liResourceManager.h"
 /*
+ * Egyelőre még nincs használatban.
+ */
 template<class lResource_T>
 class lrmResource : public liResource<lResource_T>
 {
@@ -55,9 +57,9 @@ public:
 	}
 	/*
 	 * End of class
-	 * /
+	 */
 };
-*/
+
 #include "../ObjLoader/lrmWfLoader.h"
 
 #include <fstream>

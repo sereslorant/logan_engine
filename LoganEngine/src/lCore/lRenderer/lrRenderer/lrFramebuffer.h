@@ -11,12 +11,12 @@ protected:
 
 public:
 	//
-	virtual unsigned int GetWidth()
+	virtual unsigned int GetWidth() override
 	{
 		return Width;
 	}
 	//
-	virtual unsigned int GetHeight()
+	virtual unsigned int GetHeight() override
 	{
 		return Height;
 	}

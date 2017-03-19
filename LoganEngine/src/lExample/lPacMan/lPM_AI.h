@@ -102,7 +102,7 @@ private:
 	class PacManObserver : public WallObserver,public liPM_PacManObserver
 	{
 	public:
-		virtual void WriteState()
+		virtual void WriteState() override
 		{
 			State.PacManX = X;
 			State.PacManY = Y;
@@ -223,7 +223,7 @@ public:
 		RefreshState();
 	}
 	//
-	virtual void LoopEnded()
+	virtual void LoopEnded() override
 	{
 		std::cout << "Loop" << std::endl;
 	}

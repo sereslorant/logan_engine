@@ -267,7 +267,7 @@ public:
 		return false;
 	}
     //
-    virtual void ForeachMaterial(liMatLibOperation &operation) const
+    virtual void ForeachMaterial(liMatLibOperation &operation) const override
     {
     	for(auto I : Materials)
     	{

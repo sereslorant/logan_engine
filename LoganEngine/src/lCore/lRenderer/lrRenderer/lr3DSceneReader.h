@@ -305,17 +305,17 @@ public:
 		NumLights++;
 	}
 	//
-	virtual unsigned int GetNumLights() const
+	virtual unsigned int GetNumLights() const override
 	{
 		return NumLights;
 	}
 	//
-	virtual unsigned int GetNumTextureGroups() const
+	virtual unsigned int GetNumTextureGroups() const override
 	{
 		return TextureGroups.size();
 	}
 	//
-	virtual void ForEachTextureGroup(liTextureGroupOperation &operation) const
+	virtual void ForEachTextureGroup(liTextureGroupOperation &operation) const override
 	{
 		for(auto &I : TextureGroups)
 		{

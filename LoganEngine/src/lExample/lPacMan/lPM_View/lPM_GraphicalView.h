@@ -52,7 +52,7 @@ private:
 		li2DElement *Drawable;
 	public:
 
-		virtual void RefreshPosition(int x,int y)
+		virtual void RefreshPosition(int x,int y) override
 		{
 			if((X == x) && (Y == y))
 			{
