@@ -20,8 +20,8 @@ class lrGL3Shader
 protected:
 	bool Initialized = false;
 	//
-	unsigned int AttachedShaderCount = 0;
-	GLuint *AttachedShaders = nullptr;
+	//unsigned int AttachedShaderCount = 0;
+	//GLuint *AttachedShaders = nullptr;
 	//
 	GLuint ProgramId = 0;   /**< A shader program azonosítója */
 	//
@@ -41,16 +41,23 @@ public:
 	{
 		ProgramId = glCreateProgram();
 		//
-		AttachedShaderCount = attached_shader_count;
-		AttachedShaders = new GLuint[AttachedShaderCount];
+		//AttachedShaderCount = attached_shader_count;
+		//AttachedShaders = new GLuint[AttachedShaderCount];
 		//
-		for(unsigned int i=0;i < AttachedShaderCount;i++)
+		for(unsigned int i=0;i < attached_shader_count;i++)
 		{
-			AttachedShaders[i] = attached_shaders[i];
-			glAttachShader(ProgramId,AttachedShaders[i]);
+			//AttachedShaders[i] = attached_shaders[i];
+			glAttachShader(ProgramId,attached_shaders[i]);
 		}
 		//
 		glLinkProgram(ProgramId);
+		//
+		for(unsigned int i=0;i < attached_shader_count;i++)
+		{
+			glDetachShader(ProgramId,attached_shaders[i]);
+		}
+		//
+		//delete AttachedShaders;
 		//
 		Initialized = true;
 	}
@@ -64,13 +71,6 @@ public:
 	{
 		if(Initialized)
 		{
-			for(unsigned int i=0;i < AttachedShaderCount;i++)
-			{
-				glDetachShader(ProgramId,AttachedShaders[i]);
-			}
-			//
-			delete AttachedShaders;
-			//
 			glDeleteProgram(ProgramId);
 		}
 	}
