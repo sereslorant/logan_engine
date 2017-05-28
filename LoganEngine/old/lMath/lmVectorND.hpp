@@ -3,6 +3,8 @@
 
 #include "lmTypedef.h"
 
+#include <cmath>
+
 #include <algorithm>
 #include <initializer_list>
 

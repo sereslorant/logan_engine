@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 project(loganengine_old)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_STANDARD 11)
 
-set(SRC_DIR "../../old")
+set(SRC_DIR "./")
 
 #Setting main sources
 set(lMain "${SRC_DIR}/lMain.cpp" "${SRC_DIR}/lRandomGenerator.cpp" "${SRC_DIR}/lUtils.cpp")
