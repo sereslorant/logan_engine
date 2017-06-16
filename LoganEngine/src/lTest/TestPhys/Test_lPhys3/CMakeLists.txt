@@ -1,0 +1,2 @@
+
+add_executable(CollisionTableTest lPhys3_CollisionTableTest.cpp)

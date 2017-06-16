@@ -3,7 +3,8 @@
 
 #include <cmath>
 
-#define PI 3.14159265359
+//#define PI 3.14159265359
+constexpr double PI = 3.14159265359;
 
 
 #include "lmVectorND.hpp"

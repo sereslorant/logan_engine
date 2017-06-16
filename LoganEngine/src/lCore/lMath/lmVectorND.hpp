@@ -83,6 +83,11 @@ public:
 
 		return LengthSqrd;
 	}
+	
+	T Length() const
+	{
+		return std::sqrt(LengthSquared());
+	}
 
     /** \brief Normálja a vektort.
      *
