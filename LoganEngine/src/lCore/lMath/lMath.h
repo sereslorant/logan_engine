@@ -177,6 +177,8 @@ lmVectorND<Type_T,Dim_T> AverageVelocity(const lmVectorND<Type_T,Dim_T> &p0,cons
 	return (p1-p0)*(1.0/(t1-t0));
 }
 
+#include <vector>
+
 template<typename Type_T,unsigned int Dim_T>
 class lmCatmullRomSpline : public liCurve<Type_T,Dim_T>
 {

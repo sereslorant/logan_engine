@@ -1,0 +1,11 @@
+{
+	"Resources" : {
+		"DummyResource" : [
+			{
+				"FilePath":"SubAnything",
+				"ResourceId":"Lavcsy",
+				"ResourceLoader":"DummyLoader"
+			}
+		]
+	}
+} 

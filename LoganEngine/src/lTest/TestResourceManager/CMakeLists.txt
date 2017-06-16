@@ -1,0 +1,14 @@
+
+#set(L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR "${L_SRC_DIR}/lTest/TestResourceManager")
+set(L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR ".")
+set(L_TEST_RESOURCE_MANAGER_HIERARCHY_MAIN_SRC_DIR "${L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR}/HierarchyTest")
+
+set(L_TEST_RESOURCE_MANAGER_MAIN_SRC "${L_TEST_RESOURCE_MANAGER_MAIN_SRC_DIR}/TestResourceManager.cpp")
+
+add_executable(Test_ResourceManager ${L_TEST_RESOURCE_MANAGER_MAIN_SRC})
+
+
+set(L_TEST_RESOURCE_MANAGER_HIERARCHY_MAIN_SRC "${L_TEST_RESOURCE_MANAGER_HIERARCHY_MAIN_SRC_DIR}/TestHierarchyBuilder.cpp")
+
+add_executable(Test_ResourceManagerHierarchy ${L_TEST_RESOURCE_MANAGER_HIERARCHY_MAIN_SRC})
+target_link_libraries(Test_ResourceManagerHierarchy lJSON)

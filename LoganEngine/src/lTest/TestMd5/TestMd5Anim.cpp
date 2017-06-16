@@ -9,13 +9,13 @@
 /*
  * Resource manager include-ok
  */
-#include "../../lResourceManager/lrmSkeletalMesh.h"
+#include <lCore/lResourceManager/lLegacyResourceManager/lrmSkeletalMesh.h>
 
 /*
  * Md5 loader include-ok
  */
-#include "../../lResourceManager/Md5Loader/md5Utility.h"
-#include "../../lResourceManager/Md5Loader/lrmMd5Loader.h"
+#include <lUtils/Md5Loader/md5Utility.h>
+#include <lUtils/Md5Loader/lrmMd5Loader.h>
 
 /*
  * STL include-ok

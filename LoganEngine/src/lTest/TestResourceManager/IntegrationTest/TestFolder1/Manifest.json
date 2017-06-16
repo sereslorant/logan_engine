@@ -1,0 +1,36 @@
+{
+	"Resources" : {
+		"StaticMeshes" : [
+			{
+				"FilePath":"StaticMeshes/Cube.txt",
+				"ResourceId":"WfCube",
+				"ResourceLoader":"Wavefront"
+			},
+			{
+				"FilePath":"StaticMeshes/IdiotaAlakzat.txt",
+				"ResourceId":"WfIdiota",
+				"ResourceLoader":"Wavefront"
+			}
+		],
+		"SkeletalMeshes" : [
+			{
+				"FilePath":"SkeletalMeshes/bob_lamp_update_export.md5mesh",
+				"ResourceId":"Md5Bob",
+				"ResourceLoader":"Md5Mesh"
+			}
+		],
+		"SkeletalAnimations" : [
+			{
+				"FilePath":"SkeletalAnimations/retardaltkodik_with_lamp.md5anim",
+				"ResourceId":"Bd5RetardLamp",
+				"ResourceLoader":"Md5Anim"
+			}
+		]
+	},
+	"Subdirectories":[
+		{
+			"DirectoryPath":"Materials",
+			"DirectoryId":"Materials"
+		}
+	]
+}

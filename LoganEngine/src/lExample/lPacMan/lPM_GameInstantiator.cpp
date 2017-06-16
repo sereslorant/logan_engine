@@ -32,7 +32,7 @@ R"(
   ["sc_ll","sh","sh",   "sh","sh","hc_ll","sh","sh","sh",   "sh","sc_lr"]]
   )";
 
-#include <lResourceManager/lJSON/lJSON.h>
+#include <lUtils/lJSON/lJSON.h>
 
 liGame *lPM_GameInstantiator::CreateGame(liApiAdapter &api_adapter,liResourceManager &resource_manager,liRenderer &renderer,liConsole &console)
 {

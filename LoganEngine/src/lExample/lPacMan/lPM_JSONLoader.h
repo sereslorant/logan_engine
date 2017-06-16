@@ -3,7 +3,7 @@
 
 #include "lPM_Model/lPM_Model.h"
 
-#include <lResourceManager/liJSON.h>
+#include <lUtils/lJSON/liJSON.h>
 
 class lPM_JSONLoader : public liJSON_Visitor
 {
@@ -117,11 +117,6 @@ public:
 		//Üres
 	}
 
-	virtual void VisitNull(const liJSON_Value &param) override
-	{
-		//Üres
-	}
-
 	virtual void Visit(liJSON_Array &param) override
 	{
 		if(Puszcsy == false)
@@ -159,7 +154,7 @@ public:
 		//Üres
 	}
 
-	virtual void VisitNull(liJSON_Value &param) override
+	virtual void VisitNull() override
 	{
 		//Üres
 	}

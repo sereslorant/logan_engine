@@ -1,3 +1,11 @@
 
+mkdir ./build
+cd ./build
 
-g++ ../../src/lTest/TestJSON.cpp -std=c++11 -o Test
+cmake ../../../src/
+cmake --build ./ --target TestJSON 
+
+cp ./lTest/TestJSON/TestJSON ../Test
+
+cd ../
+rm -rf ./build

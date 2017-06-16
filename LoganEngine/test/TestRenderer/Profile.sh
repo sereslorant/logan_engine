@@ -1,2 +1,0 @@
-
-gprof ./Test > ProfileData.txt 

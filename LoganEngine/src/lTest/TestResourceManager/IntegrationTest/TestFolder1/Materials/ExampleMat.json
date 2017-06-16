@@ -1,0 +1,7 @@
+{
+	"Albedo":[0.75,0.25,0.75],
+	"Fresnel":0.6,
+	"Reflectiveness":0.5,
+	"Roughness":0.75,
+	"Metallic":0.25
+}

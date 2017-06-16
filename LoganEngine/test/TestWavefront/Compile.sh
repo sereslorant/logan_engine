@@ -1,3 +1,11 @@
 
+mkdir ./build
+cd ./build
 
-g++ ../../src/lTest/TestWavefront.cpp -std=c++11 -lglut -lGL -lGLU -o Test
+cmake ../../../src/
+cmake --build ./ --target TestWavefront
+
+cp ./lTest/TestWavefront/TestWavefront ../Test
+
+cd ../
+rm -rf ./build

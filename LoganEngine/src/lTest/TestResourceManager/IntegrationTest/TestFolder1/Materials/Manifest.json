@@ -1,0 +1,12 @@
+{
+	"Resources" : {
+		"Materials":
+		[
+			{
+				"FilePath" : "ExampleMat.json",
+				"ResourceId":"Example",
+				"ResourceLoader":"JsonPbMat"
+			}
+		]
+	}
+} 

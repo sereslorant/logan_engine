@@ -5,3 +5,4 @@ set(LPM_GAME_MODE_SRC_DIR "./")
 set(LPM_GAME_MODE_SRC "${LPM_GAME_MODE_SRC_DIR}/lPM_GameInstantiator.cpp")
 #Compiling lPM_GameMode
 add_library(lPM_GameMode ${LPM_GAME_MODE_SRC})
+target_link_libraries(lPM_GameMode lJSON)

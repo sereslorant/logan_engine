@@ -6,7 +6,8 @@ do
   #FileContent=$(cat "${FilePath}")
   echo "Testing file ${FilePath}"
   #cat $FilePath
-  cat $FilePath | ./Test #> out.txt
+  cat $FilePath | ./Test >> out.txt
+  #cat $FilePath | ./Test
   echo "Finished testing ${FilePath}
   "
 done

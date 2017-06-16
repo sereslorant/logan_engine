@@ -60,7 +60,7 @@ public:
 	 */
 };
 
-#include "../ObjLoader/lrmWfLoader.h"
+#include <lUtils/ObjLoader/lrmWfLoader.h>
 
 #include <fstream>
 
@@ -275,8 +275,8 @@ public:
 	 */
 };
 
-#include "../Md5Loader/md5Utility.h"
-#include "../Md5Loader/lrmMd5Loader.h"
+#include <lUtils/Md5Loader/md5Utility.h>
+#include <lUtils/Md5Loader/lrmMd5Loader.h>
 
 class lrmMd5LoaderModule
 {
