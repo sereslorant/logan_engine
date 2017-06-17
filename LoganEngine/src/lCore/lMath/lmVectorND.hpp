@@ -162,6 +162,18 @@ public:
 
 		return V;
 	}
+	
+	lmVectorND operator/(T l) const
+	{
+		lmVectorND V;
+
+		for(unsigned int i=0;i < N;i++)
+		{
+			V[i] = X[i] / l;
+		}
+
+		return V;
+	}
 
     /** \brief Vektorhoz másik vektor hozzáadása
      *
@@ -206,6 +218,16 @@ public:
 		for(unsigned int i=0;i < N;i++)
 		{
 			X[i] *= l;
+		}
+
+		return *this;
+	}
+	
+    const lmVectorND &operator/=(T l)
+	{
+		for(unsigned int i=0;i < N;i++)
+		{
+			X[i] /= l;
 		}
 
 		return *this;
