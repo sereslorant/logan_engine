@@ -31,12 +31,3 @@ add_subdirectory(lExample)
 
 add_subdirectory(lTest)
 
-
-#Compiling test environments
-
-
-set(L_TEST_GL3_MAIN_SRC_DIR "${L_SRC_DIR}/lTest/TestRenderer")
-set(L_TEST_GL3_MAIN_SRC "${L_TEST_GL3_MAIN_SRC_DIR}/RendererTest.cpp" "${L_TEST_GL3_MAIN_SRC_DIR}/Test_lGL3Renderer.cpp")
-
-add_executable(Test_GL3Renderer ${L_TEST_GL3_MAIN_SRC})
-target_link_libraries(Test_GL3Renderer l3DScene ${SDL2_LIBRARIES} lGL3Renderer Md5Loader)

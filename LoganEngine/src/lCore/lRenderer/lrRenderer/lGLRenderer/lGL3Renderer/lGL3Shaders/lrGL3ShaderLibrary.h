@@ -16,7 +16,7 @@ using namespace lGLExt;
 extern const char *VertexShaderSource2D;
 extern const char *VertexShaderPrepassSource;
 extern const char *FragmentShaderSource2D;
-extern const char *VertexShaderSource;
+extern const char *TestVertexShader;
 extern const char *PbEquationsSource;
 extern const char *FwdFragmentShaderSrc;
 extern const char *EnvMapShaderSource;
@@ -75,59 +75,59 @@ private:
 	std::map<std::string,lrGL3ShaderObject> ShaderObjects;
 	//
 public:
-	//
+	
 	static GLuint LoadShader(const char *src,GLenum shader_type)
 	{
 		GLuint Id;
 		Id = glCreateShader(shader_type);
-		//
+		
 		glShaderSource(Id,1,&src,NULL);
 		glCompileShader(Id);
-		//
+		
 		#ifdef PRINT_GL_SHADER_COMPILE_STATUS
 			char Error[1024];
 
 			glGetShaderInfoLog(Id,1024,NULL,Error);
 			std::cout << "Shader compile status:\n" << Error << std::endl;
 		#endif
-		//
+		
 		return Id;
 	}
-	//
+	
 	GLuint GetShader(const std::string &shader_name)
 	{
 		return ShaderObjects[shader_name].GetShaderId();
 	}
-	//
+	
 	lrGL3ShaderLibrary()
 	{
 		lrGL3ShaderObject &VertexShader2D = ShaderObjects["VertexShader2D"];
 		VertexShader2D.Initialize(LoadShader(VertexShaderSource2D,GL_VERTEX_SHADER),GL_VERTEX_SHADER);
-		//
+		
 		lrGL3ShaderObject &FragmentShader2D = ShaderObjects["FragmentShader2D"];
 		FragmentShader2D.Initialize(LoadShader(FragmentShaderSource2D,GL_FRAGMENT_SHADER),GL_FRAGMENT_SHADER);
-		//
+		
 		lrGL3ShaderObject &StaticMeshPrepassVertexShader = ShaderObjects["StaticMeshPrepassVertexShader"];
 		StaticMeshPrepassVertexShader.Initialize(LoadShader(VertexShaderPrepassSource,GL_VERTEX_SHADER),GL_VERTEX_SHADER);
-		//
+		
 		lrGL3ShaderObject &StaticMeshVertexShader = ShaderObjects["StaticMeshVertexShader"];
-		StaticMeshVertexShader.Initialize(LoadShader(VertexShaderSource,GL_VERTEX_SHADER),GL_VERTEX_SHADER);
-		//
+		StaticMeshVertexShader.Initialize(LoadShader(TestVertexShader,GL_VERTEX_SHADER),GL_VERTEX_SHADER);
+		
 		lrGL3ShaderObject &PbEquationsShader = ShaderObjects["PbEquationsShader"];
 		PbEquationsShader.Initialize(LoadShader(PbEquationsSource,GL_FRAGMENT_SHADER),GL_FRAGMENT_SHADER);
-		//
+		
 		lrGL3ShaderObject &FwdRendererShader = ShaderObjects["FwdRendererShader"];
 		FwdRendererShader.Initialize(LoadShader(FwdFragmentShaderSrc,GL_FRAGMENT_SHADER),GL_FRAGMENT_SHADER);
-		//
+		
 		lrGL3ShaderObject &PbEnvMapShaderMain = ShaderObjects["PbEnvMapShaderMain"];
 		PbEnvMapShaderMain.Initialize(LoadShader(EnvMapShaderSource,GL_FRAGMENT_SHADER),GL_FRAGMENT_SHADER);
-		//
+		
 		lrGL3ShaderObject &PbFragmentShaderMain = ShaderObjects["PbFragmentShaderMain"];
 		PbFragmentShaderMain.Initialize(LoadShader(FragmentShaderSource,GL_FRAGMENT_SHADER),GL_FRAGMENT_SHADER);
 	}
-	//
+	
 	~lrGL3ShaderLibrary(){}
-	//
+	
 	/*
 	 * End of class
 	 */

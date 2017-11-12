@@ -4,7 +4,7 @@
 #include <GL/gl.h>
 #include <lCore/lMath/lMath.h>
 
-extern const char *VertexShaderSource;
+extern const char *TestVertexShader;
 extern const char *FragmentShaderSource;
 
 extern PFNGLCREATESHADERPROC glCreateShader;
@@ -67,7 +67,7 @@ public:
 	GL_Shader()
 	{
 		VertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(VertexShader,1,&VertexShaderSource,nullptr);
+		glShaderSource(VertexShader,1,&TestVertexShader,nullptr);
 		glCompileShader(VertexShader);
 		//
 		PrintShaderCompileError(VertexShader);

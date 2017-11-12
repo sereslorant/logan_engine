@@ -545,7 +545,7 @@ lrmMd5Loader::~lrmMd5Loader()
 }
 
 
-void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMultiMesh &bind_pose_mesh)
+void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh)
 {
     bind_pose_mesh.Vertices.resize(file.Meshes[mesh_index].Vertices.size());
     bind_pose_mesh.TexCoords.resize(file.Meshes[mesh_index].Vertices.size());
@@ -619,26 +619,25 @@ void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
     //
     bind_pose_mesh.Normals.resize(file.Meshes[mesh_index].Vertices.size());
     //
-    lrmStaticMultiMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
+    lrmStaticMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMesh::lrmMtlGroup;
     //bind_pose_mesh.MtlGroups.push_back(newMtlGroup);
-    bind_pose_mesh.AddMaterialGroup(newMtlGroup);
-    //
+    
     newMtlGroup->Material = file.Meshes[mesh_index].Material;
     newMtlGroup->IndexBuffer.resize(file.Meshes[mesh_index].Triangles.size()*3);
-    //
+    
     unsigned int k = 0;
     for(auto &Triangle : file.Meshes[mesh_index].Triangles)
     {
         lmVector3D VecV1V3 = bind_pose_mesh.Vertices[Triangle.V3] - bind_pose_mesh.Vertices[Triangle.V1];
         lmVector3D VecV1V2 = bind_pose_mesh.Vertices[Triangle.V2] - bind_pose_mesh.Vertices[Triangle.V1];
-        //
+        
         Triangle.Normal += lmCross(VecV1V3,VecV1V2);
         Triangle.Normal.Normalize();
-        //
+        
         bind_pose_mesh.Normals[Triangle.V1] += Triangle.Normal;
         bind_pose_mesh.Normals[Triangle.V2] += Triangle.Normal;
         bind_pose_mesh.Normals[Triangle.V3] += Triangle.Normal;
-        //
+        
         newMtlGroup->IndexBuffer[k] = Triangle.V1;
         k++;
         newMtlGroup->IndexBuffer[k] = Triangle.V3;
@@ -646,7 +645,7 @@ void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
         newMtlGroup->IndexBuffer[k] = Triangle.V2;
         k++;
     }
-    //
+    
     bind_pose_mesh.Tangents.resize(file.Meshes[mesh_index].Vertices.size());
     bind_pose_mesh.Bitangents.resize(file.Meshes[mesh_index].Vertices.size());
     /*
@@ -659,18 +658,20 @@ void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
     	 * függvénybe, mert a Wavefront loaderben is ugyanez van.
     	 */
         bind_pose_mesh.Normals[i].Normalize();
-        //
+        
         lmVector3D FirstCross = lmCross(bind_pose_mesh.Normals[i],bind_pose_mesh.Vertices[i]*(-1));
         lmVector3D Tangent = lmCross(FirstCross,bind_pose_mesh.Normals[i]);
         Tangent.Normalize();
-		//
+		
         bind_pose_mesh.Tangents[i] = Tangent;
-		//
+		
         lmVector3D Bitangent = lmCross(Tangent,bind_pose_mesh.Normals[i]);
         Bitangent.Normalize();
-		//
+		
         bind_pose_mesh.Bitangents[i] = Bitangent;
     }
+    
+    bind_pose_mesh.AddMaterialGroup(newMtlGroup);
 }
 
 bool md5CmpWeight(const md5File::md5Mesh::md5Weight &A,const md5File::md5Mesh::md5Weight&B)
@@ -688,7 +689,7 @@ void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
 	//
 	unsigned int NumVertices = file.Meshes[mesh_index].Vertices.size();
     //
-    skeletal_mesh.BoneId.resize(NumVertices);
+    skeletal_mesh.BoneIds.resize(NumVertices);
     skeletal_mesh.Weights.resize(NumVertices);
     //
     for(unsigned int i=0;i < NumVertices;i++)
@@ -720,7 +721,7 @@ void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
         int k=0;
 		for(md5File::md5Mesh::md5Weight &j : Weights)
 		{
-			skeletal_mesh.BoneId[i][k]  = j.JointIndex;
+			skeletal_mesh.BoneIds[i][k]  = j.JointIndex;
 			skeletal_mesh.Weights[i][k] = j.WeightBias;
 			//
 			k++;
@@ -731,18 +732,18 @@ void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmS
 void md5ExtractAnimFrame(md5Anim &anim,bool y_up,unsigned int frame_index,md5SkeletonExtrinsic &anim_frame)
 {
 	anim_frame.Resize(anim.Hierarchy.size());
-	//
+	
 	for(unsigned int i = 0;i < anim_frame.Size();i++)
 	{
 		anim_frame.JointData[i].Position    = anim.Baseframe[i].Position;
 		anim_frame.JointData[i].Orientation = anim.Baseframe[i].Orientation;
 	}
-	//
+	
 	for(unsigned int k=0;k < anim_frame.Size();k++)
 	{
 		unsigned int StartIndex = anim.Hierarchy[k].StartIndex;
 		int j = 0;
-		//
+		
 		bool QuatRecalc = false;
 		if(anim.Hierarchy[k].Flags & 1)
 		{
@@ -777,13 +778,13 @@ void md5ExtractAnimFrame(md5Anim &anim,bool y_up,unsigned int frame_index,md5Ske
 			QuatRecalc = true;
 			j++;
 		}
-		//
+		
 		if(QuatRecalc)
 		{
 			md5Utility::ComputeQuaternion(anim_frame.JointData[k].Orientation.X,anim_frame.JointData[k].Orientation.Y,anim_frame.JointData[k].Orientation.Z,anim_frame.JointData[k].Orientation);
 		}
 	}
-	//
+	
 	if(y_up)
 	{
 		md5Utility::Skeleton_YUp(anim_frame,anim_frame);

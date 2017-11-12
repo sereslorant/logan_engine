@@ -98,10 +98,10 @@ struct lrmSkeletalMesh
         }
     };
 
-    lrmStaticMultiMesh BindPoseMesh;
+    lrmStaticMesh BindPoseMesh;
 
-    std::vector<lrmBoneId>     BoneId;     /**< A bone id-ket tartalmazó tömb */
-    std::vector<lrmWeight>     Weights;    /**< A súlyokat tartalmazó tömb */
+    std::vector<lrmBoneId> BoneIds;	/**< A bone id-ket tartalmazó tömb */
+    std::vector<lrmWeight> Weights;	/**< A súlyokat tartalmazó tömb */
 
     /** \brief Konstruktor, nem csinál semmit.
      *

@@ -29,7 +29,7 @@ class lrGL3InstanceSetBase
 {
 protected:
 	bool MeshInitialized = false;
-	lrGLMaterialGroupView MaterialGroup;
+	lrGLStaticMaterialGroupView MaterialGroup;
 	GLuint VertexArrayObject = 0;
 	//
 	//virtual void BindInstanceData()
@@ -39,7 +39,7 @@ protected:
 	//
 public:
 	//
-	void Construct(liGLStaticMeshShader &static_mesh_shader,lrGLMaterialGroupView &material_group)
+	void Construct(liGLStaticMeshShader &static_mesh_shader,lrGLStaticMaterialGroupView &material_group)
 	{
 		if(!MeshInitialized)
 		{

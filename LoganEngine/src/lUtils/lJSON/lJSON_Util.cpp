@@ -359,7 +359,7 @@ void lJSON_Util::Parse(std::istream &in,liJSON_Value *&dest)
 	std::cout << "Starting parsing" << std::endl;
 
 	//ParseValue(in,dest);
-	lJSON_StatefulParser Parser(in);
+	lJSON_Parser Parser(in);
 	Parser.Parse(dest);
 
 	std::cout << "Finished parsing" << std::endl;

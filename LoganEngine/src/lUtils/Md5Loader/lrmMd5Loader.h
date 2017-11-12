@@ -19,7 +19,7 @@
 class lrmMd5SkeletonAdapter
 {
 private:
-	//
+	
 	struct lBoneTransform
     {
         bool MatrixReady; /**< True, ha a mátrixot már kiszámoltuk, false egyébként. */
@@ -31,34 +31,43 @@ private:
         lBoneTransform():MatrixReady(false)
         {}
     };
-	//
+	
 	md5SkeletonHierarchy &Skeleton;
 	bool Recursive;
-	//
+	
 	std::vector<lBoneTransform> TransformCache;
 	std::vector<lBoneTransform> InvTransformCache;
-	//
+	
 public:
-	//
+	
 	unsigned int Size()
 	{
 		return Skeleton.JointMetadata.size();
 	}
-	//
+	
+	void Invalidate()
+	{
+		for(lBoneTransform &transform : TransformCache)
+			{transform.MatrixReady = false;}
+			
+		for(lBoneTransform &transform : InvTransformCache)
+			{transform.MatrixReady = false;}
+	}
+	
 	const lmMatrix4x4 &GetTransformation(const std::string &bone_name,md5SkeletonExtrinsic &extrinsic_state)
 	{
 		auto j = Skeleton.JointNames.find(bone_name);
 		unsigned int Index = j->second;
 		return GetTransformation(Index,extrinsic_state);
 	}
-	//
+	
 	const lmMatrix4x4 &GetInverseTransformation(const std::string &bone_name,md5SkeletonExtrinsic &extrinsic_state)
 	{
 		auto j = Skeleton.JointNames.find(bone_name);
 		unsigned int Index = j->second;
 		return GetInverseTransformation(Index,extrinsic_state);
 	}
-	//
+	
 	const lmMatrix4x4 &GetTransformation(unsigned int Index,md5SkeletonExtrinsic &extrinsic_state)
 	{
 		if(Index > TransformCache.size())
@@ -69,7 +78,7 @@ public:
 		if(TransformCache[Index].MatrixReady == false)
 		{
 			lmMatrix4x4 Transformation = lmTranslate4x4(extrinsic_state[Index].Position)*lmRotate4x4(extrinsic_state[Index].Orientation);
-			//
+			
 			if(Skeleton.JointMetadata[Index].ParentIndex == -1)
 			{
 				TransformCache[Index].Matrix = Transformation;
@@ -85,13 +94,13 @@ public:
 					TransformCache[Index].Matrix = Transformation;
 				}
 			}
-			//
+			
 			TransformCache[Index].MatrixReady = true;
 		}
-		//
+		
 		return TransformCache[Index].Matrix;
 	}
-	//
+	
 	const lmMatrix4x4 &GetInverseTransformation(unsigned int Index,md5SkeletonExtrinsic &extrinsic_state)
     {
 		if(Index > InvTransformCache.size())
@@ -102,7 +111,7 @@ public:
     	if(InvTransformCache[Index].MatrixReady == false)
 		{
 			lmMatrix4x4 Transformation = lmRotate4x4(extrinsic_state[Index].Orientation.GetInverse()) * lmTranslate4x4(-1.0*extrinsic_state[Index].Position);
-			//
+			
 			if(Skeleton.JointMetadata[Index].ParentIndex == -1)
 			{
 				InvTransformCache[Index].Matrix = Transformation;
@@ -118,13 +127,13 @@ public:
 					InvTransformCache[Index].Matrix = Transformation;
 				}
 			}
-			//
+			
 			InvTransformCache[Index].MatrixReady = true;
 		}
-    	//
+    	
 		return InvTransformCache[Index].Matrix;
     }
-	//
+	
 	lrmMd5SkeletonAdapter(md5SkeletonHierarchy &skeleton,bool recursive,bool prealloc_transform_cache = false,bool prealloc_inv_transform_cache = false)
 		:Skeleton(skeleton),Recursive(recursive)
 	{
@@ -215,7 +224,7 @@ public:
     ~lrmMd5Loader();
 };
 
-void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMultiMesh &bind_pose_mesh);
+void md5ExtractBindPoseMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmStaticMesh &bind_pose_mesh);
 
 void md5ExtractSkeletalMesh(md5File &file,bool y_up,unsigned int mesh_index,lrmSkeletalMesh &skeletal_mesh);
 

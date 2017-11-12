@@ -68,7 +68,7 @@ void DisplayFunc()
 				//
 				for(unsigned int j=0;j < lrmSkeletalMesh::MAX_WEIGHT_COUNT;j++)
 				{
-					int BoneId = SkeletalMesh.BoneId[V[i]][j];
+					int BoneId = SkeletalMesh.BoneIds[V[i]][j];
 					float Weight = SkeletalMesh.Weights[V[i]][j];
 					//
 					if(BoneId != -1)

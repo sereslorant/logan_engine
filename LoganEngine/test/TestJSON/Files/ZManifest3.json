@@ -1,0 +1,17 @@
+{
+	"Subdirectories" : [
+		{
+			"DirectoryId" : "RenamedSubFolder",
+			"DirectoryPath" : "SubFolder"
+		}
+	],
+	"Resources" : {
+		"DummyResource" : [
+			{
+				"FilePath":"Anything",
+				"ResourceId":"Puszcsy",
+				"ResourceLoader":"DummyLoader"
+			}
+		]
+	}
+} 

@@ -262,7 +262,7 @@ private:
 	std::map<std::string,lrGL3InstanceCacher> StaticMeshInstanceCachers;
 	std::map<std::string,lrGL3InstanceCacher> SkeletalMeshInstanceCachers;
 	//
-	lrGL3InstanceCacher &GetStaticMeshInstanceCacher(lrGLMaterialGroupView &MtlGroup,const std::string &texture_group_name,const std::string &material_group_name)
+	lrGL3InstanceCacher &GetStaticMeshInstanceCacher(lrGLStaticMaterialGroupView &MtlGroup,const std::string &texture_group_name,const std::string &material_group_name)
 	{
 		std::string InstanceCacherKey = texture_group_name + ";" + material_group_name;
 		lrGL3InstanceCacher &InstanceCacher = StaticMeshInstanceCachers[InstanceCacherKey];
@@ -278,7 +278,7 @@ private:
 		return InstanceCacher;
 	}
 	//
-	lrGL3InstanceCacher &GetSkeletalMeshInstanceCacher(lrGLMaterialGroupView &MtlGroup,const std::string &texture_group_name,const std::string &material_group_name)
+	lrGL3InstanceCacher &GetSkeletalMeshInstanceCacher(lrGLStaticMaterialGroupView &MtlGroup,const std::string &texture_group_name,const std::string &material_group_name)
 	{
 		std::string InstanceCacherKey = texture_group_name + ";" + material_group_name;
 		lrGL3InstanceCacher &InstanceCacher = SkeletalMeshInstanceCachers[InstanceCacherKey];
@@ -303,7 +303,7 @@ public:
 		//
 		for(unsigned int i=0;i < StaticMesh.NumMtlGroups();i++)
 		{
-			lrGLMaterialGroupView MtlGroup = StaticMesh.GetMaterialGroup(i);
+			lrGLStaticMaterialGroupView MtlGroup = StaticMesh.GetMaterialGroup(i);
 			//
 			const liMaterial &Material = MaterialLibrary.GetMaterial(MtlGroup.GetMaterial());
 			//
@@ -337,7 +337,7 @@ public:
 		//
 		for(unsigned int i=0;i < SkeletalMesh.NumMtlGroups();i++)
 		{
-			lrGLMaterialGroupView MtlGroup = SkeletalMesh.GetMaterialGroup(i);
+			lrGLStaticMaterialGroupView MtlGroup = SkeletalMesh.GetMaterialGroup(i);
 			//
 			const liMaterial &Material = MaterialLibrary.GetMaterial(MtlGroup.GetMaterial());
 			//

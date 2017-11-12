@@ -49,7 +49,7 @@ const char *VertexShaderPrepassSource = R"(
 	}
 )";
 
-const char *VertexShaderSource = R"(
+const char *TestVertexShader = R"(
 	#version 330
 	//
 	uniform mat4 ProjectionMatrix;

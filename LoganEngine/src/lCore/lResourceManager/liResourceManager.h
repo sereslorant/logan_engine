@@ -31,7 +31,7 @@ class liResourceManager
 {
 public:
 	//
-	virtual lrmStaticMultiMesh *GetStaticMesh(const std::string &resource_identifier) = 0;
+	virtual lrmStaticMesh *GetStaticMesh(const std::string &resource_identifier) = 0;
 	virtual lrmSkeletalMesh *GetSkeletalMesh(const std::string &resource_identifier) = 0;
 	virtual liBitmap2D *GetBitmap(const std::string &resource_identifier) = 0;
 	virtual liCubemap *GetCubemap(const std::string &resource_identifier) = 0;

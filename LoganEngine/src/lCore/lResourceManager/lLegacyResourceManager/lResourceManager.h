@@ -77,9 +77,9 @@ public:
 class lrmWfObjLoaderModule
 {
 private:
-	std::map<std::string,lrmStaticMultiMesh *> LoadedMeshes;
+	std::map<std::string,lrmStaticMesh *> LoadedMeshes;
 	//
-	static void CalculateTBVectors(lrmStaticMultiMesh &static_mesh)
+	static void CalculateTBVectors(lrmStaticMesh &static_mesh)
 	{
 		for(unsigned int i=0;i < static_mesh.Normals.size();i++)
 		{
@@ -207,15 +207,15 @@ private:
 		 */
 	};
 	//
-	static void Extract(const lrmWfObj &loaded_obj,lrmStaticMultiMesh *&static_mesh)
+	static void Extract(const lrmWfObj &loaded_obj,lrmStaticMesh *&static_mesh)
 	{
-		static_mesh = new lrmStaticMultiMesh;
+		static_mesh = new lrmStaticMesh;
 		//
 		WfVertexDataIndices VertexDataIndices;
 		//
 		for(lrmWfObj::lrmWfMatGroup *MaterialGroup : loaded_obj.MatGroups)
 		{
-			lrmStaticMultiMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
+			lrmStaticMesh::lrmMtlGroup *newMtlGroup = new lrmStaticMesh::lrmMtlGroup;
 			newMtlGroup->Material = MaterialGroup->Material;
 			//
 			WfIndexBufferCreator IndexBufferCreator(VertexDataIndices,newMtlGroup->IndexBuffer);
@@ -235,7 +235,7 @@ private:
 	//
 public:
 	//
-	bool LoadStaticMesh(const std::string &resource_identifier,lrmStaticMultiMesh *&static_mesh)
+	bool LoadStaticMesh(const std::string &resource_identifier,lrmStaticMesh *&static_mesh)
 	{
 		auto I = LoadedMeshes.find(resource_identifier);
 		if(I == LoadedMeshes.end())
@@ -330,12 +330,12 @@ public:
 class lrmResourceManager : public liResourceManager
 {
 private:
-	std::map<std::string,lrmStaticMultiMesh *> StaticMeshes;
+	std::map<std::string,lrmStaticMesh *> StaticMeshes;
 	std::map<std::string,lrmSkeletalMesh *> SkeletalMeshes;
 
 public:
 	//
-	static void GenerateCube(lrmStaticMultiMesh &static_mesh,bool inside_out)
+	static void GenerateCube(lrmStaticMesh &static_mesh,bool inside_out)
 	{
 		constexpr unsigned int NUM_VERTICES = 16;
 		//
@@ -396,7 +396,7 @@ public:
 		static_mesh.TexCoords[14] = {0.0f,1.0f};
 		static_mesh.TexCoords[15] = {1.0f,1.0f};
 		//
-		lrmStaticMultiMesh::lrmMtlGroup *MtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
+		lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
 		static_mesh.AddMaterialGroup(MtlGroup);
 		//
 		constexpr unsigned int NUM_TRIANGLES = 12;
@@ -433,7 +433,7 @@ public:
 		}
 	}
 	//
-	static void GenerateSphere(lrmStaticMultiMesh &static_mesh,unsigned int resolution_xz,unsigned int resolution_xy)
+	static void GenerateSphere(lrmStaticMesh &static_mesh,unsigned int resolution_xz,unsigned int resolution_xy)
 	{
 		unsigned int NumVertices = resolution_xz*resolution_xy + 2;
 		static_mesh.Vertices.resize(NumVertices);
@@ -478,8 +478,7 @@ public:
 			}
 		}
 		//
-		lrmStaticMultiMesh::lrmMtlGroup *MtlGroup = new lrmStaticMultiMesh::lrmMtlGroup;
-		static_mesh.AddMaterialGroup(MtlGroup);
+		lrmStaticMesh::lrmMtlGroup *MtlGroup = new lrmStaticMesh::lrmMtlGroup;
 		//
 		unsigned int NumTrianglesInFan = resolution_xz - 1;
 		unsigned int NumTrianglesInMid = (resolution_xy) * (resolution_xz) * 2;
@@ -487,6 +486,8 @@ public:
 		//
 		MtlGroup->Material = "Default";
 		MtlGroup->IndexBuffer.resize(IndexBufferSize);
+		//
+		static_mesh.AddMaterialGroup(MtlGroup);
 		//
 		unsigned int NextTriangle = 0;
 		for(unsigned int x1=0;x1 < resolution_xz;x1++)
@@ -527,13 +528,13 @@ public:
 		}
 	}
 	//
-	virtual lrmStaticMultiMesh *GetStaticMesh(const std::string &resource_identifier) override
+	virtual lrmStaticMesh *GetStaticMesh(const std::string &resource_identifier) override
 	{
 		auto I = StaticMeshes.find(resource_identifier);
 		//
 		if(I == StaticMeshes.end())
 		{
-			lrmStaticMultiMesh *StaticMesh = new lrmStaticMultiMesh;
+			lrmStaticMesh *StaticMesh = new lrmStaticMesh;
 			GenerateSphere(*StaticMesh,8,16);
 			/*
 			StaticMesh->Vertices.push_back(lmVector3D({0.0f,0.4f,-3.0f}));

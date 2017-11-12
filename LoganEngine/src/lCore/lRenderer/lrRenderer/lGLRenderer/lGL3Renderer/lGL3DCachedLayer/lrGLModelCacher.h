@@ -18,7 +18,7 @@ public:
 		lrGLStaticMeshView StaticMesh = ResourceLoader.GetStaticMesh(model_name);
 		for(unsigned int i=0;i < StaticMesh.NumMtlGroups();i++)
 		{
-			lrGLMaterialGroupView MaterialGroup = StaticMesh.GetMaterialGroup(i);
+			lrGLStaticMaterialGroupView MaterialGroup = StaticMesh.GetMaterialGroup(i);
 			//
 			std::string TextureGroupKey;
 			std::string MaterialGroupKey;
@@ -34,7 +34,7 @@ public:
 		lrGLStaticMeshView SkeletalMesh = ResourceLoader.GetSkeletalMesh(character_name);
 		for(unsigned int i=0;i < SkeletalMesh.NumMtlGroups();i++)
 		{
-			lrGLMaterialGroupView MaterialGroup = SkeletalMesh.GetMaterialGroup(i);
+			lrGLStaticMaterialGroupView MaterialGroup = SkeletalMesh.GetMaterialGroup(i);
 			//
 			std::string TextureGroupKey;
 			std::string MaterialGroupKey;

@@ -35,6 +35,7 @@ class EGL_Display
 private:
 	EGLDisplay Display;
 	EGLContext Context;
+	bool HasSurface = false;
 	EGLSurface Surface;
 	//
 public:
@@ -46,7 +47,14 @@ public:
 	//
 	void Prepare()
 	{
-		eglMakeCurrent(Display,Surface,Surface,Context);
+		if(HasSurface)
+		{
+			eglMakeCurrent(Display,Surface,Surface,Context);
+		}
+		else
+		{
+			eglMakeCurrent(Display,EGL_NO_SURFACE,EGL_NO_SURFACE,Context);
+		}
 	}
 	//
 	void SwapBuffers()
@@ -57,6 +65,8 @@ public:
 	template<class Display_T,class Window_T>
 	EGL_Display(Display_T native_display,Window_T native_window)
 	{
+		
+		
 		const char *ClientExtensions = eglQueryString(EGL_NO_DISPLAY,EGL_EXTENSIONS);
 		//
 		std::cout << "Supported client extensions: " << std::endl;
@@ -118,7 +128,11 @@ public:
 			std::cout << "Error: couldn't create EGL context" << std::endl;
 		}
 		//
-		Surface = eglCreateWindowSurface(Display,Config,native_window,nullptr);
+		if(native_window != 0)
+		{
+			HasSurface = true;
+			Surface = eglCreateWindowSurface(Display,Config,native_window,nullptr);
+		}
 	}
 	//
 	~EGL_Display()
@@ -130,7 +144,7 @@ public:
 
 #include <GL/gl.h>
 
-const char *VertexShaderSource = R"(
+const char *TestVertexShader = R"(
 #version 330
 
 uniform mat4 MvpMatrix;
@@ -265,9 +279,24 @@ void InitBufferExtensions(EGL_Display &display)
 
 #include "lPhys3/lPhys3.h"
 
+
+#include <GL/glx.h>
+
+typedef const char * (*PfnQueryRendererStringMESA) (Display *dpy, int screen,
+                                           int renderer, int attribute);
+
+#include <stdlib.h>
+
 int main(int argc, char **argv)
 {
+	setenv("DRI_PRIME","0",1);
 	Display *display = XOpenDisplay(nullptr);
+	//
+	PfnQueryRendererStringMESA glXQueryRendererStringMESA = (PfnQueryRendererStringMESA)glXGetProcAddress((const unsigned char *)"glXQueryRendererStringMESA");
+	//
+	const char *RendererString0 = glXQueryRendererStringMESA(display,0,0,GLX_RENDERER_DEVICE_ID_MESA);
+	//
+	std::cout << "Display " << display << " " << RendererString0 << std::endl;
 	//
     if(display == nullptr)
     {
@@ -278,6 +307,14 @@ int main(int argc, char **argv)
     Window window = CreateWindow(display);
 	//
 	EGL_Display eglDisplay(display,window);
+	//
+	setenv("DRI_PRIME","1",1);
+	Display *display2 = XOpenDisplay(nullptr);
+	//
+	const char *RendererString1 = glXQueryRendererStringMESA(display2,0,0,GLX_RENDERER_DEVICE_ID_MESA);
+	std::cout << "Display " << display2 << " "  << RendererString1 << std::endl;
+	//
+	EGL_Display eglDisplay2(display2,(Window)nullptr);
 	//
 	int Waiting = 1;
     while(Waiting)
@@ -290,7 +327,17 @@ int main(int argc, char **argv)
         }
     }
     //
+    eglDisplay2.Prepare();
+	std::cout << glGetString(GL_RENDERER) << std::endl;
+	GLint UniformLocations;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&UniformLocations);
+	std::cout << "Num: " << UniformLocations << std::endl;
+    //
     eglDisplay.Prepare();
+	std::cout << glGetString(GL_RENDERER) << std::endl;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&UniformLocations);
+	std::cout << "Num: " << UniformLocations << std::endl;
+	//
 	InitBufferExtensions(eglDisplay);
 	InitShaderExtensions(eglDisplay);
 	//
@@ -407,6 +454,7 @@ int main(int argc, char **argv)
 	}
 	//
 	XCloseDisplay(display);
+	XCloseDisplay(display2);
     //
     return 0;
 }

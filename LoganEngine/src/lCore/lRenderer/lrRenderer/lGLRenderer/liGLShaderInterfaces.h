@@ -108,15 +108,28 @@ public:
 	virtual GLint GetTangentLocation() = 0;
 	virtual GLint GetBitangentLocation() = 0;
 	virtual GLint GetTexCoordLocation() = 0;
-	//
+	
 	liGLStaticMeshShader()
 	{}
-	//
+	
 	virtual ~liGLStaticMeshShader()
 	{}
 	/*
 	 * End of class
 	 */
+};
+
+class liGLSkeletalMeshShader
+{
+public:
+	virtual GLint GetBoneIdLocation() = 0;
+	virtual GLint GetWeightLocation() = 0;
+	
+	liGLSkeletalMeshShader()
+	{}
+	
+	virtual ~liGLSkeletalMeshShader()
+	{}
 };
 
 #endif // LI_GL_SHADER_INTERFACES_H
