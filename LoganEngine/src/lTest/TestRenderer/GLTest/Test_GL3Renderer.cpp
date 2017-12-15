@@ -1,6 +1,6 @@
 
-#include <lTest/TestRenderer/lSDL2GLTestExtLoader.h>
-#include <lTest/TestRenderer/lSDL2TestFramework.h>
+#include <lTest/Utils/lSDL2GLTestExtLoader.h>
+#include <lTest/Utils/lSDL2TestFramework.h>
 
 /*
  * STL include-ok

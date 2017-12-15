@@ -1,21 +1,42 @@
 
-#include <lPhys3/lpCollisionDetection/lpCollisionShape.h>
+#include <lPhys3/lpCollisionDetection/lpSpacePartition.h>
 
 #include <iostream>
 
 #include <vector>
 
-void PrintVector(const lmVector2D &vec)
+void PrintVector(const lmVector3D &vec)
 {
-	std::cout << "(" << vec[0] << "," << vec[1] << ")";
+	std::cout << "(" << vec[0] << "," << vec[1] << "," << vec[2] << ")";
 }
 
-void PrintCircle(const lpCircle &circle)
+void PrintSphere(const lpSphere &circle)
 {
 	std::cout << "Position = ";
 	PrintVector(circle.GetPosition());
 	std::cout << std::endl;
-	std::cout << "Radius = " << "(" << circle.GetRadius() << std::endl;
+	std::cout << "Radius = " << circle.GetRadius() << std::endl;
+}
+
+void PrintComposite(const lpCompositeShape &composite)
+{
+	std::cout << "Composite" << std::endl;
+	std::cout << "Children:" << std::endl;
+	
+	for(int i=0;i < composite.GetNumChildren();i++)
+	{
+		std::cout << "Child " << i << ":" << std::endl;
+		lShapeGetter Getter;
+		composite.GetChild(i)->Accept(Getter);
+		if(Getter.GetConstSphere() != nullptr)
+		{
+			PrintSphere(*Getter.GetConstSphere());
+		}
+		if(Getter.GetConstComposite() != nullptr)
+		{
+			PrintComposite(*Getter.GetConstComposite());
+		}
+	}
 }
 
 void PrintCollisionData(const lpCollisionData &collision_data)
@@ -31,33 +52,33 @@ void PrintCollisionData(const lpCollisionData &collision_data)
 	std::cout << std::endl;
 }
 
-void TestCollisionTable()
+void TestSphereCollisionTable()
 {
-	lpBody2DState State1(lmVector2D({-1.0f,0.0f}),lmVector2D({0.0f,0.0f}));
-	lpCircle Circle1(&State1,1.5);
-	//
-	lpBody2DState State2(lmVector2D({1.0f,1.0f}),lmVector2D({0.0f,0.0f}));
-	lpCircle Circle2(&State2,1.5);
-	//
-	lpBody2DState State3(lmVector2D({4.0f,3.0f}),lmVector2D({0.0f,0.0f}));
-	lpCircle Circle3(&State3,1.0);
-	//
+	lpShapeState State1({-1.0f,0.0f,0.0f},{0.0f,0.0f,0.0f});
+	lpSphere Sphere1(State1,1.5);
+	
+	lpShapeState State2({1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f});
+	lpSphere Sphere2(State2,1.5);
+	
+	lpShapeState State3({4.0f,3.0f,0.0f},{0.0f,0.0f,0.0f});
+	lpSphere Sphere3(State3,1.0);
+	
 	lpSpacePartition SpacePartition;
-	//
-	SpacePartition.AddCollisionShape(Circle1);
-	SpacePartition.AddCollisionShape(Circle2);
-	SpacePartition.AddCollisionShape(Circle3);
-	//
+	
+	SpacePartition.AddCollisionShape(0,&Sphere1);
+	SpacePartition.AddCollisionShape(1,&Sphere2);
+	SpacePartition.AddCollisionShape(2,&Sphere3);
+	
 	SpacePartition.CheckCollision(0.2);
-	//
+	
 	std::cout << "Bodies" << std::endl;
-	PrintCircle(Circle1);
-	PrintCircle(Circle2);
-	PrintCircle(Circle3);
-	//
+	PrintSphere(Sphere1);
+	PrintSphere(Sphere2);
+	PrintSphere(Sphere3);
+	
 	unsigned int NumCollisions = SpacePartition.GetNumCollisions();
 	std::cout << "NumCollisions: " << NumCollisions << std::endl;
-	//
+	
 	if(NumCollisions == 1)
 	{
 		lpCollisionData CollisionData;
@@ -71,8 +92,52 @@ void TestCollisionTable()
 	}
 }
 
+void TestCompositeCollisionTable()
+{
+	lpShapeState State1({-1.0f,0.0f,0.0f},{0.0f,0.0f,0.0f});
+	lpSphere Sphere1(State1,1.5);
+	
+	lpShapeState State2({1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f});
+	lpSphere Sphere2(State2,1.5);
+	
+	lpShapeState StateComposite({0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f});
+	std::list<lpCollisionShape *> CompositeChildren = {&Sphere1,&Sphere2};
+	lpCompositeShape Composite(StateComposite,CompositeChildren.begin(),CompositeChildren.end());
+	
+	lpShapeState State3({0.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f});
+	lpSphere Sphere(State3,1.0);
+	
+	lpSpacePartition SpacePartition;
+	
+	SpacePartition.AddCollisionShape(0,&Composite);
+	SpacePartition.AddCollisionShape(1,&Sphere);
+	
+	SpacePartition.CheckCollision(0.2);
+	
+	std::cout << "Bodies" << std::endl;
+	PrintComposite(Composite);
+	PrintSphere(Sphere);
+	
+	unsigned int NumCollisions = SpacePartition.GetNumCollisions();
+	std::cout << "NumCollisions: " << NumCollisions << std::endl;
+	
+	if(NumCollisions == 2)
+	{
+		lpCollisionData CollisionData[2];
+		SpacePartition.GetCollisionData(CollisionData,2);
+		PrintCollisionData(CollisionData[0]);
+		PrintCollisionData(CollisionData[1]);
+		std::cout << "Test succeeded" << std::endl;
+	}
+	else
+	{
+		std::cout << "Test failed" << std::endl;
+	}
+};
+
 int main(int argc, char *argv[])
 {
-	TestCollisionTable();
+	TestSphereCollisionTable();
+	TestCompositeCollisionTable();
 	return 0;
 }

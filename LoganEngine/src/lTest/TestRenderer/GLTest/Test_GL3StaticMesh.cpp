@@ -11,8 +11,8 @@
 
 #include <iostream>
 
-#include <lTest/TestRenderer/lSDL2GLTestExtLoader.h>
-#include <lTest/TestRenderer/lSDL2TestFramework.h>
+#include <lTest/Utils/lSDL2GLTestExtLoader.h>
+#include <lTest/Utils/lSDL2TestFramework.h>
 
 
 #include <lRenderer/lrRenderer/lGLRenderer/lGL3Renderer/lGL3Shaders/lrGL3ShaderLibrary.h>

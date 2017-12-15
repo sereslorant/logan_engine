@@ -315,7 +315,7 @@ const char *EnvMapShaderSource = R"(
 		//
 		vec3 CameraDirection = normalize(CameraPosition - Position);
 		//
-		float CameraDotNormal = dot(CameraDirection,Normal);
+		float CameraDotNormal = max(1e-4,dot(CameraDirection,Normal));
 		//
 		//vec3 ReflectionVector = reflect(-CameraDirection,Normal);
 		//vec3 Up = ReflectionVector;
@@ -330,7 +330,7 @@ const char *EnvMapShaderSource = R"(
 		}
 		vec3 BaseY = normalize(cross(Up,BaseX));
 		//
-		CameraDotNormal = max(1e-4,CameraDotNormal);
+		//CameraDotNormal = max(1e-4,CameraDotNormal);
 		//
 		const uint NumSamples = 25u;
 		vec3 SampleVectors[NumSamples];
@@ -434,8 +434,8 @@ const char *FragmentShaderSource = R"(
 		LightDirection = normalize(LightDirection);
 		vec3 CameraDirection = normalize(CameraPosition - Position);
 		//
-		float LightDotNormal = max(0.0,dot(LightDirection,Normal));
-		float CameraDotNormal = max(0.0,dot(CameraDirection,Normal));
+		float LightDotNormal = max(1e-4,dot(LightDirection,Normal));
+		float CameraDotNormal = max(1e-4,dot(CameraDirection,Normal));
 		//
 		/*if(LightDotNormal <= 0.0 || CameraDotNormal <= 0.0)
 		{
@@ -445,10 +445,10 @@ const char *FragmentShaderSource = R"(
 		//
 		vec3 HalfwayVector = normalize(CameraDirection + LightDirection);
 		//
-		float CameraDotHalfway = dot(CameraDirection,HalfwayVector);
-		float LightDotHalfway = dot(LightDirection,HalfwayVector);
+		float CameraDotHalfway = max(1e-4,dot(CameraDirection,HalfwayVector));
+		float LightDotHalfway = max(1e-4,dot(LightDirection,HalfwayVector));
 		//
-		float NormalDotHalfway = dot(Normal,HalfwayVector);
+		float NormalDotHalfway = max(1e-4,dot(Normal,HalfwayVector));
 		//
 		/*
 		 * Calculating diffuse
