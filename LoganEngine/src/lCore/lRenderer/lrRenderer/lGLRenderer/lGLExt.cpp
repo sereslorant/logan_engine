@@ -1,9 +1,6 @@
 
 #include "lGLExt.h"
 
-namespace lGLExt
-{
-
 //Program
 PFNGLCREATEPROGRAMPROC glCreateProgram = nullptr;
 PFNGLDELETEPROGRAMPROC glDeleteProgram = nullptr;
@@ -64,10 +61,6 @@ PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers = nullptr;
 PFNGLFRAMEBUFFERTEXTURE1DPROC glFramebufferTexture1D = nullptr;
 PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D = nullptr;
 PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus = nullptr;
-
-}
-
-using namespace lGLExt;
 
 #include <map>
 
@@ -443,11 +436,7 @@ public:
 
 lGLExtLoader lGLExtLoader::Instance;
 
-extern "C" {
-
 liGLExtLoader &lGetGLExtLoader()
 {
 	return lGLExtLoader::GetInstance();
-}
-
 }

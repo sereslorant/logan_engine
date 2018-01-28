@@ -131,7 +131,7 @@ void RendererTest::Draw()
 		//std::chrono::seconds Difference_sec = After - Before;
 		//
 		std::cout << "Frame time = " << Difference.count() / 1000000.0 << "ms" << std::endl;
-		//std::cout << "FPS = " << 1.0/(Difference.count() / 1000000000.0) << std::endl;
+		std::cout << "FPS = " << 1.0/(Difference.count() / 1000000000.0) << std::endl;
 	}
 	else
 	{
@@ -143,22 +143,22 @@ void RendererFunctionalityTest::SetScene()
 {
 	lrMaterialLibrary MaterialLibrary;
 	MaterialLibrary.AddMaterial("Default",CreateMaterial(GoldFresnel(),0.35,1.0,"Empty"));
-	//
+	
 	li3DModElement *ModElement = Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({0.0f,0.0f,-4.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary,"Sphere");
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({0.0f,2.0f,-6.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({0.6f,0.6f,0.6f}),MaterialLibrary,"Sphere");
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({2.0f,0.0f,-6.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),0.0),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary,"Cone");
-	//
+	
 	lrMaterialLibrary MaterialLibrary1;
 	MaterialLibrary1.AddMaterial("Default",CreateSkinMaterial());
-	//
+	
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({-14.0f,-1.0f,-6.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary1,"Anything");
-	//
+	
 	lrMaterialLibrary MaterialLibrary2;
 	MaterialLibrary2.AddMaterial("Default",CreateMaterial(SilverFresnel(),0.35,1.0,"Puszcsy"));
-	//
+	
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({-1.5f,1.5f,-6.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),0.0),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary2,"Box");
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({4.0f,0.0f,-8.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),0.0),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary2,"Sphere");
-	//
+	
 	lrMaterialLibrary MaterialLibrary31;
 	MaterialLibrary31.AddMaterial("Default",CreateMaterial(SilverFresnel(),0.25,0.0,"Empty"));
 	lrMaterialLibrary MaterialLibrary32;
@@ -168,35 +168,39 @@ void RendererFunctionalityTest::SetScene()
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({ 0.0f,0.0f,0.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),0.0),lmVector3D({30.0f,15.0f,20.0f}),MaterialLibrary31,"Box_InsideOut");
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({-2.0f,0.0f,-6.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),0.0),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary32,"Anything");
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({4.0f,0.0f,5.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),0.0),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary33,"Sphere");
-	//
+	
 	lrMaterialLibrary MaterialLibrary4;
 	MaterialLibrary4.AddMaterial("Default",CreateMaterial(GoldFresnel(),0.125,1.0,"Empty"));
-	//
+	
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({0.0f,0.0f,-8.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary4,"Sphere");
-	//
+	
 	lrMaterialLibrary MaterialLibrary5;
 	MaterialLibrary5.AddMaterial("Default",CreateMaterial(GoldFresnel(),0.05,1.0,"Empty"));
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({6.0f,1.0f,-8.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({0.6f,0.6f,0.6f}),MaterialLibrary5,"Sphere");
-	//
+	
 	lrMaterialLibrary MaterialLibrarySk;
 	MaterialLibrarySk.AddMaterial("Default",CreateMaterial(SilverFresnel(),0.5,1.0,"Empty"));
 	MaterialLibrarySk.AddMaterial("bob_body",CreateMaterial(SilverFresnel(),0.5,1.0,"Empty"));
-	//
+	
 	Scene3D->GetElementFactory().CreateSkeletalMesh(lmVector3D({0.0f,-3.0f,4.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrarySk,"BobWithLamp");
-	//
+	
 	lrMaterialLibrary MaterialLibrary6;
 	MaterialLibrary6.AddMaterial("Material.001",CreateMaterial(SilverFresnel(),0.05,1.0,"Szercsy"));
 	Scene3D->GetElementFactory().CreateStaticMesh(lmVector3D({0.0f,0.0f,8.0f}),lmQuaternion(lmVector3D({0.0f,1.0f,0.0f}),Angle),lmVector3D({1.0f,1.0f,1.0f}),MaterialLibrary6,"LoadedMesh");
-	//
+	
 	std::string Textures[6] = {"Empty","Puszcsy","Szercsy","Arcsy","Faszcsy","Cukcsy"};
 	std::string Models[4] = {"Sphere","Cone","Box","LoadedMesh"};
 	lmVector3D Pos = {-6.0f,-4.0f,20.0f};
+	//for(int i=0;i < 40;i++)
 	for(int i=0;i < 20;i++)
 	{
+		//for(int j=0;j < 40;j++)
 		for(int j=0;j < 20;j++)
 		{
+			//for(int k=0;k < 40;k++)
 			//for(int k=0;k < 20;k++)
-			for(int k=0;k < 1;k++)
+			for(int k=0;k < 5;k++)
+			//for(int k=0;k < 1;k++)
 			{
 				lrMaterialLibrary MaterialLibrary5;
 				MaterialLibrary5.AddMaterial("Default",CreateMaterial(GoldFresnel(),0.05,1.0,Textures[(i + j + k)%6]));
@@ -205,49 +209,61 @@ void RendererFunctionalityTest::SetScene()
 			}
 		}
 	}
-	//
+	
 	luGetModMesh Getter;
 	ModElement->Accept(Getter);
 	TestElement = Getter.GetModMesh();
-	//
+	
 	ModElement = Scene3D->GetElementFactory().CreatePointLight({0.0f,-3.0f,0.0f});
 	luGetModLight GetLight;
 	ModElement->Accept(GetLight);
 	li3DModLight &ModLight = *GetLight.GetModLight();
-	//
+	
 	ModLight.SetColor(lrColor(1.0,1.0,1.0,1.0));
 	ModLight.SetIntensity(25.0);
-	//
+	
 	ModElement = Scene3D->GetElementFactory().CreatePointLight({4.0f,4.0f,-2.0f});
 	ModElement->Accept(GetLight);
 	li3DModLight &ModLight2 = *GetLight.GetModLight();
-	//
+	
 	ModLight2.SetColor(lrColor(1.0,1.0,1.0,1.0));
 	ModLight2.SetIntensity(25.0);
-	//
+	
 	ModElement = Scene3D->GetElementFactory().CreatePointLight({-4.0f,4.0f,-2.0f});
 	ModElement->Accept(GetLight);
 	li3DModLight &ModLight3 = *GetLight.GetModLight();
-	//
+	
 	ModLight3.SetColor(lrColor(1.0,1.0,1.0,1.0));
 	ModLight3.SetIntensity(25.0);
-	//
+	
 	ModElement = Scene3D->GetElementFactory().CreatePointLight({-12.0f,0.0f,2.0f});
 	ModElement->Accept(GetLight);
 	li3DModLight &ModLight4 = *GetLight.GetModLight();
-	//
+	
 	ModLight4.SetColor(lrColor(1.0,1.0,1.0,1.0));
 	ModLight4.SetIntensity(25.0);
-	//ModLight.SetDiffuse(L_RED_INDEX,0.5);
-	//ModLight.SetDiffuse(L_GREEN_INDEX,0.5);
-	//ModLight.SetDiffuse(L_BLUE_INDEX,0.5);
-	//
+	
 	ModElement = Scene3D->GetElementFactory().CreatePointLight({0.0f,0.0f,0.0f});
 	ModElement->Accept(GetLight);
 	TestLight = GetLight.GetModLight();
-	//
-	//TestLight->SetDiffuse(L_RED_INDEX,0.5);
-	//TestLight->SetDiffuse(L_GREEN_INDEX,0.5);
+	
 	TestLight->SetColor(lrColor(1.0,1.0,0.4,1.0));
 	TestLight->SetIntensity(30);
+	
+	//for(int i=0;i < 20;i++)
+	//for(int i=0;i < 10;i++)
+	for(int i=0;i < 5;i++)
+	{
+		//for(int j=0;j < 20;j++)
+		//for(int j=0;j < 10;j++)
+		for(int j=0;j < 5;j++)
+		{
+			ModElement = Scene3D->GetElementFactory().CreatePointLight({-5.0f + 2.0f * i,0.0f + 2.0f * j,15.0f});
+			ModElement->Accept(GetLight);
+			TestLight = GetLight.GetModLight();
+			
+			TestLight->SetColor(lrColor(1.0,1.0,0.4,1.0));
+			TestLight->SetIntensity(15);
+		}
+	}
 }

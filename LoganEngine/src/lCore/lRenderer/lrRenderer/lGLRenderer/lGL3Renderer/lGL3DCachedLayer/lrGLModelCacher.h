@@ -13,7 +13,7 @@ private:
 	//
 public:
 	//
-	virtual void IncrementMaterialGroups(const liMaterialLibrary &material_library,const std::string &model_name,liMeshStats &mesh_stats) override
+	virtual void IncrementStaticMeshes(const liMaterialLibrary &material_library,const std::string &model_name,liMeshStats &mesh_stats) override
 	{
 		lrGLStaticMeshView StaticMesh = ResourceLoader.GetStaticMesh(model_name);
 		for(unsigned int i=0;i < StaticMesh.NumMtlGroups();i++)

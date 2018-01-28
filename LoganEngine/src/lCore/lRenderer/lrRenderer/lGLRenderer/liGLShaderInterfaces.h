@@ -10,14 +10,15 @@
 class liGL2DShader
 {
 public:
-	//
 	virtual GLint GetCameraLocation() = 0;
 	virtual GLint GetTransformLocation() = 0;
-	//
+	
 	virtual GLint GetVertexLocation() = 0;
-	//
-	liGL2DShader(){}
-	virtual ~liGL2DShader(){}
+	
+	liGL2DShader()
+	{}
+	virtual ~liGL2DShader()
+	{}
 	/*
 	 * End of class
 	 */
@@ -26,11 +27,12 @@ public:
 class liGL2DSolidColorShader
 {
 public:
-	//
 	virtual GLint GetColorLocation() = 0;
-	//
-	liGL2DSolidColorShader(){}
-	virtual ~liGL2DSolidColorShader(){}
+	
+	liGL2DSolidColorShader()
+	{}
+	virtual ~liGL2DSolidColorShader()
+	{}
 	/*
 	 * End of class
 	 */
@@ -40,21 +42,20 @@ public:
  * 3D shader interfaces
  */
 
-class liGLShader
+class liGL3DShader
 {
 public:
 	virtual GLint GetCameraPositionLocation() = 0;
-	//
+	
 	virtual GLint GetProjectionMatrixLocation() = 0;
 	virtual GLint GetViewMatrixLocation() = 0;
 	virtual GLint GetModelMatrixLocation() = 0;
 	virtual GLint GetNormalMatrixLocation() = 0;
 	virtual GLint GetMvpMatrixLocation() = 0;
-	//
-	liGLShader()
+	
+	liGL3DShader()
 	{}
-	//
-	virtual ~liGLShader()
+	virtual ~liGL3DShader()
 	{}
 	/*
 	 * End of class
@@ -65,17 +66,15 @@ class liGLPbMatShader
 {
 public:
 	virtual GLint GetAlbedoMapLocation() = 0;
-	/*
-	 * TODO: Másik interfészben van a helye!
-	 */
+	
+	// TODO: Másik interfészben van a helye!
 	virtual GLint GetEnvironmentMapLocation() = 0;
-	//
+	
 	virtual GLint GetMatAlbedoLocation() = 0;
 	virtual GLint GetMaterial1Location() = 0;
-	//
+	
 	liGLPbMatShader()
 	{}
-	//
 	virtual ~liGLPbMatShader()
 	{}
 	/*
@@ -86,13 +85,14 @@ public:
 class liGLPointLightShader
 {
 public:
+	virtual GLint GetLightCountLocation() = 0;
+	
 	virtual GLint GetLightPositionLocation() = 0;
 	virtual GLint GetLightColorLocation() = 0;
 	virtual GLint GetLightIntensityLocation() = 0;
-	//
+	
 	liGLPointLightShader()
 	{}
-	//
 	virtual ~liGLPointLightShader()
 	{}
 	/*
@@ -111,7 +111,6 @@ public:
 	
 	liGLStaticMeshShader()
 	{}
-	
 	virtual ~liGLStaticMeshShader()
 	{}
 	/*
@@ -125,9 +124,11 @@ public:
 	virtual GLint GetBoneIdLocation() = 0;
 	virtual GLint GetWeightLocation() = 0;
 	
+	// TODO: Másik interfészben van a helye!
+	virtual GLint GetBoneTransformLocation() = 0;
+	
 	liGLSkeletalMeshShader()
 	{}
-	
 	virtual ~liGLSkeletalMeshShader()
 	{}
 };

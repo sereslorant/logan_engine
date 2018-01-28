@@ -1,6 +1,8 @@
 #ifndef LI_3D_MESH_H
 #define LI_3D_MESH_H
 
+#include <lCore/lMath/lMath.h>
+
 #include <string>
 
 class li3DStaticMesh
@@ -34,7 +36,7 @@ class li3DMeshVisitor
 public:
 	//
 	virtual void VisitStaticMesh(const li3DStaticMesh &static_mesh) = 0;
-	virtual void VisitSkeletalMesh(const li3DSkeletalMesh &static_mesh) = 0;
+	virtual void VisitSkeletalMesh(const li3DSkeletalMesh &skeletal_mesh) = 0;
 	//
 	li3DMeshVisitor(){}
 	virtual ~li3DMeshVisitor(){}

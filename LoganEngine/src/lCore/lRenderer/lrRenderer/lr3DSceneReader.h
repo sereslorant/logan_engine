@@ -96,7 +96,7 @@ class liModelCacher
 {
 public:
 	//
-	virtual void IncrementMaterialGroups(const liMaterialLibrary &material_library,const std::string &model_name,liMeshStats &mesh_stats) = 0;
+	virtual void IncrementStaticMeshes(const liMaterialLibrary &material_library,const std::string &model_name,liMeshStats &mesh_stats) = 0;
 	virtual void IncrementSkeletalMeshes(const liMaterialLibrary &material_library,const std::string &character_name,liMeshStats &mesh_stats) = 0;
 	//
 	liModelCacher()
@@ -290,7 +290,7 @@ public:
 	{
 		lrStaticMeshStats StaticMeshStats(*this);
 		//
-		ModelCacher.IncrementMaterialGroups(mesh.GetMaterialLibrary(),static_mesh.GetModelName(),StaticMeshStats);
+		ModelCacher.IncrementStaticMeshes(mesh.GetMaterialLibrary(),static_mesh.GetModelName(),StaticMeshStats);
 	}
 	//
 	virtual void CacheSkeletalMesh(const li3DMesh &mesh,const li3DSkeletalMesh &skeletal_mesh) override

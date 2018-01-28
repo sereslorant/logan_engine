@@ -310,7 +310,7 @@ public:
 #include <lScene/l3DScene/lModScene/li3DModScene.h>
 
 #include "../lrColor.h"
-
+/*
 class lr3DElementPool
 {
 private:
@@ -349,7 +349,7 @@ private:
 		{}
 		/*
 		 * End of class
-		 */
+		 * /
 	};
 	//
 	template<class lrSceneElement_T>
@@ -381,7 +381,7 @@ private:
 		}
 		/*
 		 * End of class
-		 */
+		 * /
 	};
 	//
 	lrListBase *First	= nullptr;
@@ -462,11 +462,11 @@ public:
 	}
 	/*
 	 * End of class
-	 */
+	 * /
 };
-
-#include <cstdlib>
-
+*/
+//#include <cstdlib>
+/*
 class liMemoryBlock
 {
 public:
@@ -529,10 +529,10 @@ public:
 	}
 	/*
 	 * End of class
-	 */
+	 * /
 };
-
-#define LR3D_SCENE_USE_OBJECT_POOL
+*/
+//#define LR3D_SCENE_USE_OBJECT_POOL
 
 class lr3DScene : public li3DModScene
 {

@@ -3,10 +3,7 @@ project(LoganEngine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-#include(FindPkgConfig)
-#pkg_search_module(SDL2 REQUIRED sdl2)
-#pkg_search_module(OPENGL REQUIRED gl)
-
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)

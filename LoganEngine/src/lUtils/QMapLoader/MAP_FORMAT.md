@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document describes the grammar of the .map format this plugin can load. The goal is that it can load anything GtkRadiant saves into.
+This document describes the grammar of the .map format this module can load. The goal is to load anything GtkRadiant saves into.
 
 The features are listed following a bottom up principle: it explains the smallest primitive first and the more complex features later.
 

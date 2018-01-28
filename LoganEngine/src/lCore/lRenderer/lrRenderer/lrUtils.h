@@ -11,13 +11,13 @@ public:
 	{
 		lmOrtho3x3(dest,camera.GetPosition()[1],camera.GetPosition()[1] + camera.GetHeight(),camera.GetPosition()[0],camera.GetPosition()[0] + camera.GetWidth());
 	}
-	//
+	
 	static void GetTransformMatrix(const li2DRectangle &rectangle,lmMatrix3x3 &dest)
 	{
 		lmTranslate3x3(dest,rectangle.GetPosition());
 		lmScale3x3(dest,rectangle.GetWidth(),rectangle.GetHeight());
 	}
-	//
+	
 	/*
 	 * TODO: Ideiglenesen van csak itt, majd később kikerül külső függvénybe.
 	 */
@@ -39,11 +39,18 @@ public:
 	/*
 	 * TODO: Ideiglenesen van csak itt, majd később kikerül külső függvénybe.
 	 */
-	static void GetModelMatrix(const li3DMesh &mesh,lmMatrix4x4 &dest)
+	static void GetModelMatrix(const lmVector3D &position,const lmQuaternion &orientation,const lmVector3D &scale,lmMatrix4x4 &result)
 	{
-		lmTranslate4x4(dest,mesh.GetPosition());
-		lmRotate4x4(dest,mesh.GetOrientation());
-		lmScale4x4(dest,mesh.GetScale());
+		lmTranslate4x4(result,position);
+		lmRotate4x4(result,orientation);
+		lmScale4x4(result,scale);
+	}
+	/*
+	 * TODO: Ideiglenesen van csak itt, majd később kikerül külső függvénybe.
+	 */
+	static void GetModelMatrix(const li3DMesh &mesh,lmMatrix4x4 &result)
+	{
+		GetModelMatrix(mesh.GetPosition(),mesh.GetOrientation(),mesh.GetScale(),result);
 	}
 
 	static void ComputeTextureGroupKey(const liMaterial &material,std::string &dest)

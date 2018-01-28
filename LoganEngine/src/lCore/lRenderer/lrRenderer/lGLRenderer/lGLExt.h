@@ -3,9 +3,6 @@
 
 #include "lGLIncludes.h"
 
-namespace lGLExt
-{
-
 //Program
 extern PFNGLCREATEPROGRAMPROC glCreateProgram;
 extern PFNGLDELETEPROGRAMPROC glDeleteProgram;
@@ -67,15 +64,8 @@ extern PFNGLFRAMEBUFFERTEXTURE1DPROC glFramebufferTexture1D;
 extern PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D;
 extern PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus;
 
-}
-
 #include <lRenderer/liGLExtLoader.h>
 
-/*
- * TMP!!!!!!!!!!!!!!!!!!!
- */
-extern "C" {
 liGLExtLoader &lGetGLExtLoader();
-}
 
 #endif // LGL_EXT_H

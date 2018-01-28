@@ -4,4 +4,4 @@ add_subdirectory(Bsp)
 
 add_subdirectory(Md5Loader)
 
-add_subdirectory(QMapLoader)
+#add_subdirectory(QMapLoader)
